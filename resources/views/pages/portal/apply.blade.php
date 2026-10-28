@@ -1,7 +1,7 @@
 @extends('layouts.master_portal')
 
 @section('title')
-CISS V.1.0 || Apply Admission
+    CISS - Admission Apply Portal
 @endsection
 
 @section('workspace')

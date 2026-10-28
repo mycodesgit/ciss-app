@@ -1,7 +1,7 @@
 @extends('layouts.master_main')
 
 @section('title')
-    Admission
+    CISS - Admission Portal
 @endsection
 
 @section('body')

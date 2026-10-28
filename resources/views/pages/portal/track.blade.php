@@ -1,7 +1,7 @@
 @extends('layouts.master_portal')
 
 @section('title')
-CISS V.1.0 || Track Admission
+    CISS - Track Admission
 @endsection
 
 @section('workspace')
