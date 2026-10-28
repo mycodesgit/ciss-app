@@ -30,7 +30,7 @@
                         $endTime = now()->setHour(17)->setMinute(0)->setSecond(0);
                     @endphp
                 </div>
-                <div class="">
+                <div>
                     <form action="#" method="post">
                         @csrf
                         <div class="input-group mb-2">

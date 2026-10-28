@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\StudentLoginController;
+use App\Http\Controllers\Auth\FacultyLoginController;
+use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -45,4 +47,6 @@ Route::prefix('portal')->name('portal.')->group(function () {
 // Guest only (logged-in users are redirected away from login pages)
 Route::middleware('guest')->group(function () {
     Route::get('/student/login', [StudentLoginController::class, 'index'])->name('student.login');
+    Route::get('/faculty/login', [FacultyLoginController::class, 'index'])->name('faculty.login');
+    Route::get('/employee', [EmployeeLoginController::class, 'index'])->name('employee.login'); // URL only, no button on the main page
 });

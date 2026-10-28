@@ -28,7 +28,7 @@
                     <div>
                         <a href="{{ route('portal.admission') }}" wire:navigate class="btn btn-success btn-lg w-100 fs-6 text-bolder mb-2">Admission</a>
                         <a href="{{ route('student.login') }}" wire:navigate class="btn btn-success btn-lg text-bold w-100 fs-6 mb-2">Student</a>
-                        <a href="#" class="btn btn-success btn-lg text-bold w-100 fs-6 mb-2">Faculty</a>
+                        <a href="{{ route('faculty.login') }}" wire:navigate class="btn btn-success btn-lg text-bold w-100 fs-6 mb-2">Faculty</a>
                         <a href="#" class="btn btn-success btn-lg text-bold w-100 fs-6 mb-2 disabled">Request for Documents</a>
                     </div>
                 </div>
