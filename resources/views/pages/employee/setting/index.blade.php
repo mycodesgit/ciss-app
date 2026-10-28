@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-6">
-                <div class="card mb-4" style=" background-color: #e9ecef; margin-top: -10px">
+                <div class="card mb-3" style=" background-color: #e9ecef; margin-top: -10px">
                     <div class="card-body">
                         <ol class="breadcrumb" style="margin-bottom: -3px;">
                             <li class="breadcrumb-item">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                     <div>
                         <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">System Dashboard Overview</h1>
                         <p class="text-muted small mb-0">System metrics, configuration, and daily activity logs.</p>
