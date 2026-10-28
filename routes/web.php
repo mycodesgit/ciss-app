@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
+use App\Http\Controllers\Main\PortalTrackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ Route::prefix('portal')->name('portal.')->middleware('guest')->group(function ()
         Route::get('/programs', 'programs')->name('programs');
         Route::get('/schedules', 'schedules')->name('schedules');
     });
+
+    Route::get('/admission/track', [PortalTrackController::class, 'index'])->name('track.index');
 
     Route::prefix('locations')->name('locations.')->controller(PortalLocationController::class)->group(function () {
         Route::get('/provinces/{regionId}', 'provinces')->name('provinces');

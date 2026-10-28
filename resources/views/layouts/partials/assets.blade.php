@@ -7,6 +7,13 @@
     script below just enables the stylesheets of the layout on <html data-layout>.
 --}}
 
+{{--
+    Livewire builds its update URL as "/livewire/update" (relative to the server root),
+    which misses the app's subfolder (e.g. /ciss-app/public). Livewire's JS reads the
+    first [data-update-uri] on the page, so this full URL takes priority.
+--}}
+<meta name="livewire-update-uri" data-update-uri="{{ url('livewire/update') }}">
+
 {{-- master_main stylesheets --}}
 <link rel="stylesheet" href="{{ asset('uilibs/plugins/bootstrap/css/bootstrap.min.css') }}" data-layout="main">
 <link rel="stylesheet" href="{{ asset('uilibs/css/login-style.css') }}" data-layout="main">

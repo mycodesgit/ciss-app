@@ -27,7 +27,7 @@
                 <div class="">
                     <div>
                         <a href="{{ route('portal.apply.create') }}" wire:navigate class="btn btn-success btn-lg w-100 fs-6 text-bold mb-2">Apply for Admission</a>
-                        <a href="#" class="btn btn-success btn-lg w-100 fs-6 text-bold mb-2">Track your Admission</a>
+                        <a href="{{ route('portal.track.index') }}" wire:navigate class="btn btn-success btn-lg w-100 fs-6 text-bold mb-2">Track your Admission</a>
                         <a href="#" class="btn btn-success btn-lg w-100 fs-6 text-bold mb-2">Re-upload Documents</a>
                         <a href="{{ route('home') }}" wire:navigate class="btn btn-outline-warning btn-lg w-100 fs-6 text-bold mb-2 text-dark">Back</a>
                     </div>
