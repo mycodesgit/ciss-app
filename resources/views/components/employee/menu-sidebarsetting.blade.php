@@ -14,5 +14,10 @@
                 <i class="ti ti-users"></i><span class="nav-text">User's Management</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.settings.academic-terms.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.settings.academic-terms.*')])>
+                <i class="ti ti-calendar-cog"></i><span class="nav-text">A.Y. & Semester</span>
+            </a>
+        </li>
     @endif
 </ul>

@@ -164,5 +164,7 @@
 <script src="{{ asset('uilibs/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('uilibs/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('uilibs/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+{{-- Shared "DataTable + modal forms" behaviour for employee pages (CissCrud) --}}
+<script src="{{ asset('js/employee/crud.js') }}"></script>
 {{-- Tracked: wire:navigate does a full reload when crossing into the public pages (assets) --}}
 <script src="{{ asset('uilibs/js/contextmenu.js') }}?area=employee" data-navigate-track></script>

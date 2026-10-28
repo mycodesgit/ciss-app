@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Employee\SettingController;
 use App\Http\Controllers\Employee\SettingUsersController;
+use App\Http\Controllers\Employee\SettingAcademicTermController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -78,6 +79,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::put('/{user}/menu-access', 'updateMenuAccess')->name('menu-access.update');
             Route::get('/{user}/year-access', 'showYearAccess')->name('year-access.show');
             Route::put('/{user}/year-access', 'updateYearAccess')->name('year-access.update');
+        });
+
+        // A.Y. & Semester (administrators only)
+        Route::prefix('academic-terms')->name('academic-terms.')->middleware('admin')->controller(SettingAcademicTermController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{academicTerm}', 'update')->name('update');
         });
     });
 });

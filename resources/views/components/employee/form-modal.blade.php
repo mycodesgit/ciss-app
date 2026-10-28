@@ -2,6 +2,7 @@
     Modal with a form submitted by AJAX.
     url    = key of the URL in the page's data-* attributes (e.g. "update-url"), may contain __ID__
     method = HTTP method sent to Laravel (POST, PUT)
+    Saved by public/js/employee/crud.js.
 --}}
 @props(['id', 'title', 'formId', 'url', 'method' => 'POST', 'size' => 'md'])
 

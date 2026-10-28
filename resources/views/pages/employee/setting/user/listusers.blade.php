@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="mb-6">
-                    <div class="card" style=" background-color: #e9ecef; margin-top: -10px">
+                    <div class="card mb-3" style=" background-color: #e9ecef; margin-top: -10px">
                         <div class="card-body">
                             <ol class="breadcrumb" style="margin-bottom: -3px;">
                                 <li class="breadcrumb-item">
@@ -31,18 +31,27 @@
                             </ol>
                         </div>
                     </div>
-                    <div class="row g-3 mb-3 mt-3">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                        <div>
+                            <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">User's Management</h1>
+                            <p class="text-muted small mb-0">Manage user accounts, assign role permissions, and configure office access levels across the system.</p>
+                        </div>
+                    </div>
+                    <div class="row g-3">
                         <div class="col-md-12">
                             <div class="card card-animate">
+                                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                                    <h6 class="card-title mb-0">
+                                        <i class="ti ti-server"></i> List of Users
+                                    </h6>
+                                    <button type="button" class="btn btn-success btn-sm text-light" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                        <i class="fas fa-user-plus"></i> Add New
+                                    </button>
+                                </div>
                                 <div class="card-body">
-                                    <div class="page-header" style="border-bottom: 1px solid #04401f;">
-                                        <h4>User's Management</h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="table-responsive p-3 mt-3">
-                                            <button type="button" class="btn btn-success btn-sm mb-4 text-light" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                                                <i class="fas fa-user-plus"></i> Add New
-                                            </button>
+                                    <div class="row g-3">
+                                        <div class="table-responsive p-3">
                                             <table id="userlist" class="table table-hover w-100">
                                                 <thead>
                                                     <tr>
