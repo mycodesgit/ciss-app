@@ -13,7 +13,6 @@ class EmployeeLoginRequest extends FormRequest
 {
     private const MAX_ATTEMPTS = 5;
     private const DECAY_SECONDS = 60;
-    private const ACTIVE_STATUS = 1; // users.statuser: 1 = active, anything else = disabled
 
     public function authorize(): bool
     {
@@ -54,7 +53,7 @@ class EmployeeLoginRequest extends FormRequest
         $user = $guard->getLastAttempted();
 
         // Only revealed to someone who already knows the correct password
-        if ((int) $user->statuser !== self::ACTIVE_STATUS) {
+        if (!$user->isActive()) {
             throw ValidationException::withMessages([
                 'email' => 'Your account is disabled. Please contact the administrator.',
             ]);

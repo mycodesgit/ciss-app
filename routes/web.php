@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Auth\FacultyLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\DashboardController;
+use App\Http\Controllers\Employee\SettingController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -59,4 +60,9 @@ Route::middleware('guest:web')->controller(EmployeeLoginController::class)->grou
 Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-back-history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [EmployeeLoginController::class, 'logout'])->name('logout');
+
+    // Accounts / Settings module (menu key "setting-url")
+    Route::prefix('settings')->name('settings.')->middleware('menu.access:setting-url')->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+    });
 });

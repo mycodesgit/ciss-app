@@ -70,7 +70,7 @@ return [
         'nstp-url' => ['label' => 'Nstp', 'icon' => 'fas fa-person-rifle', 'route' => null],
         'ossa-url' => ['label' => 'Ossa', 'icon' => 'fas fa-user-gear', 'route' => null],
         'request-url' => ['label' => 'Request', 'icon' => 'fas fa-file', 'route' => null],
-        'setting-url' => ['label' => 'Accounts', 'icon' => 'fas fa-cog', 'route' => null],
+        'setting-url' => ['label' => 'Accounts', 'icon' => 'fas fa-cog', 'route' => 'employee.settings.index'],
     ],
 
 ];

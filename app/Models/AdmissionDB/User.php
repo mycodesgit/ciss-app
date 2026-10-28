@@ -50,6 +50,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     public const ADMIN_ROLE = 0;
+    public const ACTIVE_STATUS = 1; // statuser: 1 = active, anything else = disabled
 
     public function getIsAdminAttribute($value)
     {
@@ -58,6 +59,18 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->role === $role;
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('statuser', self::ACTIVE_STATUS);
+    }
+    public function scopeInactive($query)
+    {
+        return $query->where(fn ($q) => $q->where('statuser', '!=', self::ACTIVE_STATUS)->orWhereNull('statuser'));
+    }
+    public function isActive(): bool
+    {
+        return (int) $this->statuser === self::ACTIVE_STATUS;
     }
     public function isAdministrator(): bool
     {
