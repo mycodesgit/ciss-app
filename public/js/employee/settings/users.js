@@ -7,11 +7,28 @@
 
     // Badge colour per role id
     const ROLE_BADGES = {
-        0: 'bg-secondary', 1: 'bg-primary', 2: 'bg-success', 3: 'bg-danger', 4: 'bg-warning',
-        5: 'bg-info', 6: 'bg-info', 7: 'bg-info', 8: 'bg-warning', 9: 'bg-warning',
-        10: 'bg-warning', 11: 'bg-warning', 12: 'bg-secondary', 13: 'bg-secondary', 14: 'bg-secondary',
-        15: 'bg-warning', 16: 'bg-ossa', 17: 'bg-info', 18: 'bg-info', 19: 'bg-secondary',
-        20: 'bg-secondary', 21: 'bg-secondary',
+        0: 'bg-secondary',
+        1: 'bg-primary',
+        2: 'bg-success',
+        3: 'bg-danger',
+        4: 'bg-warning',
+        5: 'bg-info',
+        6: 'bg-info',
+        7: 'bg-info',
+        8: 'bg-warning',
+        9: 'bg-warning',
+        10: 'bg-warning',
+        11: 'bg-warning',
+        12: 'bg-secondary',
+        13: 'bg-secondary',
+        14: 'bg-secondary',
+        15: 'bg-warning',
+        16: 'bg-ossa',
+        17: 'bg-info',
+        18: 'bg-info',
+        19: 'bg-secondary',
+        20: 'bg-secondary',
+        21: 'bg-secondary',
     };
 
     const ACTIONS = CissCrud.actionsMenu([

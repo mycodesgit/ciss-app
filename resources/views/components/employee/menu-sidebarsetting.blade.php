@@ -19,5 +19,10 @@
                 <i class="ti ti-calendar-cog"></i><span class="nav-text">A.Y. & Semester</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.settings.grade-passwords.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.settings.grade-passwords.*')])>
+                <i class="ti ti-lock-cog"></i><span class="nav-text">Grades Password</span>
+            </a>
+        </li>
     @endif
 </ul>

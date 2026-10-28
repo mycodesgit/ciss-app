@@ -6,9 +6,10 @@ use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Auth\FacultyLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\DashboardController;
-use App\Http\Controllers\Employee\SettingController;
-use App\Http\Controllers\Employee\SettingUsersController;
-use App\Http\Controllers\Employee\SettingAcademicTermController;
+use App\Http\Controllers\Employee\Settings\SettingController;
+use App\Http\Controllers\Employee\Settings\SettingUsersController;
+use App\Http\Controllers\Employee\Settings\SettingAcademicTermController;
+use App\Http\Controllers\Employee\Settings\SettingGradePassController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -87,6 +88,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::post('/', 'store')->name('store');
             Route::put('/{academicTerm}', 'update')->name('update');
+        });
+
+        // Grades Password (administrators only)
+        Route::prefix('grade-passwords')->name('grade-passwords.')->middleware('admin')->controller(SettingGradePassController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{gradePass}', 'update')->name('update');
         });
     });
 });
