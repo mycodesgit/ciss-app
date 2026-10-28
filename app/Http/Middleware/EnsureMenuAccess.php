@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Middleware\Concerns\DeniesAccessWithModal;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EnsureMenuAccess
 {
+    use DeniesAccessWithModal;
+
     public function handle(Request $request, Closure $next, string $menuKey): Response
     {
-        abort_unless(Auth::guard('web')->user()?->canAccessMenu($menuKey), 403, 'You do not have access to this module.');
+        if (!Auth::guard('web')->user()?->canAccessMenu($menuKey)) {
+            $module = config("ciss.employee_menu.{$menuKey}.label", 'this module');
+
+            return $this->denyAccess($request, $module, 'Your account has not been given access to this module.');
+        }
 
         return $next($request);
     }

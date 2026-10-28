@@ -22,6 +22,7 @@ class Menu extends Component
         $user = Auth::guard('web')->user();
 
         $this->items = collect(config('ciss.employee_menu'))
+            ->reject(fn ($item) => ($item['in_menu'] ?? true) === false)
             ->map(function ($item, $key) use ($user) {
                 $routeName = $item['route'] ?? null;
 

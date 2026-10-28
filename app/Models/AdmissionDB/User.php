@@ -80,6 +80,13 @@ class User extends Authenticatable
     {
         return trim($this->fname . ' ' . $this->lname);
     }
+    // e.g. "Juan D. Dela Cruz Jr."
+    public function getDisplayNameAttribute(): string
+    {
+        $middleInitial = $this->mname ? mb_substr($this->mname, 0, 1) . '.' : null;
+
+        return collect([$this->fname, $middleInitial, $this->lname, $this->ext])->filter()->implode(' ');
+    }
     public function getRoleNameAttribute(): ?string
     {
         return is_numeric($this->role) ? config('ciss.roles')[(int) $this->role] ?? null : null;

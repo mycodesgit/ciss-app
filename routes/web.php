@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\FacultyLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Employee\SettingController;
+use App\Http\Controllers\Employee\SettingUsersController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -64,5 +65,19 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
     // Accounts / Settings module (menu key "setting-url")
     Route::prefix('settings')->name('settings.')->middleware('menu.access:setting-url')->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
+
+        // User's Management (administrators only)
+        Route::prefix('users')->name('users.')->middleware('admin')->controller(SettingUsersController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{user}', 'update')->name('update');
+            Route::put('/{user}/password', 'updatePassword')->name('password');
+            Route::put('/{user}/status', 'updateStatus')->name('status');
+            Route::get('/{user}/menu-access', 'showMenuAccess')->name('menu-access.show');
+            Route::put('/{user}/menu-access', 'updateMenuAccess')->name('menu-access.update');
+            Route::get('/{user}/year-access', 'showYearAccess')->name('year-access.show');
+            Route::put('/{user}/year-access', 'updateYearAccess')->name('year-access.update');
+        });
     });
 });

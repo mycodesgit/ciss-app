@@ -1,4 +1,8 @@
 {{-- End of <body> for employee layouts. Body scripts re-run on every wire:navigate visit. --}}
+@if (session('access_denied'))
+    @include('layouts.partials.access-denied-modal')
+@endif
+
 <script>
     @if (Session::has('error'))
         toastr.options = {

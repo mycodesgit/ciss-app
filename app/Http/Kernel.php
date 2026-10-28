@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
         'menu.access' => \App\Http\Middleware\EnsureMenuAccess::class,
+        'admin' => \App\Http\Middleware\EnsureAdministrator::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,

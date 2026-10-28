@@ -51,10 +51,29 @@ return [
         21 => 'YearBook Staff',
     ],
 
+    'departments' => [
+        'CAS' => 'College of Arts and Sciences',
+        'CCS' => 'College of Computer Studies',
+        'CTE' => 'College of Teacher Education',
+        'CCJE' => 'College of Criminal Justice Education',
+        'COE' => 'College of Engineering',
+        'CAF' => 'College of Agriculture and Forestry',
+        'CBM' => 'College of Business Management',
+        'Guidance Office' => 'Guidance Office',
+        'Registrar Office' => 'Registrar Office',
+        'Assessment Office' => 'Assessment Office',
+        'Scholarship Office' => 'Scholarship Office',
+        'Cashier Office' => 'Cashier Office',
+        'Graduate School Registar' => 'Graduate School Registar',
+        'MIS Office' => 'MIS Office',
+        'OSSA' => 'OSSA',
+    ],
+
     /*
     | Employee control menu. Keys match the values stored in button_access.buttons.
     | 'route' is the named route the item opens; null until that module exists.
     | 'always' items are shown enabled to every employee.
+    | 'in_menu' => false: grantable in User Access but not shown as a menu button.
     */
     'employee_menu' => [
         'home-url' => ['label' => 'Home', 'icon' => 'fas fa-home', 'route' => 'employee.dashboard', 'always' => true],
@@ -65,6 +84,7 @@ return [
         'cashiering-url' => ['label' => 'Cashier', 'icon' => 'fas fa-calculator', 'route' => null],
         'scholarship-url' => ['label' => 'Scholarship', 'icon' => 'fas fa-graduation-cap', 'route' => null],
         'yearbook-url' => ['label' => 'Yearbook', 'icon' => 'fas fa-book', 'route' => null],
+        'grading-url' => ['label' => 'Grading', 'icon' => 'fas fa-star', 'route' => null, 'in_menu' => false],
         'kiosk-url' => ['label' => 'Kiosk', 'icon' => 'fas fa-desktop', 'route' => null],
         'queue-url' => ['label' => 'Queuing', 'icon' => 'fas fa-list-ol', 'route' => null],
         'nstp-url' => ['label' => 'Nstp', 'icon' => 'fas fa-person-rifle', 'route' => null],
