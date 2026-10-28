@@ -15,19 +15,6 @@ class TrackAdmission extends Component
     private const CANCELLED_STATUS = 7;
     private const RESULTS_RELEASE = '04-01'; // month-day the exam results are shown
 
-    private const CAMPUSES = [
-        'MC' => 'Main Campus',
-        'VC' => 'Victorias Campus',
-        'SCC' => 'San Carlos Campus',
-        'MP' => 'Moises Padilla Campus',
-        'HC' => 'Hinigaran Campus',
-        'IC' => 'Ilog Campus',
-        'CA' => 'Candoni Campus',
-        'CC' => 'Cauayan Campus',
-        'SC' => 'Sipalay Campus',
-        'HinC' => 'Hinobaan Campus',
-    ];
-
     // Raw score upper bound => stanine
     private const STANINES = [12 => 1, 18 => 2, 23 => 3, 29 => 4, 36 => 5, 43 => 6, 49 => 7, 56 => 8, 72 => 9];
 
@@ -95,7 +82,7 @@ class TrackAdmission extends Component
         return [
             'admission_id' => $record->admission_id,
             'name' => trim($record->fname . ' ' . substr($record->mname, 0, 2) . ' ' . $record->lname),
-            'campus' => self::CAMPUSES[$record->campus] ?? $record->campus,
+            'campus' => config('ciss.campuses')[$record->campus] ?? $record->campus,
             'bday' => $record->bday ? Carbon::parse($record->bday)->format('F d, Y') : null,
             'email' => $record->email,
             'contact' => $record->contact,

@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'faculty' => [
+            'driver' => 'session',
+            'provider' => 'faculty',
+        ],
+        'kioskstudent' => [
+            'driver' => 'session',
+            'provider' => 'kioskstudent',
+        ],
     ],
 
     /*
@@ -62,7 +70,17 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\AdmissionDB\User::class,
+        ],
+
+        'faculty' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ScheduleDB\Faculty::class,
+        ],
+
+        'kioskstudent' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\EnrollmentDB\KioskUser::class,
         ],
 
         // 'users' => [
@@ -94,6 +112,19 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'faculty' => [
+            'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'kioskstudent' => [
+            'provider' => 'users',
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],

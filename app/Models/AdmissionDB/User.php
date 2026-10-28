@@ -49,6 +49,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public const ADMIN_ROLE = 0;
+
     public function getIsAdminAttribute($value)
     {
         return (bool) $value;
@@ -57,14 +59,33 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+    public function isAdministrator(): bool
+    {
+        return is_numeric($this->role) && (int) $this->role === self::ADMIN_ROLE;
+    }
+    public function getFullNameAttribute(): string
+    {
+        return trim($this->fname . ' ' . $this->lname);
+    }
+    public function getRoleNameAttribute(): ?string
+    {
+        return is_numeric($this->role) ? config('ciss.roles')[(int) $this->role] ?? null : null;
+    }
+    public function getCampusNameAttribute(): ?string
+    {
+        return config('ciss.campuses')[$this->campus] ?? $this->campus;
+    }
     public function buttonAccess(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne('App\Models\SettingDB\ButtonAccess', 'user_id');
     }
     public function hasPermissionToAccess($button)
     {
-        $buttonAccess = $this->buttonAccess;
-        $buttons = $buttonAccess ? $buttonAccess->buttons : [];
-        return in_array($button, $buttons);
+        return in_array($button, $this->buttonAccess?->buttons ?? []);
+    }
+    // Administrators can open every menu; everyone else needs it in button_access
+    public function canAccessMenu($button): bool
+    {
+        return $this->isAdministrator() || $this->hasPermissionToAccess($button);
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Auth\FacultyLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
+use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -44,9 +45,18 @@ Route::prefix('portal')->name('portal.')->group(function () {
     });
 });
 
-// Guest only (logged-in users are redirected away from login pages)
-Route::middleware('guest')->group(function () {
-    Route::get('/student/login', [StudentLoginController::class, 'index'])->name('student.login');
-    Route::get('/faculty/login', [FacultyLoginController::class, 'index'])->name('faculty.login');
-    Route::get('/employee', [EmployeeLoginController::class, 'index'])->name('employee.login'); // URL only, no button on the main page
+// Guest only (users already logged in on that guard are redirected to their home)
+Route::get('/student/login', [StudentLoginController::class, 'index'])->middleware('guest:kioskstudent')->name('student.login');
+Route::get('/faculty/login', [FacultyLoginController::class, 'index'])->middleware('guest:faculty')->name('faculty.login');
+
+// Employee login: URL only, no button on the main page. POST is limited to 10 requests/minute per IP
+Route::middleware('guest:web')->controller(EmployeeLoginController::class)->group(function () {
+    Route::get('/employee', 'index')->name('employee.login');
+    Route::post('/employee', 'login')->middleware('throttle:10,1')->name('employee.login.attempt');
+});
+
+// Employee area (logged in on the "web" guard; pages are never cached so Back after logout can't show them)
+Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-back-history'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [EmployeeLoginController::class, 'logout'])->name('logout');
 });

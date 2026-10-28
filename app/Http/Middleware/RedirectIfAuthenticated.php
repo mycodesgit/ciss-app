@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
+    // Where a logged-in user of each guard belongs (guards without a dashboard yet go home)
+    private const HOME_ROUTES = [
+        'web' => 'employee.dashboard',
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -21,7 +25,9 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                $guard = $guard ?? config('auth.defaults.guard');
+
+                return redirect()->route(self::HOME_ROUTES[$guard] ?? 'home');
             }
         }
 

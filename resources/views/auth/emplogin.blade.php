@@ -23,13 +23,16 @@
                     <p>Sign in to start session</p>
                 </div>
                 <div>
-                    <form action="#" method="post">
+                    <form action="{{ route('employee.login.attempt') }}" method="post">
                         @csrf
+                        @if ($errors->any())
+                            <div class="alert alert-danger py-2 small">{{ $errors->first() }}</div>
+                        @endif
                         <div class="input-group mb-3">
-                            <input type="email" name="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email" id="empEmailInput" autofocus>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control form-control-lg bg-light fs-6 @error('email') is-invalid @enderror" placeholder="Email" id="empEmailInput" autocomplete="username" required autofocus>
                         </div>
                         <div class="input-group mb-1">
-                            <input type="password" name="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" id="empPassInput">
+                            <input type="password" name="password" class="form-control form-control-lg bg-light fs-6 @error('password') is-invalid @enderror" placeholder="Password" id="empPassInput" autocomplete="current-password" required>
                         </div>
                         <div class="input-group mb-4 d-flex justify-content-between">
                             <div class="form-check">
@@ -38,7 +41,7 @@
                             </div>
                         </div>
                         <div class="input-group mb-3">
-                            <button class="btn btn-lg btn-success w-100 fs-6">Login</button>
+                            <button type="submit" class="btn btn-lg btn-success w-100 fs-6">Login</button>
                         </div>
                     </form>
                 </div>
