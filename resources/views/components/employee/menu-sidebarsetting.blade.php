@@ -29,5 +29,10 @@
                 <i class="ti ti-toggle-right"></i><span class="nav-text">Control Status</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.settings.campuses.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.settings.campuses.*')])>
+                <i class="ti ti-building"></i><span class="nav-text">Campuses Control</span>
+            </a>
+        </li>
     @endif
 </ul>

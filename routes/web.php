@@ -11,6 +11,7 @@ use App\Http\Controllers\Employee\Settings\SettingUsersController;
 use App\Http\Controllers\Employee\Settings\SettingAcademicTermController;
 use App\Http\Controllers\Employee\Settings\SettingGradePassController;
 use App\Http\Controllers\Employee\Settings\SettingControlStatusController;
+use App\Http\Controllers\Employee\Settings\SettingCampusController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -103,6 +104,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('control-status')->name('control-status.')->middleware('admin')->controller(SettingControlStatusController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::put('/{control}', 'update')->whereIn('control', SettingControlStatusController::keys())->name('update');
+        });
+
+        // Campuses Control: student login per campus (administrators only)
+        Route::prefix('campuses')->name('campuses.')->middleware('admin')->controller(SettingCampusController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/{campus}', 'update')->name('update');
         });
     });
 });
