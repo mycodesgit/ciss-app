@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -18,9 +19,10 @@ use App\Http\Controllers\Main\PortalTrackController;
 |
 */
 
+// Public
 Route::get('/', [PortalController::class, 'home'])->name('home');
 
-Route::prefix('portal')->name('portal.')->middleware('guest')->group(function () {
+Route::prefix('portal')->name('portal.')->group(function () {
     Route::get('/admission', [PortalController::class, 'admission'])->name('admission');
 
     Route::prefix('admission/apply')->name('apply.')->controller(PortalApplyController::class)->group(function () {
@@ -38,4 +40,9 @@ Route::prefix('portal')->name('portal.')->middleware('guest')->group(function ()
         Route::get('/cities/{provinceId}', 'cities')->name('cities');
         Route::get('/barangays/{cityId}', 'barangays')->name('barangays');
     });
+});
+
+// Guest only (logged-in users are redirected away from login pages)
+Route::middleware('guest')->group(function () {
+    Route::get('/student/login', [StudentLoginController::class, 'index'])->name('student.login');
 });
