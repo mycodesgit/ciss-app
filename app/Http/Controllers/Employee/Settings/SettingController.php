@@ -10,6 +10,7 @@ use App\Models\AdmissionDB\User;
 use App\Models\SettingDB\AdmissionMode;
 use App\Models\SettingDB\EnrollmentMode;
 use App\Models\SettingDB\QueueMode;
+use App\Models\EvaluationDB\QCEsetting;
 
 class SettingController extends Controller
 {
@@ -32,6 +33,7 @@ class SettingController extends Controller
                 'enrollmentStatus' => EnrollmentMode::where('campus', $user->campus)->value('statusenroll')
                     ?? EnrollmentMode::value('statusenroll'),
                 'queueStatus' => QueueMode::value('statusqueue'),
+                'facultyEvalStatus' => QCEsetting::value('statuseval'),
             ],
         ]);
     }

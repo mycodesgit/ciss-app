@@ -39,7 +39,7 @@
                             ['label' => 'Admission Status', 'value' => $overview['admissionStatus'] ?? 'N/A', 'icon' => 'ti ti-calendar-user', 'color' => 'success', 'tagIcon' => 'ti ti-info-circle', 'tag' => 'Status', 'note' => 'current admission mode'],
                             ['label' => 'Enrollment Status', 'value' => $overview['enrollmentStatus'] ?? 'N/A', 'icon' => 'ti ti-device-laptop', 'color' => 'success', 'tagIcon' => 'ti ti-info-circle', 'tag' => 'Status', 'note' => 'current enrollment mode'],
                             ['label' => 'Queueing Status', 'value' => $overview['queueStatus'] ?? 'N/A', 'icon' => 'ti ti-line', 'color' => 'success', 'tagIcon' => 'ti ti-info-circle', 'tag' => 'Status', 'note' => 'queue system operational state'],
-                            ['label' => 'Faculty Eval. Status', 'value' => 'N/A', 'icon' => 'ti ti-file-analytics', 'color' => 'success', 'tagIcon' => 'ti ti-info-circle', 'tag' => 'Status', 'note' => 'faculty evaluation system state'],
+                            ['label' => 'Faculty Eval. Status', 'value' => $overview['facultyEvalStatus'] ?? 'N/A', 'icon' => 'ti ti-file-analytics', 'color' => 'success', 'tagIcon' => 'ti ti-info-circle', 'tag' => 'Status', 'note' => 'faculty evaluation system state'],
                             ['label' => 'Server Maintenance Status', 'value' => 'Off', 'icon' => 'ti ti-server', 'color' => 'success', 'tagIcon' => 'ti ti-check', 'tag' => 'Normal', 'note' => 'server status operating'],
                         ];
                     @endphp

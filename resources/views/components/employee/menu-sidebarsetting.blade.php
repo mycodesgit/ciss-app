@@ -24,5 +24,10 @@
                 <i class="ti ti-lock-cog"></i><span class="nav-text">Grades Password</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.settings.control-status.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.settings.control-status.*')])>
+                <i class="ti ti-toggle-right"></i><span class="nav-text">Control Status</span>
+            </a>
+        </li>
     @endif
 </ul>

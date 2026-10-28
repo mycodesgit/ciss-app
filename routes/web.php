@@ -10,6 +10,7 @@ use App\Http\Controllers\Employee\Settings\SettingController;
 use App\Http\Controllers\Employee\Settings\SettingUsersController;
 use App\Http\Controllers\Employee\Settings\SettingAcademicTermController;
 use App\Http\Controllers\Employee\Settings\SettingGradePassController;
+use App\Http\Controllers\Employee\Settings\SettingControlStatusController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -96,6 +97,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::post('/', 'store')->name('store');
             Route::put('/{gradePass}', 'update')->name('update');
+        });
+
+        // Control Status: admission / enrollment / queueing switches (administrators only)
+        Route::prefix('control-status')->name('control-status.')->middleware('admin')->controller(SettingControlStatusController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/{control}', 'update')->whereIn('control', SettingControlStatusController::keys())->name('update');
         });
     });
 });
