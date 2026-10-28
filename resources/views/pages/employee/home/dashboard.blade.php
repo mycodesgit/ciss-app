@@ -1,7 +1,7 @@
 @extends('layouts.master_empdash')
 
 @section('title')
-    CISS V.1.0 || Home
+    CISS - Dashboard
 @endsection
 
 @section('workspace')

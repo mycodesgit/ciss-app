@@ -1,7 +1,7 @@
 @extends('layouts.master_empsetting')
 
 @section('title')
-    CISS V.1.0 || Settings
+    CISS - Setting | Dashboard
 @endsection
 
 @section('workspace')
