@@ -54,22 +54,6 @@
                         <div class="input-group mb-3">
                             <button class="btn btn-lg btn-success w-100 fs-6">Login</button>
                         </div>
-                        {{-- <div class="modal-content">
-                            <div class="modal-header text-center justify-content-center mb-3">
-                                <h5 class="modal-title">
-                                    <i class="fas fa-exclamation-triangle text-warning"></i> Temporarily Unavailable
-                                </h5>
-                            </div>
-
-                            <div class="modal-body text-center bg-light p-4 rounded-3 mb-2">
-
-                                <p style="font-size: 11pt; font-weight: 500;">
-                                    The student login portal is currently undergoing system maintenance. We appreciate your patience while we work to improve the system.
-
-                                    Please return to the home page and try again soon.
-                                </p>
-                            </div>
-                        </div> --}}
                         <div class="text-center"><a href="{{ route('home') }}" wire:navigate class="text-center text-dark" style="text-decoration: none">Back to main page</a></div>
                     </form>
                 </div>
