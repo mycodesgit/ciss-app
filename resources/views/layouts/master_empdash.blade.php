@@ -36,8 +36,8 @@
 
             <div class="row d-none d-md-block">
                 <div class="col-12">
-                    <footer class="text-center py-2 mt-6 text-secondary fixed-bottom">
-                        <p class="mb-0">CISS V.1.0: Maintained and Managed by Management Information System Office (MISO) under the Leadership of Dr. Aladino C. Moraca Copyright © 2023 CPSU, All Rights Reserved</p>
+                    <footer class="text-center py-2 mt-6 text-secondary fixed-bottom bg-body border-top" style="z-index: 99">
+                        <p class="mb-0">CISS V.1.0: Maintained and Managed by Management Information System Office (MISO) © 2023 CPSU, All Rights Reserved</p>
                     </footer>
                 </div>
             </div>

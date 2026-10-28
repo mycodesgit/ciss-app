@@ -57,6 +57,22 @@
         display: block;
         width: 100%;
     }
+
+    /* Footer on sidebar layouts: sits beside the sidebar (240px, 60px when collapsed), full width on mobile */
+    .content .content-footer {
+        left: 240px;
+        transition: left 0.3s;
+    }
+
+    .content.full .content-footer {
+        left: 60px;
+    }
+
+    @media (max-width: 992px) {
+        .content .content-footer {
+            left: 0;
+        }
+    }
 </style>
 
 <script>

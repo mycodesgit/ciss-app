@@ -21,7 +21,7 @@
     @include('layouts.partials.employee-topbar', ['withSidebar' => true])
 
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="sidebar overflow-y-auto overflow-x-hidden" style="height: 95vh">
+    <aside id="sidebar" class="sidebar overflow-y-auto overflow-x-hidden">
         <x-employee.menu-sidebarsetting />
     </aside>
 
@@ -39,8 +39,9 @@
 
             <div class="row d-none d-md-block">
                 <div class="col-12">
-                    <footer class="text-center py-2 mt-6 text-secondary fixed-bottom bg-white" style="z-index: 99">
-                        <p class="mb-0">CISS V.1.0: Maintained and Managed by Management Information System Office (MISO) under the Leadership of Dr. Aladino C. Moraca Copyright © 2023 CPSU, All Rights Reserved</p>
+                    {{-- Starts at the sidebar's edge instead of running under it (see .content-footer) --}}
+                    <footer class="content-footer text-center py-2 mt-6 text-secondary fixed-bottom bg-body border-top" style="z-index: 99">
+                        <p class="mb-0">CISS V.1.0: Maintained and Managed by Management Information System Office (MISO) © 2023 CPSU, All Rights Reserved</p>
                     </footer>
                 </div>
             </div>
