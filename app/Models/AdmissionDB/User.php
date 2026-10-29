@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -51,6 +52,21 @@ class User extends Authenticatable
     ];
     public const ADMIN_ROLE = 0;
     public const ACTIVE_STATUS = 1; // statuser: 1 = active, anything else = disabled
+
+    // Cache key of the Settings dashboard user counts (per day, for "added today")
+    public static function dashboardCountsCacheKey(): string
+    {
+        return 'settings_dashboard_user_counts_' . today()->toDateString();
+    }
+
+    // The counts are cleared whenever a user is added, changed or deleted
+    protected static function booted(): void
+    {
+        $forget = fn () => Cache::forget(self::dashboardCountsCacheKey());
+
+        static::saved($forget);
+        static::deleted($forget);
+    }
 
     public function getIsAdminAttribute($value)
     {

@@ -42,4 +42,13 @@ class DeptRating extends Model
     {
         return (int) $this->remarks === self::REMARK_COMPLETED;
     }
+
+    // The Admission dashboard counts applicants that have a rating row: a new / changed / deleted row refreshes it
+    protected static function booted(): void
+    {
+        $forget = fn (DeptRating $rating) => Applicant::find($rating->app_id)?->forgetDashboardCache();
+
+        static::saved($forget);
+        static::deleted($forget);
+    }
 }

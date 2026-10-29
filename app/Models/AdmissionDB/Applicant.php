@@ -4,12 +4,41 @@ namespace App\Models\AdmissionDB;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Applicant extends Model
 {
     use HasFactory;
 
     protected $table = 'ad_applicant_admission';
+
+    // ---------- Admission dashboard cache (AdmissionDashboardController) ----------
+
+    // Status counts of a campus + the all-campus chart, of an admission year
+    public static function dashboardCacheKeys(?string $campus, $year): array
+    {
+        return ["admission_dashboard_status_{$campus}_{$year}", "admission_dashboard_chart_{$year}"];
+    }
+
+    // Clears the dashboard numbers this applicant is counted in (also its old campus / year when they changed)
+    public function forgetDashboardCache(): void
+    {
+        $keys = array_merge(
+            self::dashboardCacheKeys($this->campus, $this->year),
+            self::dashboardCacheKeys($this->getOriginal('campus'), $this->getOriginal('year')),
+        );
+
+        foreach (array_unique($keys) as $key) {
+            Cache::forget($key);
+        }
+    }
+
+    // Any applicant added, changed (e.g. pushed to the next step) or deleted refreshes the dashboard
+    protected static function booted(): void
+    {
+        static::saved(fn (Applicant $applicant) => $applicant->forgetDashboardCache());
+        static::deleted(fn (Applicant $applicant) => $applicant->forgetDashboardCache());
+    }
 
     // p_status: the applicant's step in the admission process
     public const STATUS_REGISTERED = 1;   // registered, no exam schedule yet
