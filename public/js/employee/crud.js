@@ -221,5 +221,11 @@ window.CissCrud = (function () {
         this.value = this.value.replace(/(^|\s)(\S)/g, (m, space, letter) => space + letter.toUpperCase());
     });
 
+    // Student ID typed as 2024-0001-K (class js-student-id): letters/digits only, dashes added after 4 and 8 characters
+    $(document).on('input', 'input.js-student-id', function () {
+        const clean = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 9);
+        this.value = [clean.slice(0, 4), clean.slice(4, 8), clean.slice(8, 9)].filter(Boolean).join('-');
+    });
+
     return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send, urlFor, openPdf };
 })();

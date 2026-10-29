@@ -29,12 +29,6 @@
         actions: {},
     });
 
-    // Student ID typed as 2024-0001-K
-    $(document).on('input', '#transferLookupForm .js-student-id', function () {
-        const clean = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 9);
-        this.value = [clean.slice(0, 4), clean.slice(4, 8), clean.slice(8, 9)].filter(Boolean).join('-');
-    });
-
     function resetTransferForm() {
         const form = document.getElementById('transferForm');
         form.reset();

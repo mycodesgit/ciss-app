@@ -33,15 +33,7 @@
 
     // ---------- Search ----------
 
-    // Student ID typed as 2024-0001-K: letters/digits only, dashes added after 4 and 8 characters
-    function formatStudentId(value) {
-        const clean = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 9);
-        return [clean.slice(0, 4), clean.slice(4, 8), clean.slice(8, 9)].filter(Boolean).join('-');
-    }
-
-    $(document).on('input', '#enrollSearchForm .js-student-id', function () {
-        this.value = formatStudentId(this.value);
-    });
+    // The Student ID (.js-student-id) is formatted as 2024-0001-K by crud.js
 
     $(document).on('submit', '#enrollSearchForm', function (e) {
         e.preventDefault();

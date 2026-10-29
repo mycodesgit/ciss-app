@@ -63,13 +63,18 @@
         </li>
     @endif
 
+    <li class="px-4 py-1 mt-2"><small class="nav-text text-muted">Reports</small></li>
     {{-- Administrators, Registrar and Guidance only (the routes check it too: 'student-info' middleware) --}}
     @if (Auth::guard('web')->user()->canManageStudentInfo())
-        <li class="px-4 py-1 mt-2"><small class="nav-text text-muted">Reports</small></li>
         <li>
             <a href="{{ route('employee.enrollment.student-info.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.student-info.*')])>
                 <i class="ti ti-user"></i><span class="nav-text">Student Information</span>
             </a>
         </li>
     @endif
+    <li>
+        <a href="{{ route('employee.enrollment.print-rf.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.print-rf.*')])>
+            <i class="ti ti-printer"></i><span class="nav-text">Print Student RF</span>
+        </a>
+    </li>
 </ul>

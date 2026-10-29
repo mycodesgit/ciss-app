@@ -46,6 +46,7 @@ use App\Http\Controllers\Employee\Enrollment\GradeCorrectionController;
 use App\Http\Controllers\Employee\Enrollment\StudentTransferController;
 use App\Http\Controllers\Employee\Enrollment\SubjectController;
 use App\Http\Controllers\Employee\Enrollment\StudentInformationController;
+use App\Http\Controllers\Employee\Enrollment\PrintRegistrationFormController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -359,6 +360,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::get('/lookup', 'lookup')->name('lookup');
             Route::post('/', 'store')->name('store');
+        });
+
+        // Print Student RF: search an enrollment (?campus=&stud_id=&schlyear=&semester=), the PDF is enroll.registration-form
+        Route::prefix('print-rf')->name('print-rf.')->controller(PrintRegistrationFormController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'find')->name('find');
         });
     });
 
