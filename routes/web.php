@@ -297,37 +297,6 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::delete('/{student}/fees/{appraisal}', 'destroy')->whereNumber('appraisal')->name('destroy');
         });
 
-        // Correction of Grades (Registrar, Administrators): change any grade, even submitted / INC
-        Route::prefix('corrections')->name('corrections.')->middleware('registrar')->controller(GradeCorrectionController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/subjects', 'subjects')->name('subjects');
-            Route::get('/subjects/{subject}', 'show')->whereNumber('subject')->name('show');
-            Route::get('/subjects/{subject}/students', 'students')->whereNumber('subject')->name('students');
-            Route::put('/grades/{grade}', 'correctGrade')->whereNumber('grade')->name('grade');
-            Route::put('/grades/{grade}/completion', 'correctCompletion')->whereNumber('grade')->name('completion');
-            // Grades password: at most 10 tries a minute
-            Route::put('/grades/{grade}/unlock', 'unlock')->whereNumber('grade')->middleware('throttle:10,1')->name('unlock');
-        });
-
-        // Transferred Student (Registrar, Administrators): add another campus to a student's records
-        Route::prefix('transfers')->name('transfers.')->middleware('registrar')->controller(StudentTransferController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/list', 'list')->name('list');
-            Route::get('/lookup', 'lookup')->name('lookup');
-            Route::post('/', 'store')->name('store');
-        });
-
-        // Subjects (Registrar, Administrators): the subjects master list, add a subject
-        Route::prefix('subjects')->name('subjects.')->middleware('registrar')->controller(SubjectController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/list', 'list')->name('list');
-            Route::get('/next-code', 'nextCode')->name('next-code');
-            Route::post('/', 'store')->name('store');
-            Route::put('/{subject}', 'update')->name('update');
-            // Delete = Inactive (and back to Active): subjects are never removed
-            Route::put('/{subject}/status', 'updateStatus')->name('status');
-        });
-
         // Enrollment History: search students, view a student's enrollments, print the Pre-Enrollment Form
         Route::prefix('history')->name('history.')->controller(EnrollmentHistoryController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -350,6 +319,37 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
                 Route::put('/grades/{grade}/unlock', 'unlockGrade')->whereNumber('grade')->name('unlock-grade');
                 Route::put('/grades/{grade}/completion/unlock', 'unlockCompletion')->whereNumber('grade')->name('unlock-completion');
             });
+        });
+
+        // Correction of Grades (Registrar, Administrators): change any grade, even submitted / INC
+        Route::prefix('corrections')->name('corrections.')->middleware('registrar')->controller(GradeCorrectionController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/subjects', 'subjects')->name('subjects');
+            Route::get('/subjects/{subject}', 'show')->whereNumber('subject')->name('show');
+            Route::get('/subjects/{subject}/students', 'students')->whereNumber('subject')->name('students');
+            Route::put('/grades/{grade}', 'correctGrade')->whereNumber('grade')->name('grade');
+            Route::put('/grades/{grade}/completion', 'correctCompletion')->whereNumber('grade')->name('completion');
+            // Grades password: at most 10 tries a minute
+            Route::put('/grades/{grade}/unlock', 'unlock')->whereNumber('grade')->middleware('throttle:10,1')->name('unlock');
+        });
+
+        // Subjects (Registrar, Administrators): the subjects master list, add a subject
+        Route::prefix('subjects')->name('subjects.')->middleware('registrar')->controller(SubjectController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/next-code', 'nextCode')->name('next-code');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{subject}', 'update')->name('update');
+            // Delete = Inactive (and back to Active): subjects are never removed
+            Route::put('/{subject}/status', 'updateStatus')->name('status');
+        });
+
+        // Transferred Student (Registrar, Administrators): add another campus to a student's records
+        Route::prefix('transfers')->name('transfers.')->middleware('registrar')->controller(StudentTransferController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/lookup', 'lookup')->name('lookup');
+            Route::post('/', 'store')->name('store');
         });
     });
 

@@ -62,4 +62,11 @@
             </a>
         </li>
     @endif
+
+    <li class="px-4 py-1 mt-2"><small class="nav-text text-muted">Reports</small></li>
+    <li>
+        <a href="#" class="nav-link">
+            <i class="ti ti-user"></i><span class="nav-text">Student Information</span>
+        </a>
+    </li>
 </ul>
