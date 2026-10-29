@@ -16,7 +16,7 @@ class ApplicantConfirmationMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @param array{applicant_name: string, date: string, time: string, venue: string} $data
+     * @param array{applicant_name: string, admission_id?: string, campus?: string, date: string, time: string, venue: string} $data
      */
     public function __construct(public array $data)
     {

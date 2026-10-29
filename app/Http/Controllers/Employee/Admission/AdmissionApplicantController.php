@@ -128,6 +128,8 @@ class AdmissionApplicantController extends Controller
         try {
             Mail::to($applicant->email)->send(new ApplicantConfirmationMail([
                 'applicant_name' => $applicant->fname . ' ' . $applicant->lname,
+                'admission_id' => $applicant->admission_id,
+                'campus' => config('ciss.campuses')[$applicant->campus] ?? $applicant->campus,
                 'date' => Carbon::parse($applicant->d_admission)->format('F d, Y'),
                 'time' => Carbon::parse($applicant->time)->format('h:i A'),
                 'venue' => $applicant->venue,
