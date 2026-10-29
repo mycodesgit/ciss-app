@@ -238,14 +238,9 @@ window.AdmissionUi = (function () {
             $modal.modal('show');
         },
 
-        // Pre-Enrollment Form: the iframe's src is the PDF route (dompdf), shown in the browser's PDF viewer
+        // Pre-Enrollment Form PDF (AdmissionPreEnrollmentController)
         preEnrollment(row) {
-            const $modal = $('#preEnrollmentModal');
-
-            $modal.find('.js-pre-enrollment-name').text('- ' + row.display_name);
-            $modal.find('.js-pre-enrollment-loading').removeClass('d-none');
-            $modal.find('.js-pre-enrollment-frame').attr('src', CissCrud.urlFor('preEnrollmentUrl', row.id));
-            $modal.modal('show');
+            openPdf('#preEnrollmentModal', row.display_name, CissCrud.urlFor('preEnrollmentUrl', row.id));
         },
 
         schedule(row) {
@@ -283,18 +278,28 @@ window.AdmissionUi = (function () {
         },
     };
 
-    // ---------- Pre-Enrollment modal ----------
+    // ---------- PDF modals (shared/pdf-modal.blade.php) ----------
+    // The iframe's src is the PDF route (dompdf), shown in the browser's PDF viewer
+    function openPdf(modalId, name, url) {
+        const $modal = $(modalId);
+
+        $modal.find('.js-pdf-name').text('- ' + name);
+        $modal.find('.js-pdf-loading').removeClass('d-none');
+        $modal.find('.js-pdf-frame').attr('src', url);
+        $modal.modal('show');
+    }
+
     // Hide "Loading..." when the PDF has loaded. iframe "load" doesn't bubble, so it is caught in the capture
     // phase on document (works for every new modal after wire:navigate).
     document.addEventListener('load', function (e) {
-        if (!e.target.classList || !e.target.classList.contains('js-pre-enrollment-frame') || !e.target.getAttribute('src')) return;
+        if (!e.target.classList || !e.target.classList.contains('js-pdf-frame') || !e.target.getAttribute('src')) return;
 
-        $(e.target).closest('.modal').find('.js-pre-enrollment-loading').addClass('d-none');
+        $(e.target).closest('.modal').find('.js-pdf-loading').addClass('d-none');
     }, true);
 
     // Unload the PDF when the modal closes, so the next applicant never shows the previous one
-    $(document).on('hidden.bs.modal', '#preEnrollmentModal', function () {
-        $(this).find('.js-pre-enrollment-frame').attr('src', 'about:blank').removeAttr('src');
+    $(document).on('hidden.bs.modal', '.js-pdf-modal', function () {
+        $(this).find('.js-pdf-frame').attr('src', 'about:blank').removeAttr('src');
     });
 
     // Search: reload the table with the new filters (no page reload)
@@ -303,5 +308,5 @@ window.AdmissionUi = (function () {
         CissCrud.reload();
     });
 
-    return { searchFilters, showFields, confirmThen, openDocument, actions };
+    return { searchFilters, showFields, confirmThen, openDocument, openPdf, actions };
 })();

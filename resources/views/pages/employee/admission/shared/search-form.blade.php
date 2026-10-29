@@ -20,9 +20,17 @@
         </div>
 
         <div class="col-md-4">
-            <label class="form-label fw-semibold">Strand:</label>
-            <select class="form-control form-control-sm" name="strand">
-                <option value="">All strands</option>
+            {{-- $requireStrand (reports): a choice must be made, so every strand is only loaded when "All strands" is picked on purpose --}}
+            @if ($requireStrand ?? false)
+                <label class="form-label fw-semibold">Strand: <span class="text-danger">*</span></label>
+                <select class="form-control form-control-sm" name="strand" required>
+                    <option value="" selected disabled>Select strand</option>
+                    <option value="all">All strands</option>
+            @else
+                <label class="form-label fw-semibold">Strand:</label>
+                <select class="form-control form-control-sm" name="strand">
+                    <option value="">All strands</option>
+            @endif
                 @foreach ($strands as $strand)
                     <option value="{{ $strand->code }}">{{ $strand->strand }}</option>
                 @endforeach

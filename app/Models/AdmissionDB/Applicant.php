@@ -20,6 +20,16 @@ class Applicant extends Model
     public const STATUS_ENROLLMENT = 6;   // pushed to enrollment (student record created)
     public const STATUS_CANCELLED = 7;    // removed from the applicant list
 
+    // Every step from registered to pushed to enrollment (all but cancelled), used by the reports
+    public const ACTIVE_STATUSES = [
+        self::STATUS_REGISTERED,
+        self::STATUS_SCHEDULED,
+        self::STATUS_WITH_RESULT,
+        self::STATUS_CONFIRMED,
+        self::STATUS_ACCEPTED,
+        self::STATUS_ENROLLMENT,
+    ];
+
     public const TYPES = [
         1 => 'New',
         2 => 'Returnee',

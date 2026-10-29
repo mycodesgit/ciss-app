@@ -20,6 +20,8 @@ use App\Http\Controllers\Employee\Admission\AdmissionConfirmController;
 use App\Http\Controllers\Employee\Admission\AdmissionPreEnrollmentController;
 use App\Http\Controllers\Employee\Admission\AdmissionAcceptedController;
 use App\Http\Controllers\Employee\Admission\AdmissionSlotsController;
+use App\Http\Controllers\Employee\Admission\AdmissionApplicantReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionSchoolReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionConfigController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigProgramController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigStrandController;
@@ -137,6 +139,20 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/', 'index')->name('index');
             Route::get('/list', 'list')->name('list');
             Route::put('/{applicant}/push', 'pushToEnrollment')->name('push');
+        });
+
+        // Reports: Applicants (View Data uses the applicants route above)
+        Route::prefix('reports')->name('reports.')->controller(AdmissionApplicantReportController::class)->group(function () {
+            Route::get('/applicants', 'applicants')->name('applicants');
+            Route::get('/applicants/list', 'applicantsList')->name('applicants.list');
+            Route::get('/applicants/admission-slips', 'admissionSlipsZip')->name('applicants.slips');
+            Route::get('/applicants/{applicant}/admission-slip', 'admissionSlip')->name('applicants.slip');
+        });
+
+        // Reports: Applicants per School
+        Route::prefix('reports/schools')->name('reports.schools.')->controller(AdmissionSchoolReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
         });
 
         // Configuration: Availability Slots

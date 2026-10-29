@@ -40,7 +40,8 @@ window.CissCrud = (function () {
     function start(config, page) {
         const urls = page.dataset;
 
-        const table = $(config.table).DataTable({
+        // config.tableOptions: extra DataTable options for one page (e.g. export buttons on a report)
+        const table = $(config.table).DataTable(Object.assign({
             ajax: {
                 url: urls.listUrl,
                 // Optional extra query values (e.g. search filters), read on every (re)load
@@ -52,7 +53,7 @@ window.CissCrud = (function () {
             createdRow: function (row, data) {
                 row.id = 'tr-' + data.id;
             },
-        });
+        }, config.tableOptions));
 
         current = { config, table, urls };
     }

@@ -44,4 +44,16 @@
             <i class="ti ti-settings"></i><span class="nav-text">Configure Admission</span>
         </a>
     </li>
+
+    <li class="px-4 py-1 mt-2"><small class="nav-text text-muted">Reports</small></li>
+    <li>
+        <a href="{{ route('employee.admission.reports.applicants') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.applicants*')])>
+            <i class="ti ti-file-star"></i><span class="nav-text">Applicants</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('employee.admission.reports.schools.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.schools.*')])>
+            <i class="ti ti-file-barcode"></i><span class="nav-text">Applicants per School</span>
+        </a>
+    </li>
 </ul>

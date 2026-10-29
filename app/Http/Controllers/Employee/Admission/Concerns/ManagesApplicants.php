@@ -81,6 +81,11 @@ trait ManagesApplicants
         // Users who can't see every campus only ever get their own campus
         $campus = $user->canViewAllCampuses() ? $filters['campus'] : $user->campus;
 
+        // "all" (the reports' "All strands" option) means no strand filter, like an empty strand
+        if (($filters['strand'] ?? null) === 'all') {
+            $filters['strand'] = null;
+        }
+
         return Applicant::with('documents')
             ->where('year', $filters['year'])
             ->where('campus', $campus)
