@@ -47,6 +47,7 @@ use App\Http\Controllers\Employee\Enrollment\StudentTransferController;
 use App\Http\Controllers\Employee\Enrollment\SubjectController;
 use App\Http\Controllers\Employee\Enrollment\StudentInformationController;
 use App\Http\Controllers\Employee\Enrollment\PrintRegistrationFormController;
+use App\Http\Controllers\Employee\Enrollment\StudentPerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -363,9 +364,17 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         });
 
         // Print Student RF: search an enrollment (?campus=&stud_id=&schlyear=&semester=), the PDF is enroll.registration-form
-        Route::prefix('print-rf')->name('print-rf.')->controller(PrintRegistrationFormController::class)->group(function () {
+        Route::prefix('print-rf')->name('print-rf.')->middleware('enrollment-reports')->controller(PrintRegistrationFormController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/find', 'find')->name('find');
+        });
+
+        // Student Per Degree: enrolled students per program + year + section (?campus=&schlyear=&semester=), list and PDF of a class
+        Route::prefix('per-degree')->name('per-degree.')->middleware('enrollment-reports')->controller(StudentPerDegreeController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/students', 'students')->name('students');
+            Route::get('/pdf', 'pdf')->name('pdf');
         });
     });
 

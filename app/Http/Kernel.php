@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\EnsureAdministrator::class,
         'registrar' => \App\Http\Middleware\EnsureRegistrar::class,
         'student-info' => \App\Http\Middleware\EnsureStudentInfoAccess::class,
+        'enrollment-reports' => \App\Http\Middleware\EnsureEnrollmentReports::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,

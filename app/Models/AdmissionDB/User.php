@@ -137,6 +137,14 @@ class User extends Authenticatable
         return in_array((int) $this->role, self::STUDENT_INFO_ROLES, true);
     }
 
+    // Enrollment reports (Print Student RF, Student Per Degree): everyone but the Encoder (19)
+    public const ENCODER_ROLE = 19;
+
+    public function canViewEnrollmentReports(): bool
+    {
+        return (int) $this->role !== self::ENCODER_ROLE;
+    }
+
     // Guidance Officer (1) and Guidance Staff (2) can view interview results but not record them
     public function canRecordInterviews(): bool
     {
