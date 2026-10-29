@@ -22,6 +22,9 @@ use App\Http\Controllers\Employee\Admission\AdmissionAcceptedController;
 use App\Http\Controllers\Employee\Admission\AdmissionSlotsController;
 use App\Http\Controllers\Employee\Admission\AdmissionApplicantReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionSchoolReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionScheduleReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionNoScheduleReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionResultReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionConfigController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigProgramController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigStrandController;
@@ -147,6 +150,28 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/applicants/list', 'applicantsList')->name('applicants.list');
             Route::get('/applicants/admission-slips', 'admissionSlipsZip')->name('applicants.slips');
             Route::get('/applicants/{applicant}/admission-slip', 'admissionSlip')->name('applicants.slip');
+        });
+
+        // Reports: Admission Schedules
+        Route::prefix('reports/schedules')->name('reports.schedules.')->controller(AdmissionScheduleReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/options', 'schedules')->name('options');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Reports: Applicants No Sched
+        Route::prefix('reports/no-schedule')->name('reports.no-schedule.')->controller(AdmissionNoScheduleReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Reports: Examination Results
+        Route::prefix('reports/results')->name('reports.results.')->controller(AdmissionResultReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
         });
 
         // Reports: Applicants per School

@@ -86,6 +86,12 @@ class ExamineeResult extends Model
             && ($this->percentile !== self::REMARK_FAILED || (int) $this->qualifier === self::SECOND_QUALIFIER);
     }
 
+    // Remark shown on reports: only "Passed" or "Failed" (a campus's "Qualified" shows as "Passed")
+    public function displayRemark(): string
+    {
+        return $this->percentile === self::REMARK_FAILED ? 'Failed' : 'Passed';
+    }
+
     public function user()
     {
         return $this->belongsToMany('App\Models\AdmissionDB\User', 'admission_id');

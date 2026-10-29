@@ -56,4 +56,44 @@
             <i class="ti ti-file-barcode"></i><span class="nav-text">Applicants per School</span>
         </a>
     </li>
+
+    <li>
+        <a href="{{ route('employee.admission.reports.schedules.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.schedules.*')])>
+            <i class="ti ti-file-analytics"></i><span class="nav-text">Admission Schedules</span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ route('employee.admission.reports.no-schedule.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.no-schedule.*')])>
+            <i class="ti ti-file-alert"></i><span class="nav-text">Applicants No Sched</span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ route('employee.admission.reports.results.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.results.*')])>
+            <i class="ti ti-file-text"></i><span class="nav-text">Examination Results</span>
+        </a>
+    </li>
+
+    {{-- Reports not built yet (links to be added) --}}
+    <li>
+        <a href="#" class="nav-link">
+            <i class="ti ti-file-check"></i><span class="nav-text">Qualified Applicants</span>
+        </a>
+    </li>
+    <li>
+        <a href="#" class="nav-link">
+            <i class="ti ti-file-code"></i><span class="nav-text">Accepted Applicants</span>
+        </a>
+    </li>
+    <li>
+        <a href="#" class="nav-link">
+            <i class="ti ti-file-code-2"></i><span class="nav-text">Course Preferences</span>
+        </a>
+    </li>
+    <li>
+        <a href="#" class="nav-link">
+            <i class="ti ti-file-invoice"></i><span class="nav-text">Billing</span>
+        </a>
+    </li>
 </ul>
