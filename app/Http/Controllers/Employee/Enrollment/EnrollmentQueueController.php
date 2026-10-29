@@ -138,6 +138,8 @@ class EnrollmentQueueController extends Controller
                 'campus' => str_replace(' Campus', '', config('ciss.campuses')[$row->campus] ?? $row->campus),
                 'status' => (int) $row->status,
                 'status_label' => self::PRE_ENROLLED_STATUSES[(int) $row->status] ?? (string) $row->status,
+                // Action: open the enrollment in Edit Enrollment
+                'edit_url' => route('employee.enrollment.edit.show', ['student' => $row->studentID, 'schlyear' => $term->schlyear, 'semester' => $term->semester]),
             ]),
         ]);
     }

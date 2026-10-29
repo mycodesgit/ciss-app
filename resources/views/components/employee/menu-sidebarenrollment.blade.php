@@ -20,7 +20,7 @@
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.enrollment.edit.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.edit.*')])>
             <i class="ti ti-edit"></i><span class="nav-text">Edit Enrollment</span>
         </a>
     </li>

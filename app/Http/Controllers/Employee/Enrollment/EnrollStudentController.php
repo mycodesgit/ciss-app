@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Employee\Enrollment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Employee\Enrollment\Concerns\ChecksEnrollment;
+use App\Http\Controllers\Employee\Enrollment\Concerns\ShowsQueuePanel;
 
 use Illuminate\Http\Request;
-
-use App\Models\SettingDB\QueueCounter;
-use App\Models\SettingDB\QueueCustomer;
-use App\Models\SettingDB\QueueMode;
 
 /**
  * Enrollment > Enroll Student, search page.
@@ -20,21 +17,15 @@ use App\Models\SettingDB\QueueMode;
  */
 class EnrollStudentController extends Controller
 {
-    use ChecksEnrollment;
+    use ChecksEnrollment, ShowsQueuePanel;
 
     public function index()
     {
         $terms = $this->openTerms();
-        $queueCounter = QueueCounter::where('useridlog', $this->user()->id)->first();
 
-        return view('pages.employee.enrollment.studenroll.enroll', [
+        return view('pages.employee.enrollment.studenroll.enroll', $this->queuePanelData() + [
             'schoolYears' => $terms->pluck('schlyear')->unique()->values(),
             'semesters' => $terms->pluck('semester')->unique()->sort()->values(),
-            'queueOn' => QueueMode::value('statusqueue') !== 'Off',
-            'queueCounter' => $queueCounter,
-            // Number the counter is serving now (shown in Current Serving)
-            'servingNumber' => $queueCounter?->currentid ? QueueCustomer::whereKey($queueCounter->currentid)->value('queue_number') : null,
-            'hasQueueCounter' => $this->user()->campus === 'MC', // only Main Campus has queue counters
         ]);
     }
 

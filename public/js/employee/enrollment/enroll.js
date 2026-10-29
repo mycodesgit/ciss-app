@@ -144,7 +144,15 @@
                         ? CissCrud.badge(row.status === 3 ? 'bg-success-subtle text-success' : 'bg-info-subtle text-dark', label)
                         : label,
                 },
-                { data: null, orderable: false, searchable: false, defaultContent: '' }, // Action: with Edit Enrollment
+                {
+                    data: 'edit_url',
+                    orderable: false,
+                    searchable: false,
+                    // Opens the enrollment in Edit Enrollment (no page reload)
+                    render: (url, type) => type === 'display'
+                        ? '<a href="' + CissCrud.escapeHtml(url) + '" wire:navigate class="btn btn-sm btn-success text-light" title="View / Edit"><i class="fas fa-eye"></i></a>'
+                        : '',
+                },
             ],
         });
 

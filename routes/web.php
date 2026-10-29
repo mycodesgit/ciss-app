@@ -38,6 +38,7 @@ use App\Http\Controllers\Employee\Enrollment\EnrollmentDashboardController;
 use App\Http\Controllers\Employee\Enrollment\EnrollStudentController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentFormController;
 use App\Http\Controllers\Employee\Enrollment\RegistrationFormController;
+use App\Http\Controllers\Employee\Enrollment\EditEnrollmentController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -258,6 +259,18 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
 
             // Print RF (Registration Form PDF) of an enrolled student: ?schlyear=&semester=
             Route::get('/{student}/registration-form', [RegistrationFormController::class, 'show'])->name('registration-form');
+        });
+
+        // Edit Enrollment: search -> form of a saved enrollment ({student} = Student ID; schlyear & semester are query / form values)
+        Route::prefix('edit')->name('edit.')->controller(EditEnrollmentController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'findEnrollment')->name('find');
+            Route::get('/{student}', 'edit')->name('show');
+            Route::get('/{student}/section-subjects', 'sectionSubjects')->name('section-subjects');
+            Route::post('/{student}/assess', 'assess')->name('assess');
+            Route::put('/{student}', 'update')->name('update');
+            Route::put('/{student}/done-print', 'donePrint')->name('done-print');
+            Route::delete('/{student}', 'destroy')->name('destroy');
         });
 
         // Enroll Student: queue panel (the user's own counter) and List of Pre-Enrolled Students

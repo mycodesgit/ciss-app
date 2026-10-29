@@ -1,10 +1,16 @@
 /**
- * Enrollment > Enroll Student, enrollment form (resources/views/pages/employee/enrollment/studenroll/enrollstudent.blade.php).
- * Server: EnrollmentFormController.
+ * The enrollment form of Enroll Student (enrollstudent.blade.php, EnrollmentFormController) and
+ * Edit Enrollment (editenrollstudent.blade.php, EditEnrollmentController); see partials/enrollment-form.
  *
  * Flow: pick a Course Year & Section (its subjects load) -> add / remove subjects -> Assess (the server computes
  * the fees) -> Save. Changing the section, subjects, Status, Type or Transferee/Shiftee clears the assessment,
  * so Save is only possible right after an Assess of what is on screen. The server checks everything again.
+ *
+ * The page (#enrollmentForm) tells the differences:
+ *   data-subjects        subjects shown when the page opens (Edit: the saved ones)
+ *   data-save-url / -method   POST (enroll) or PUT (edit)
+ *   data-lock-after-save 1: the form locks after saving (enroll); 0: it stays editable (edit)
+ *   data-done-print-url / data-delete-url   Edit only: Done Print and Delete Enrollment
  *
  * Pushed to <head>, so with wire:navigate it loads once: handlers are delegated (bound once) and the page state
  * is reset on every livewire:navigated that lands on the form.
@@ -22,7 +28,8 @@
     document.addEventListener('livewire:navigated', function () {
         if (!page()) return;
 
-        subjects = new Map();
+        subjects = new Map(JSON.parse(page().dataset.subjects || '[]').map((subject) => [subject.id, subject]));
+        renderSubjectRows(); // Edit: the saved subjects; the saved fees stay until the next Assess
         $('#subjectSelect').select2({ dropdownParent: $('#addSubjectModal'), width: '100%' });
         setUpValidation();
     });
@@ -109,13 +116,21 @@
         return $(form()).serialize() + '&' + $.param({ subject_ids: Array.from(subjects.keys()) });
     }
 
-    function post(url, data) {
+    // POST with Laravel's _method (PUT / DELETE) when given
+    function post(url, data, method) {
+        if (method && method !== 'POST') data = (data ? data + '&' : '') + '_method=' + method;
         return $.ajax({ url, type: 'POST', data, headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
     }
 
     // ---------- Subjects table ----------
 
+    // A change of subjects needs a new Assess
     function renderSubjects() {
+        renderSubjectRows();
+        clearAssessment();
+    }
+
+    function renderSubjectRows() {
         const rows = Array.from(subjects.values());
 
         $('#subjectTable tbody').html(rows.length
@@ -139,8 +154,6 @@
         $('.js-total-lab').val(money(Math.round(sum('labFee'))));
         $('.js-total-dev').val(money(Math.round(sum('devFee'))));
         $('.js-it-subject').val(rows.some((subject) => subject.itSubject) ? 'Yes' : 'No');
-
-        clearAssessment();
     }
 
     // ---------- Assessment ----------
@@ -268,23 +281,24 @@
         if (!fieldsAreValid()) return;
 
         const button = this;
+        const isEdit = page().dataset.saveMethod === 'PUT';
 
         Swal.fire({
-            title: 'Save this enrollment?',
+            title: isEdit ? 'Save the changes of this enrollment?' : 'Save this enrollment?',
             text: subjects.size + ' subject(s), total fees ' + $('#feeTable .js-fee-total').text(),
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#198754',
-            confirmButtonText: 'Yes, enroll',
+            confirmButtonText: isEdit ? 'Yes, save' : 'Yes, enroll',
         }).then((result) => {
             if (!result.isConfirmed) return;
 
             button.disabled = true;
 
-            post(page().dataset.storeUrl, payload())
+            post(page().dataset.saveUrl, payload(), page().dataset.saveMethod)
                 .done(function (response) {
-                    lockForm();
-                    Swal.fire({ icon: 'success', title: 'Enrolled', text: response.message });
+                    afterSave();
+                    Swal.fire({ icon: 'success', title: isEdit ? 'Saved' : 'Enrolled', text: response.message });
                 })
                 .fail(function (xhr) {
                     button.disabled = false;
@@ -301,16 +315,66 @@
         });
     });
 
-    // After saving: nothing on the form can change anymore (Enroll New starts the next one); Print RF is enabled
-    function lockForm() {
-        $(form()).find('select, input').prop('disabled', true);
-        $('#enrollmentForm .js-lockable, #saveButton').prop('disabled', true);
-        $('#saveButton').text('Saved');
+    // After saving, Print RF is enabled. Enroll: nothing can change anymore (Enroll New starts the next one).
+    // Edit: the form stays editable; another change needs a new Assess before Save.
+    function afterSave() {
         $('#printRfButton').prop('disabled', false).attr('title', 'Print the Registration Form');
+
+        if (page().dataset.lockAfterSave === '1') {
+            $(form()).find('select, input').prop('disabled', true);
+            $('#enrollmentForm .js-lockable, #saveButton').prop('disabled', true);
+            $('#saveButton').text('Saved');
+        } else {
+            $('#saveButton').prop('disabled', true);
+        }
     }
 
     // Print RF: the Registration Form PDF in the modal's iframe
     $(document).on('click', '#printRfButton', function () {
         CissCrud.openPdf('#registrationFormModal', page().dataset.studentName, page().dataset.rfUrl);
+    });
+
+    // ---------- Edit Enrollment only ----------
+
+    // The term of the form, sent with Done Print / Delete (the server finds the enrollment by student + term)
+    const termData = () => $.param({ schlyear: form().elements.schlyear.value, semester: form().elements.semester.value });
+
+    // Done Print: "For Printing" -> enrolled
+    $(document).on('click', '#donePrintButton', function () {
+        const button = this;
+        button.disabled = true;
+
+        Swal.fire({ title: 'Processing...', text: 'Please wait while we process the enrollment.', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+
+        post(page().dataset.donePrintUrl, termData(), 'PUT')
+            .done(function (response) {
+                $(button).remove();
+                Swal.fire({ icon: 'success', title: 'Done Print', text: response.message });
+            })
+            .fail(function (xhr) {
+                button.disabled = false;
+                Swal.fire({ icon: 'error', title: 'Error!', text: errorMessage(xhr, 'Failed to process the enrollment.') });
+            });
+    });
+
+    // Delete Enrollment: confirm, delete, then back to the Edit Enrollment search
+    $(document).on('click', '#deleteEnrollmentButton', function () {
+        Swal.fire({
+            title: 'Delete this enrollment?',
+            text: "You won't be able to recover the enrollment of " + page().dataset.studentName + '.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it',
+        }).then(function (result) {
+            if (!result.isConfirmed) return;
+
+            post(page().dataset.deleteUrl, termData(), 'DELETE')
+                .done(function (response) {
+                    Swal.fire({ icon: 'success', title: 'Deleted', text: response.message })
+                        .then(() => Livewire.navigate(response.redirect));
+                })
+                .fail((xhr) => Swal.fire({ icon: 'error', title: 'Not deleted', text: errorMessage(xhr, 'Could not delete the enrollment.') }));
+        });
     });
 })();
