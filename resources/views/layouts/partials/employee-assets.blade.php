@@ -9,7 +9,8 @@
 @include('layouts.partials.livewire-head')
 
 <link rel="stylesheet" href="{{ asset('uilibs/css/main.css') }}">
-<link rel="stylesheet" href="{{ asset('uilibs/css/custom.css') }}">
+{{-- Versioned like x-script: ?v= reloads it whenever it changes; data-navigate-track does one full reload with wire:navigate --}}
+<link rel="stylesheet" href="{{ asset('uilibs/css/custom.css') }}?v={{ @filemtime(public_path('uilibs/css/custom.css')) }}" data-navigate-track>
 <link rel="stylesheet" href="{{ asset('uilibs/plugins/fontawesome-free-V6/css/all.min.css') }}">
 <link rel="stylesheet" href="{{ asset('uilibs/plugins/toastr/toastr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('uilibs/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">

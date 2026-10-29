@@ -248,6 +248,21 @@
 
 .modal {
     z-index: 9991;
+    /* Space above every modal for the fixed green topbar and its logo (#topbar is above modals: z-index 9995) */
+    --modal-top-gap: 5rem;
+}
+
+.modal-dialog {
+    margin-top: var(--modal-top-gap);
+}
+
+/* Centered and scrollable modals: keep their height inside the space left below the topbar */
+.modal-dialog-centered {
+    min-height: calc(100% - var(--modal-top-gap) - var(--bs-modal-margin));
+}
+
+.modal-dialog-scrollable {
+    height: calc(100% - var(--modal-top-gap) - var(--bs-modal-margin));
 }
 
 @media (min-width: 992px) {
