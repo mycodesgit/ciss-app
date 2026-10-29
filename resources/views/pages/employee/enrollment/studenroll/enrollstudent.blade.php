@@ -63,6 +63,7 @@
                                     </div>
                                     <div class="card-body card-body-bg-color d-grid gap-2">
                                         <a href="{{ route('employee.enrollment.enroll.index') }}" wire:navigate class="btn btn-secondary btn-sm">Enroll New</a>
+                                        <button type="button" class="btn btn-info btn-sm text-white js-lockable" id="addSubjectModalButton" data-bs-toggle="modal" data-bs-target="#addSubjectModal">Add Subject</button>
                                         <button type="button" class="btn btn-success btn-sm js-lockable" id="assessButton">Assess</button>
                                         {{-- Enabled after a successful Assess; any change of section, subjects, status, type or transferee needs a new Assess --}}
                                         <button type="button" class="btn btn-success btn-sm" id="saveButton" disabled>Save</button>

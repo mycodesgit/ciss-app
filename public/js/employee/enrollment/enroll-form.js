@@ -30,7 +30,8 @@
 
         subjects = new Map(JSON.parse(page().dataset.subjects || '[]').map((subject) => [subject.id, subject]));
         renderSubjectRows(); // Edit: the saved subjects; the saved fees stay until the next Assess
-        $('#subjectSelect').select2({ dropdownParent: $('#addSubjectModal'), width: '100%' });
+        $('#subjectSelect').select2({ theme: 'bootstrap4', dropdownParent: $('#addSubjectModal'), width: '100%' });
+        $(form()).find('.select2bs4').select2({ theme: 'bootstrap4', width: '100%' });
         setUpValidation();
     });
 
@@ -49,7 +50,15 @@
         fourPs: "Please select if 4P's Beneficiary.",
     };
 
-    // Required fields come from the `required` attributes; a missing one is outlined red with its message below
+    // What the user sees of a field: Select2's box for a select2bs4 select (the real select is hidden), else the field
+    function visibleField(element) {
+        const $element = $(element);
+        return $element.hasClass('select2-hidden-accessible') ? $element.next('.select2-container') : $element;
+    }
+
+    // Required fields come from the `required` attributes; a missing one is outlined red with its message below.
+    // For a Select2 select the message goes after Select2's box, so the theme's ".is-invalid + .select2-container"
+    // red outline and the ".is-invalid ~ .invalid-feedback" message both show.
     function setUpValidation() {
         $(form()).validate({
             ignore: [],
@@ -58,7 +67,7 @@
             messages: Object.fromEntries(Object.entries(MESSAGES).map(([name, text]) => [name, { required: text }])),
             highlight: (element) => element.classList.add('is-invalid'),
             unhighlight: (element) => element.classList.remove('is-invalid'),
-            errorPlacement: (error, element) => error.insertAfter(element),
+            errorPlacement: (error, element) => error.insertAfter(visibleField(element)),
         });
     }
 
@@ -69,8 +78,9 @@
         const invalid = elements.filter((element) => !$(element).valid());
         if (!invalid.length) return true;
 
-        invalid[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        invalid[0].focus();
+        const $first = visibleField(invalid[0]);
+        $first[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        ($first.find('.select2-selection')[0] || invalid[0]).focus();
         Swal.fire({
             icon: 'warning',
             title: 'Missing input',
@@ -189,7 +199,8 @@
                 renderSubjects();
             })
             .fail(function (xhr) {
-                select.value = '';
+                // Back to empty; "change.select2" only refreshes Select2's box (a plain "change" would load again)
+                $(select).val('').trigger('change.select2');
                 $('.js-program-name, .js-year-level').val('');
                 subjects = new Map();
                 renderSubjects();
