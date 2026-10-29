@@ -12,6 +12,7 @@ use App\Http\Controllers\Employee\Settings\SettingAcademicTermController;
 use App\Http\Controllers\Employee\Settings\SettingGradePassController;
 use App\Http\Controllers\Employee\Settings\SettingControlStatusController;
 use App\Http\Controllers\Employee\Settings\SettingCampusController;
+use App\Http\Controllers\Employee\Admission\AdmissionDashboardController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -65,6 +66,12 @@ Route::middleware('guest:web')->controller(EmployeeLoginController::class)->grou
 Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-back-history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [EmployeeLoginController::class, 'logout'])->name('logout');
+
+    // Admission module (menu key "admission-url")
+    Route::prefix('admission')->name('admission.')->middleware('menu.access:admission-url')->group(function () {
+        Route::get('/', [AdmissionDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/chart', [AdmissionDashboardController::class, 'chart'])->name('dashboard.chart');
+    });
 
     // Accounts / Settings module (menu key "setting-url")
     Route::prefix('settings')->name('settings.')->middleware('menu.access:setting-url')->group(function () {

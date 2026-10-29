@@ -77,7 +77,7 @@ return [
     */
     'employee_menu' => [
         'home-url' => ['label' => 'Home', 'icon' => 'fas fa-home', 'route' => 'employee.dashboard', 'always' => true],
-        'admission-url' => ['label' => 'Admission', 'icon' => 'fas fa-id-card', 'route' => null],
+        'admission-url' => ['label' => 'Admission', 'icon' => 'fas fa-id-card', 'route' => 'employee.admission.dashboard'],
         'enrollment-url' => ['label' => 'Enrollment', 'icon' => 'fas fa-laptop-code', 'route' => null],
         'scheduler-url' => ['label' => 'Scheduling', 'icon' => 'fas fa-calendar-alt', 'route' => null],
         'assessment-url' => ['label' => 'Assessment', 'icon' => 'fas fa-clipboard', 'route' => null],

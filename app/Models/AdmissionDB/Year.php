@@ -11,7 +11,13 @@ class Year extends Model
     protected $table = 'admission_year';
 
     protected $fillable = [
-        'adyear', 
-        'status', 
+        'adyear',
+        'status',
     ];
+
+    // The admission year currently switched "On"
+    public static function current()
+    {
+        return static::where('status', 'On')->value('adyear');
+    }
 }

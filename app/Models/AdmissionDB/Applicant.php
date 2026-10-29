@@ -11,6 +11,12 @@ class Applicant extends Model
 
     protected $table = 'ad_applicant_admission';
 
+    // p_status: the applicant's step in the admission process
+    public const STATUS_REGISTERED = 1;   // registered, no exam schedule yet
+    public const STATUS_SCHEDULED = 2;    // exam scheduled (examinee)
+    public const STATUS_WITH_RESULT = 3;  // exam score encoded
+    public const STATUS_CONFIRMED = 4;    // confirmed, ready for department interview
+
     protected $fillable = [
         'studagree',
         'year',
