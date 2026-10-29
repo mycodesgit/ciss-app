@@ -24,7 +24,78 @@
 
         subjects = new Map();
         $('#subjectSelect').select2({ dropdownParent: $('#addSubjectModal'), width: '100%' });
+        setUpValidation();
     });
+
+    // ---------- Validation (jQuery Validation, loaded in employee-assets) ----------
+
+    // Assess and Save both check every required field (so everything missing is highlighted at once)
+    const MESSAGES = {
+        class_id: 'Please select the Course Year & Section.',
+        studLevel: 'Please select the Student Level.',
+        studSch: 'Please select the Scholarship.',
+        studMajor: 'Please select the Major.',
+        studMinor: 'Please select the Minor.',
+        studStatus: 'Please select the Status.',
+        studType: 'Please select the Type.',
+        transferee: 'Please select Transferee/Shiftee.',
+        fourPs: "Please select if 4P's Beneficiary.",
+    };
+
+    // Required fields come from the `required` attributes; a missing one is outlined red with its message below
+    function setUpValidation() {
+        $(form()).validate({
+            ignore: [],
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            messages: Object.fromEntries(Object.entries(MESSAGES).map(([name, text]) => [name, { required: text }])),
+            highlight: (element) => element.classList.add('is-invalid'),
+            unhighlight: (element) => element.classList.remove('is-invalid'),
+            errorPlacement: (error, element) => error.insertAfter(element),
+        });
+    }
+
+    // Checks every required field; on a missing one: scroll to it, focus it and tell the user
+    function fieldsAreValid() {
+        const elements = Array.from(form().querySelectorAll('select[required], input[required]'));
+
+        const invalid = elements.filter((element) => !$(element).valid());
+        if (!invalid.length) return true;
+
+        invalid[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalid[0].focus();
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing input',
+            html: 'Please complete the highlighted field(s):<br><b>' +
+                invalid.map((element) => escape(fieldLabel(element))).join('<br>') + '</b>',
+        });
+
+        return false;
+    }
+
+    // The field's label text without the "*"
+    function fieldLabel(element) {
+        const label = element.closest('[class*="col-"]').querySelector('label');
+        return label ? label.textContent.replace('*', '').replace(':', '').trim() : element.name;
+    }
+
+    // A highlighted field is checked again as soon as it is changed, so the red outline goes away once filled
+    $(document).on('change', '#enrollForm select.is-invalid, #enrollForm input.is-invalid', function () {
+        $(this).valid();
+    });
+
+    // Server validation errors (422) on form fields: highlight them like the browser checks
+    function showFieldErrors(xhr) {
+        const errors = (xhr.responseJSON || {}).errors || {};
+        const fieldErrors = {};
+
+        Object.keys(errors).forEach(function (name) {
+            if (form().elements[name]) fieldErrors[name] = errors[name][0];
+        });
+
+        if (Object.keys(fieldErrors).length) $(form()).validate().showErrors(fieldErrors);
+    }
 
     // ---------- Requests ----------
 
@@ -154,10 +225,8 @@
     });
 
     $(document).on('click', '#assessButton', function () {
-        if (!form().elements.class_id.value) {
-            Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please select a Course Year & Section.' });
-            return;
-        }
+        if (!fieldsAreValid()) return;
+
         if (!subjects.size) {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'No subjects added.' });
             return;
@@ -189,13 +258,14 @@
             })
             .fail(function (xhr) {
                 clearAssessment();
+                showFieldErrors(xhr);
                 Swal.fire({ icon: 'warning', title: 'Assess', text: errorMessage(xhr, 'Could not assess the fees.') });
             })
             .always(() => { button.disabled = false; });
     });
 
     $(document).on('click', '#saveButton', function () {
-        if (!form().reportValidity()) return; // required Level, Scholarship, Type, 4P's...
+        if (!fieldsAreValid()) return;
 
         const button = this;
 
@@ -218,6 +288,7 @@
                 })
                 .fail(function (xhr) {
                     button.disabled = false;
+                    showFieldErrors(xhr);
                     const errors = (xhr.responseJSON || {}).errors || {};
 
                     // Full subjects: list them all
