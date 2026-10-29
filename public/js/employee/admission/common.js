@@ -1,7 +1,7 @@
 /**
  * Shared by the admission list pages (applicants.js, examinees.js, results.js): search form, the shared
  * modals (View Data with address, Schedule, Documents, Exam Result) and the Delete confirmation.
- * Uses CissCrud (public/js/employee/crud.js).
+ * Uses CissCrud (public/js/employee/crud.js) and CissAddress (public/js/employee/address.js).
  */
 window.AdmissionUi = (function () {
     'use strict';
@@ -75,145 +75,6 @@ window.AdmissionUi = (function () {
         previewResult(this);
     });
 
-    // ---------- Address (View Data modal): same ids and flow as the apply form (public/js/portal/apply.js) ----------
-    // #region > #province > #city > #barangay (select2bs4) fill the hidden *_name fields; #viewdatastudHnum and
-    // #zipcode complete #viewdatastudAddress. Lists come from the employee.locations.* routes (#applicantAddress data-*).
-    const Address = (function () {
-        function urlFor(key, id) {
-            return $('#applicantAddress').data(key).replace('__ID__', encodeURIComponent(id));
-        }
-
-        function rowsFrom(data) {
-            return Array.isArray(data) ? data : (data && Array.isArray(data.data) ? data.data : []);
-        }
-
-        function resetSelect(selector, placeholder) {
-            $(selector).html('<option value="">' + placeholder + '</option>').trigger('change.select2');
-        }
-
-        function fillSelect(selector, placeholder, rows, buildOption) {
-            const $select = $(selector).html('<option value="">' + placeholder + '</option>');
-            rows.forEach((row) => $select.append(buildOption(row)));
-            $select.trigger('change.select2');
-        }
-
-        function loadProvinces(regionId) {
-            return $.get(urlFor('provincesUrl', regionId)).done(function (data) {
-                fillSelect('#province', 'Select Province', rowsFrom(data), (p) => $('<option>').val(p.province_id).attr('data-name', p.name).text(p.name));
-            });
-        }
-
-        function loadCities(provinceId) {
-            return $.get(urlFor('citiesUrl', provinceId)).done(function (data) {
-                fillSelect('#city', 'Select City', rowsFrom(data), (c) => $('<option>').val(c.city_id).attr('data-name', c.name).attr('data-zip', c.zip_code || '').text(c.name));
-            });
-        }
-
-        function loadBarangays(cityId) {
-            return $.get(urlFor('barangaysUrl', cityId)).done(function (data) {
-                fillSelect('#barangay', 'Select Barangay', rowsFrom(data), (b) => $('<option>').val(b.id).attr('data-name', b.name).text(b.name));
-            });
-        }
-
-        function selectedName(select) {
-            return $(select).find(':selected').attr('data-name') || '';
-        }
-
-        // Same as the apply form: house no., barangay, city, province, region, zip code
-        function updateAddress() {
-            const fullAddress = [
-                $('#viewdatastudHnum').val(),
-                $('#brgy_name').val(),
-                $('#city_name').val(),
-                $('#province_name').val(),
-                $('#region_name').val(),
-                $('#zipcode').val(),
-            ].filter(Boolean).join(', ');
-
-            $('#viewdatastudAddress').val(fullAddress);
-        }
-
-        // ----- User changes (bound once; select2 fires "change" when an option is picked) -----
-        $(document).on('change', '#applicantAddress #region', function () {
-            $('#region_name').val(selectedName(this));
-            $('#province_name, #city_name, #brgy_name, #zipcode').val('');
-            resetSelect('#province', 'Select Province');
-            resetSelect('#city', 'Select City');
-            resetSelect('#barangay', 'Select Barangay');
-            if (this.value) loadProvinces(this.value);
-            updateAddress();
-        });
-
-        $(document).on('change', '#applicantAddress #province', function () {
-            $('#province_name').val(selectedName(this));
-            $('#city_name, #brgy_name, #zipcode').val('');
-            resetSelect('#city', 'Select City');
-            resetSelect('#barangay', 'Select Barangay');
-            if (this.value) loadCities(this.value);
-            updateAddress();
-        });
-
-        $(document).on('change', '#applicantAddress #city', function () {
-            $('#city_name').val(selectedName(this));
-            $('#zipcode').val($(this).find(':selected').attr('data-zip') || '');
-            $('#brgy_name').val('');
-            resetSelect('#barangay', 'Select Barangay');
-            if (this.value) loadBarangays(this.value);
-            updateAddress();
-        });
-
-        $(document).on('change', '#applicantAddress #barangay', function () {
-            $('#brgy_name').val(selectedName(this));
-            updateAddress();
-        });
-
-        $(document).on('input', '#applicantAddress #viewdatastudHnum', updateAddress);
-
-        // ----- select2bs4 on page load (like the apply form); dropdownParent keeps it usable inside the modal -----
-        document.addEventListener('livewire:navigated', function () {
-            const $modal = $('#applicantInfoModal');
-            if ($modal.length) {
-                $modal.find('.select2bs4').select2({ theme: 'bootstrap4', width: '100%', dropdownParent: $modal });
-            }
-        });
-
-        // ----- Show an applicant's saved address: pick each level by its saved name, then load the next list -----
-        function sameName(a, b) {
-            const normalize = (value) => String(value || '').trim().replace(/\s+/g, ' ').toUpperCase();
-            return normalize(a) !== '' && normalize(a) === normalize(b);
-        }
-
-        // Selects the option whose data-name matches; updates select2 without firing the change handlers
-        function pickByName(selector, name) {
-            const option = $(selector).find('option').toArray().find((o) => sameName(o.getAttribute('data-name'), name));
-            $(selector).val(option ? option.value : '').trigger('change.select2');
-            return option ? option.value : '';
-        }
-
-        function show(row) {
-            resetSelect('#province', 'Select Province');
-            resetSelect('#city', 'Select City');
-            resetSelect('#barangay', 'Select Barangay');
-
-            const regionId = pickByName('#region', row.region);
-            if (!regionId) return;
-
-            loadProvinces(regionId).done(function () {
-                const provinceId = pickByName('#province', row.province);
-                if (!provinceId) return;
-
-                loadCities(provinceId).done(function () {
-                    const cityId = pickByName('#city', row.city);
-                    if (!cityId) return;
-
-                    loadBarangays(cityId).done(() => pickByName('#barangay', row.brgy));
-                });
-            });
-        }
-
-        return { show };
-    })();
-
     // Row actions used by both pages (spread into a page's CissCrud actions)
     const actions = {
         view(row) {
@@ -223,7 +84,7 @@ window.AdmissionUi = (function () {
                 'fname', 'mname', 'lname', 'ext', 'gender', 'bday', 'civil_status',
                 'region', 'province', 'city', 'brgy', 'hnum', 'zcode', 'address',
             ]);
-            Address.show(row);
+            CissAddress.show(row); // public/js/employee/address.js
             $modal.modal('show');
         },
 

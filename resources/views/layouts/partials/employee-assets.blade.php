@@ -166,5 +166,7 @@
 <script src="{{ asset('uilibs/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 {{-- Shared "DataTable + modal forms" behaviour for employee pages (CissCrud) --}}
 <x-script src="js/employee/crud.js" />
+{{-- Shared address fields (x-employee.address-fields): Region > Province > City > Barangay (CissAddress) --}}
+<x-script src="js/employee/address.js" />
 {{-- Tracked: wire:navigate does a full reload when crossing into the public pages (assets) --}}
 <script src="{{ asset('uilibs/js/contextmenu.js') }}?area=employee" data-navigate-track></script>

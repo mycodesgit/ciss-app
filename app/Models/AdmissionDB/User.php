@@ -128,6 +128,15 @@ class User extends Authenticatable
         return in_array((int) $this->role, self::GRADE_CORRECTION_ROLES, true);
     }
 
+    // Administrator (0), Guidance Officer (1), Guidance Staff (2) and Registrar (3): Enrollment > Student Information.
+    // Registrar Staff (4) is not included.
+    public const STUDENT_INFO_ROLES = [0, 1, 2, 3];
+
+    public function canManageStudentInfo(): bool
+    {
+        return in_array((int) $this->role, self::STUDENT_INFO_ROLES, true);
+    }
+
     // Guidance Officer (1) and Guidance Staff (2) can view interview results but not record them
     public function canRecordInterviews(): bool
     {

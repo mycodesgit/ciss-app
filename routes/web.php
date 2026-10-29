@@ -45,6 +45,7 @@ use App\Http\Controllers\Employee\Enrollment\GradesheetController;
 use App\Http\Controllers\Employee\Enrollment\GradeCorrectionController;
 use App\Http\Controllers\Employee\Enrollment\StudentTransferController;
 use App\Http\Controllers\Employee\Enrollment\SubjectController;
+use App\Http\Controllers\Employee\Enrollment\StudentInformationController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -342,6 +343,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::put('/{subject}', 'update')->name('update');
             // Delete = Inactive (and back to Active): subjects are never removed
             Route::put('/{subject}/status', 'updateStatus')->name('status');
+        });
+
+        // Student Information (Administrators, Registrar, Guidance): search students, view / edit a student ({student} = Student ID)
+        Route::prefix('student-info')->name('student-info.')->middleware('student-info')->controller(StudentInformationController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/{student}', 'show')->name('show');
+            Route::put('/{student}', 'update')->name('update');
         });
 
         // Transferred Student (Registrar, Administrators): add another campus to a student's records
