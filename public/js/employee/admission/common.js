@@ -278,29 +278,8 @@ window.AdmissionUi = (function () {
         },
     };
 
-    // ---------- PDF modals (shared/pdf-modal.blade.php) ----------
-    // The iframe's src is the PDF route (dompdf), shown in the browser's PDF viewer
-    function openPdf(modalId, name, url) {
-        const $modal = $(modalId);
-
-        $modal.find('.js-pdf-name').text('- ' + name);
-        $modal.find('.js-pdf-loading').removeClass('d-none');
-        $modal.find('.js-pdf-frame').attr('src', url);
-        $modal.modal('show');
-    }
-
-    // Hide "Loading..." when the PDF has loaded. iframe "load" doesn't bubble, so it is caught in the capture
-    // phase on document (works for every new modal after wire:navigate).
-    document.addEventListener('load', function (e) {
-        if (!e.target.classList || !e.target.classList.contains('js-pdf-frame') || !e.target.getAttribute('src')) return;
-
-        $(e.target).closest('.modal').find('.js-pdf-loading').addClass('d-none');
-    }, true);
-
-    // Unload the PDF when the modal closes, so the next applicant never shows the previous one
-    $(document).on('hidden.bs.modal', '.js-pdf-modal', function () {
-        $(this).find('.js-pdf-frame').attr('src', 'about:blank').removeAttr('src');
-    });
+    // PDF modals (x-employee.pdf-modal) are opened by CissCrud.openPdf (crud.js)
+    const openPdf = CissCrud.openPdf;
 
     // Search: reload the table with the new filters (no page reload)
     $(document).on('submit', '#admissionSearchForm', function (e) {

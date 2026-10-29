@@ -34,6 +34,7 @@ use App\Http\Controllers\Employee\Admission\Config\ConfigDateController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigTimeController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigVenueController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigYearController;
+use App\Http\Controllers\Employee\Enrollment\EnrollmentDashboardController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -224,6 +225,17 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
                     Route::delete("/{{$parameter}}", 'destroy')->name('destroy');
                 });
             }
+        });
+    });
+
+    // Enrollment module (menu key "enrollment-url")
+    Route::prefix('enrollment')->name('enrollment.')->middleware('menu.access:enrollment-url')->group(function () {
+        Route::controller(EnrollmentDashboardController::class)->group(function () {
+            Route::get('/', 'index')->name('dashboard');
+            Route::get('/charts', 'charts')->name('dashboard.charts');
+            Route::get('/students/{group}/pdf', 'studentsPdf')
+                ->whereIn('group', array_keys(EnrollmentDashboardController::STUDENT_GROUPS))
+                ->name('dashboard.students-pdf');
         });
     });
 

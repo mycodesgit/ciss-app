@@ -30,6 +30,26 @@ class ConfigureCurrent extends Model
         'set_status',
     ];
 
+    public const STATUS_ACTIVE = 2;
+
+    // The school year & semester currently set to Active
+    public static function active(): ?self
+    {
+        return static::where('set_status', self::STATUS_ACTIVE)->first();
+    }
+
+    // The term configured just before this one
+    public function previous(): ?self
+    {
+        return static::where('id', '<', $this->id)->orderByDesc('id')->first();
+    }
+
+    // e.g. "1st Semester 2025-2026"
+    public function getLabelAttribute(): string
+    {
+        return $this->semester_name . ' ' . $this->schlyear;
+    }
+
     public function getSemesterNameAttribute(): string
     {
         return self::SEMESTERS[$this->semester] ?? (string) $this->semester;

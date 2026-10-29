@@ -190,10 +190,36 @@ window.CissCrud = (function () {
             .always(() => $submit.prop('disabled', false));
     });
 
+    // ---------- PDF modals (x-employee.pdf-modal) ----------
+
+    // The iframe's src is the PDF route (dompdf), shown in the browser's PDF viewer. title is optional.
+    function openPdf(modalId, name, url, title) {
+        const $modal = $(modalId);
+
+        if (title) $modal.find('.js-pdf-title').text(title);
+        $modal.find('.js-pdf-name').text(name ? '- ' + name : '');
+        $modal.find('.js-pdf-loading').removeClass('d-none');
+        $modal.find('.js-pdf-frame').attr('src', url);
+        $modal.modal('show');
+    }
+
+    // Hide "Loading..." when the PDF has loaded. iframe "load" doesn't bubble, so it is caught in the capture
+    // phase on document (works for every new modal after wire:navigate).
+    document.addEventListener('load', function (e) {
+        if (!e.target.classList || !e.target.classList.contains('js-pdf-frame') || !e.target.getAttribute('src')) return;
+
+        $(e.target).closest('.modal').find('.js-pdf-loading').addClass('d-none');
+    }, true);
+
+    // Unload the PDF when the modal closes, so the next one never shows the previous PDF
+    $(document).on('hidden.bs.modal', '.js-pdf-modal', function () {
+        $(this).find('.js-pdf-frame').attr('src', 'about:blank').removeAttr('src');
+    });
+
     // Capitalize the first letter of every word (class js-capitalize)
     $(document).on('input', '.js-capitalize', function () {
         this.value = this.value.replace(/(^|\s)(\S)/g, (m, space, letter) => space + letter.toUpperCase());
     });
 
-    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send, urlFor };
+    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send, urlFor, openPdf };
 })();
