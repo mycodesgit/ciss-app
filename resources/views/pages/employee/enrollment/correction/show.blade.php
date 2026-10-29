@@ -42,9 +42,10 @@
                     </div>
 
                     <div class="alert alert-warning small">
-                        <i class="ti ti-alert-triangle"></i>
-                        Every change here is an official correction: it is saved right away (after you confirm), even for submitted grades,
-                        and logged with your name. Submitted grades stay submitted.
+                        <i class="ti ti-lock"></i>
+                        Grades are locked. Click <strong>Unlock</strong> on a student and enter the grades password to correct that student's grade
+                        (unlocked for 5 minutes). Every correction is official: it is saved after you confirm, logged with your name, and the
+                        row locks again. Submitted grades stay submitted.
                     </div>
 
                     <div class="card card-animate">
@@ -66,15 +67,39 @@
                                             <th>Equivalent</th>
                                             <th>Unit</th>
                                             <th>Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr><td colspan="8" class="text-center text-muted py-3"><span class="spinner-border spinner-border-sm me-2"></span> Loading students...</td></tr>
+                                        <tr><td colspan="9" class="text-center text-muted py-3"><span class="spinner-border spinner-border-sm me-2"></span> Loading students...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Unlock a row: the campus grades password (checked by the server) --}}
+        <div class="modal fade" id="unlockCorrectionModal" tabindex="-1" aria-labelledby="unlockCorrectionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="unlockCorrectionModalLabel"><i class="ti ti-lock-open"></i> Unlock Grade</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="unlockCorrectionForm" autocomplete="off">
+                        <div class="modal-body">
+                            <p class="mb-2 js-unlock-question"></p>
+                            <label class="form-label small"><span class="badge bg-warning text-dark">Enter the grades password here</span></label>
+                            <input type="password" name="password" class="form-control form-control-sm" required autocomplete="new-password">
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="submit" class="btn btn-success">Unlock</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

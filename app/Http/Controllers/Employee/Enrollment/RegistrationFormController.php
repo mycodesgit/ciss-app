@@ -18,6 +18,7 @@ use App\Models\EnrollmentDB\Student;
 use App\Models\ScheduleDB\EnPrograms;
 use App\Models\ScholarshipDB\Scholar;
 use App\Models\SettingDB\ConfigureCurrent;
+use App\Support\CampusList;
 
 /**
  * Print RF: the Registration Form (PDF) of an enrollment in the user's campus, the src of the PDF modal's iframe.
@@ -44,7 +45,7 @@ class RegistrationFormController extends Controller
         $enrollment = StudEnrolmentHistory::where('studentID', $student)
             ->where('schlyear', $data['schlyear'])
             ->where('semester', $data['semester'])
-            ->whereIn('campus', $campuses)
+            ->whereCampusIn('campus', $campuses)
             ->firstOrFail();
 
         $schedule = config('database.connections.schedule.database');
@@ -54,7 +55,7 @@ class RegistrationFormController extends Controller
             ->where('studgrades.studID', $enrollment->studentID)
             ->where('sub_offered.schlyear', $enrollment->schlyear)
             ->where('sub_offered.semester', $enrollment->semester)
-            ->where('sub_offered.campus', $enrollment->campus)
+            ->whereIn('sub_offered.campus', CampusList::split($enrollment->campus))
             ->orderBy('sub_offered.subCode')
             ->get(['sub_offered.subCode', 'sub_offered.subSec', 'sub_offered.subUnit', 'sub_offered.lecFee', 'sub_offered.labFee', 'sub_offered.isType', 'subjects.sub_name', 'subjects.sub_title']);
 
@@ -72,6 +73,7 @@ class RegistrationFormController extends Controller
 
         $user = $this->user();
         $poster = User::find($enrollment->postedBy);
+        $campus = CampusList::current($enrollment->campus); // a transferred student's list: the campus they are at now
 
         return PDF::loadView('pdf.registration-form', [
             'enrollment' => $enrollment,
@@ -79,7 +81,7 @@ class RegistrationFormController extends Controller
             'scholarship' => Scholar::whereKey($enrollment->studSch)->value('scholar_name'),
             'programAcronym' => EnPrograms::where('progCod', $enrollment->progCod)->value('progAcronym'),
             'semesterName' => strtoupper(ConfigureCurrent::SEMESTERS[(int) $enrollment->semester] ?? ''),
-            'header' => in_array($enrollment->campus, self::HEADERS, true) ? "studrfheader-{$enrollment->campus}.png" : 'studrfheader.png',
+            'header' => in_array($campus, self::HEADERS, true) ? "studrfheader-{$campus}.png" : 'studrfheader.png',
             'subjects' => $subjects,
             'fees' => $fees,
             'payments' => $payments,

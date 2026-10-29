@@ -43,6 +43,7 @@ use App\Http\Controllers\Employee\Enrollment\DuplicateFeesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentHistoryController;
 use App\Http\Controllers\Employee\Enrollment\GradesheetController;
 use App\Http\Controllers\Employee\Enrollment\GradeCorrectionController;
+use App\Http\Controllers\Employee\Enrollment\StudentTransferController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -303,6 +304,16 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/subjects/{subject}/students', 'students')->whereNumber('subject')->name('students');
             Route::put('/grades/{grade}', 'correctGrade')->whereNumber('grade')->name('grade');
             Route::put('/grades/{grade}/completion', 'correctCompletion')->whereNumber('grade')->name('completion');
+            // Grades password: at most 10 tries a minute
+            Route::put('/grades/{grade}/unlock', 'unlock')->whereNumber('grade')->middleware('throttle:10,1')->name('unlock');
+        });
+
+        // Transferred Student (Registrar, Administrators): add another campus to a student's records
+        Route::prefix('transfers')->name('transfers.')->middleware('registrar')->controller(StudentTransferController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/lookup', 'lookup')->name('lookup');
+            Route::post('/', 'store')->name('store');
         });
 
         // Enrollment History: search students, view a student's enrollments, print the Pre-Enrollment Form

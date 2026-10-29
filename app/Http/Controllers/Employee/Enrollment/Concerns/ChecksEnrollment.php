@@ -46,7 +46,7 @@ trait ChecksEnrollment
             $this->failEnrollment('Enrollment is not open for the selected school year and semester.');
         }
 
-        $student = Student::where('stud_id', $data['stud_id'])->whereIn('campus', $this->campuses())->first();
+        $student = Student::where('stud_id', $data['stud_id'])->whereCampusIn('campus', $this->campuses())->first();
 
         if (! $student) {
             $this->failEnrollment("Student ID Number {$data['stud_id']} does not exist in your campus.");

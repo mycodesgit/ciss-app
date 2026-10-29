@@ -245,7 +245,7 @@ class EditEnrollmentController extends Controller
             'schlyear.in' => 'You have no access to edit enrollments of this school year.',
         ], ['stud_id' => 'Student ID Number']);
 
-        $student = Student::where('stud_id', $data['stud_id'])->whereIn('campus', $this->campuses())->first();
+        $student = Student::where('stud_id', $data['stud_id'])->whereCampusIn('campus', $this->campuses())->first();
         if (! $student) {
             $this->failEnrollment("Student ID Number {$data['stud_id']} does not exist in your campus.");
         }
@@ -253,7 +253,7 @@ class EditEnrollmentController extends Controller
         $enrollment = StudEnrolmentHistory::where('studentID', $student->stud_id)
             ->where('schlyear', $data['schlyear'])
             ->where('semester', $data['semester'])
-            ->whereIn('campus', $this->campuses())
+            ->whereCampusIn('campus', $this->campuses())
             ->first();
 
         $term = ConfigureCurrent::where('schlyear', $data['schlyear'])->where('semester', $data['semester'])->first()

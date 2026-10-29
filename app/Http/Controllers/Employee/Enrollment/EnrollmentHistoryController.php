@@ -42,7 +42,7 @@ class EnrollmentHistoryController extends Controller
             return response()->json(['data' => []]);
         }
 
-        $students = Student::whereIn('campus', $this->campuses())
+        $students = Student::whereCampusIn('campus', $this->campuses())
             ->where(fn ($where) => $where->where('lname', 'like', '%' . addcslashes($query, '%_\\') . '%')->orWhere('stud_id', $query))
             ->orderBy('lname')->orderBy('fname')
             ->limit(self::MAX_RESULTS)
@@ -65,7 +65,7 @@ class EnrollmentHistoryController extends Controller
 
         $rows = StudEnrolmentHistory::leftJoin("{$programs} as programs", 'program_en_history.progCod', '=', 'programs.progCod')
             ->where('program_en_history.studentID', $student->stud_id)
-            ->whereIn('program_en_history.campus', $this->campuses())
+            ->whereCampusIn('program_en_history.campus', $this->campuses())
             ->orderBy('program_en_history.schlyear')
             ->orderBy('program_en_history.semester')
             ->get([
@@ -98,6 +98,6 @@ class EnrollmentHistoryController extends Controller
     // The student with this Student ID in the user's campus (404 otherwise)
     private function studentOfCampus(string $studentId): Student
     {
-        return Student::where('stud_id', strtoupper(trim($studentId)))->whereIn('campus', $this->campuses())->firstOrFail();
+        return Student::where('stud_id', strtoupper(trim($studentId)))->whereCampusIn('campus', $this->campuses())->firstOrFail();
     }
 }

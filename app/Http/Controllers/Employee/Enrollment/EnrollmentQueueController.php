@@ -117,7 +117,7 @@ class EnrollmentQueueController extends Controller
         $rows = StudEnrolmentHistory::join('students', 'program_en_history.studentID', '=', 'students.stud_id')
             ->where('program_en_history.schlyear', $term->schlyear)
             ->where('program_en_history.semester', $term->semester)
-            ->whereIn('program_en_history.campus', $this->campuses())
+            ->whereCampusIn('program_en_history.campus', $this->campuses())
             ->whereIn('program_en_history.status', array_keys(self::PRE_ENROLLED_STATUSES))
             ->orderBy('program_en_history.created_at')
             ->get([

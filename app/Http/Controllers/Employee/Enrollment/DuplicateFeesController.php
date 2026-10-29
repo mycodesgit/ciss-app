@@ -16,6 +16,7 @@ use App\Models\EnrollmentDB\Grade;
 use App\Models\EnrollmentDB\StudEnrolmentHistory;
 use App\Models\EnrollmentDB\Student;
 use App\Models\SettingDB\ConfigureCurrent;
+use App\Support\CampusList;
 
 /**
  * Enrollment > Edit Dup. Fees: remove fee lines that were saved twice in a student's appraisal of a term.
@@ -45,7 +46,7 @@ class DuplicateFeesController extends Controller
 
         return response()->json(['url' => route('employee.enrollment.dup-fees.show', [
             'student' => $student->stud_id,
-            'campus' => $enrollment->campus,
+            'campus' => $request->input('campus'),
             'schlyear' => $term->schlyear,
             'semester' => $term->semester,
         ])]);
@@ -64,11 +65,11 @@ class DuplicateFeesController extends Controller
             ->where('studgrades.studID', $student->stud_id)
             ->where('sub_offered.schlyear', $term->schlyear)
             ->where('sub_offered.semester', $term->semester)
-            ->where('sub_offered.campus', $enrollment->campus)
+            ->whereIn('sub_offered.campus', CampusList::split($enrollment->campus))
             ->get(['sub_offered.lecFee', 'sub_offered.labFee']);
 
         $poster = User::find($enrollment->postedBy);
-        $query = ['student' => $student->stud_id, 'campus' => $enrollment->campus, 'schlyear' => $term->schlyear, 'semester' => $term->semester];
+        $query = ['student' => $student->stud_id, 'campus' => $request->input('campus'), 'schlyear' => $term->schlyear, 'semester' => $term->semester];
 
         return view('pages.employee.enrollment.dupfees.show', [
             'student' => $student,
@@ -144,7 +145,7 @@ class DuplicateFeesController extends Controller
             'semester' => ['required', Rule::in(array_keys(ConfigureCurrent::SEMESTERS))],
         ], ['stud_id.regex' => 'The Student ID Number must look like 2024-0001-K.'], ['stud_id' => 'Student ID Number']);
 
-        $student = Student::where('stud_id', $data['stud_id'])->where('campus', $data['campus'])->first();
+        $student = Student::where('stud_id', $data['stud_id'])->whereCampusIn('campus', [$data['campus']])->first();
         if (! $student) {
             $this->failEnrollment("Student ID Number {$data['stud_id']} does not exist in this campus.");
         }
@@ -155,7 +156,7 @@ class DuplicateFeesController extends Controller
         $enrollment = StudEnrolmentHistory::where('studentID', $student->stud_id)
             ->where('schlyear', $term->schlyear)
             ->where('semester', $term->semester)
-            ->where('campus', $data['campus'])
+            ->whereCampusIn('campus', [$data['campus']])
             ->first();
 
         if (! $enrollment) {

@@ -19,7 +19,7 @@ class EnsureRegistrar
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('web')->user()?->canCorrectGrades()) {
-            return $this->denyAccess($request, 'Correction of Grades', 'This page is only available to the Registrar and Administrators.');
+            return $this->denyAccess($request, 'this page', 'This page is only available to the Registrar and Administrators.');
         }
 
         return $next($request);

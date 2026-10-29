@@ -220,7 +220,7 @@ trait BuildsEnrollmentForm
     {
         $enrolled = StudEnrolmentHistory::where('schlyear', $term->schlyear)
             ->where('semester', $term->semester)
-            ->where('campus', $class->campus)
+            ->whereCampusIn('campus', [$class->campus])
             ->where('progCod', $class->progCode)
             ->where('studYear', $class->studYear)
             ->where('studSec', $class->studSec)
