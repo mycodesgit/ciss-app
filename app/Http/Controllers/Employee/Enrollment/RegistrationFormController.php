@@ -35,12 +35,16 @@ class RegistrationFormController extends Controller
         $data = $request->validate([
             'schlyear' => ['required', 'string'],
             'semester' => ['required', Rule::in(array_keys(ConfigureCurrent::SEMESTERS))],
+            'campus' => ['nullable', Rule::in(array_keys(config('ciss.campuses')))],
         ]);
+
+        // Administrators may print any campus (?campus=, e.g. from Edit Dup. Fees); everyone else only their own
+        $campuses = $this->user()->isAdministrator() && ! empty($data['campus']) ? [$data['campus']] : $this->campuses();
 
         $enrollment = StudEnrolmentHistory::where('studentID', $student)
             ->where('schlyear', $data['schlyear'])
             ->where('semester', $data['semester'])
-            ->whereIn('campus', $this->campuses())
+            ->whereIn('campus', $campuses)
             ->firstOrFail();
 
         $schedule = config('database.connections.schedule.database');

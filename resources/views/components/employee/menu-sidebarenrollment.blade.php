@@ -25,7 +25,7 @@
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.enrollment.dup-fees.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.dup-fees.*')])>
             <i class="ti ti-receipt"></i><span class="nav-text">Edit Dup. Fees</span>
         </a>
     </li>

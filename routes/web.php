@@ -39,6 +39,7 @@ use App\Http\Controllers\Employee\Enrollment\EnrollStudentController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentFormController;
 use App\Http\Controllers\Employee\Enrollment\RegistrationFormController;
 use App\Http\Controllers\Employee\Enrollment\EditEnrollmentController;
+use App\Http\Controllers\Employee\Enrollment\DuplicateFeesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -271,6 +272,15 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::put('/{student}', 'update')->name('update');
             Route::put('/{student}/done-print', 'donePrint')->name('done-print');
             Route::delete('/{student}', 'destroy')->name('destroy');
+        });
+
+        // Edit Dup. Fees: search -> a student's appraisal lines of a term (?campus=&schlyear=&semester=), delete duplicates
+        Route::prefix('dup-fees')->name('dup-fees.')->controller(DuplicateFeesController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'find')->name('find');
+            Route::get('/{student}', 'show')->name('show');
+            Route::get('/{student}/fees', 'list')->name('list');
+            Route::delete('/{student}/fees/{appraisal}', 'destroy')->whereNumber('appraisal')->name('destroy');
         });
 
         // Enroll Student: queue panel (the user's own counter) and List of Pre-Enrolled Students

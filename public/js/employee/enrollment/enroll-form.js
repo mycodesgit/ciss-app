@@ -341,7 +341,7 @@
     }
 
     // Print RF: the Registration Form PDF in the modal's iframe
-    $(document).on('click', '#printRfButton', function () {
+    $(document).on('click', '#enrollmentForm #printRfButton', function () {
         CissCrud.openPdf('#registrationFormModal', page().dataset.studentName, page().dataset.rfUrl);
     });
 
