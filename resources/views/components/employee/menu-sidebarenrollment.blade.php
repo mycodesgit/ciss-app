@@ -8,14 +8,14 @@
         </a>
     </li>
 
-    {{-- Pages not built yet (links to be added) --}}
+    {{-- Pages not built yet link to # --}}
     <li>
         <a href="#" class="nav-link">
             <i class="ti ti-user-plus"></i><span class="nav-text">Add Student</span>
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.enrollment.enroll.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.enroll.*')])>
             <i class="ti ti-device-laptop"></i><span class="nav-text">Enroll Student</span>
         </a>
     </li>

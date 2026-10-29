@@ -35,6 +35,10 @@ use App\Http\Controllers\Employee\Admission\Config\ConfigTimeController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigVenueController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigYearController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentDashboardController;
+use App\Http\Controllers\Employee\Enrollment\EnrollStudentController;
+use App\Http\Controllers\Employee\Enrollment\EnrollmentFormController;
+use App\Http\Controllers\Employee\Enrollment\RegistrationFormController;
+use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -236,6 +240,33 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/students/{group}/pdf', 'studentsPdf')
                 ->whereIn('group', array_keys(EnrollmentDashboardController::STUDENT_GROUPS))
                 ->name('dashboard.students-pdf');
+        });
+
+        // Enroll Student: search -> enrollment form ({student} = Student ID; schlyear & semester are query / form values)
+        Route::prefix('enroll')->name('enroll.')->group(function () {
+            Route::controller(EnrollStudentController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/find', 'findStudent')->name('find');
+            });
+
+            Route::controller(EnrollmentFormController::class)->group(function () {
+                Route::get('/{student}', 'create')->name('create');
+                Route::get('/{student}/section-subjects', 'sectionSubjects')->name('section-subjects');
+                Route::post('/{student}/assess', 'assess')->name('assess');
+                Route::post('/{student}', 'store')->name('store');
+            });
+
+            // Print RF (Registration Form PDF) of an enrolled student: ?schlyear=&semester=
+            Route::get('/{student}/registration-form', [RegistrationFormController::class, 'show'])->name('registration-form');
+        });
+
+        // Enroll Student: queue panel (the user's own counter) and List of Pre-Enrolled Students
+        Route::prefix('queue')->name('queue.')->controller(EnrollmentQueueController::class)->group(function () {
+            Route::put('/status', 'updateStatus')->name('status');
+            Route::put('/category', 'updateCategory')->name('category');
+            Route::post('/next', 'next')->name('next');
+            Route::post('/call', 'call')->name('call');
+            Route::get('/pre-enrolled', 'preEnrolled')->name('pre-enrolled');
         });
     });
 
