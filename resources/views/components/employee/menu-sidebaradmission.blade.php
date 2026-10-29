@@ -39,4 +39,9 @@
             <i class="ti ti-id-badge"></i><span class="nav-text">Availability Slots</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.config.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.config.*')])>
+            <i class="ti ti-settings"></i><span class="nav-text">Configure Admission</span>
+        </a>
+    </li>
 </ul>

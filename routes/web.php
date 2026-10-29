@@ -20,6 +20,13 @@ use App\Http\Controllers\Employee\Admission\AdmissionConfirmController;
 use App\Http\Controllers\Employee\Admission\AdmissionPreEnrollmentController;
 use App\Http\Controllers\Employee\Admission\AdmissionAcceptedController;
 use App\Http\Controllers\Employee\Admission\AdmissionSlotsController;
+use App\Http\Controllers\Employee\Admission\AdmissionConfigController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigProgramController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigStrandController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigDateController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigTimeController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigVenueController;
+use App\Http\Controllers\Employee\Admission\Config\ConfigYearController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -136,6 +143,30 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('slots')->name('slots.')->controller(AdmissionSlotsController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/list', 'list')->name('list');
+        });
+
+        // Configuration: Configure Admission (one page, a tab per setting; each tab has list / store / update / destroy)
+        Route::prefix('config')->name('config.')->group(function () {
+            Route::get('/', [AdmissionConfigController::class, 'index'])->name('index');
+            Route::get('/dates/options', [ConfigDateController::class, 'options'])->name('dates.options');
+
+            $sections = [
+                'programs' => [ConfigProgramController::class, 'program'],
+                'strands' => [ConfigStrandController::class, 'strand'],
+                'dates' => [ConfigDateController::class, 'date'],
+                'times' => [ConfigTimeController::class, 'time'],
+                'venues' => [ConfigVenueController::class, 'venue'],
+                'years' => [ConfigYearController::class, 'year'],
+            ];
+
+            foreach ($sections as $section => [$controller, $parameter]) {
+                Route::prefix($section)->name("{$section}.")->controller($controller)->group(function () use ($parameter) {
+                    Route::get('/', 'list')->name('list');
+                    Route::post('/', 'store')->name('store');
+                    Route::put("/{{$parameter}}", 'update')->name('update');
+                    Route::delete("/{{$parameter}}", 'destroy')->name('destroy');
+                });
+            }
         });
     });
 
