@@ -23,6 +23,13 @@ class UpdateApplicantRequest extends FormRequest
             'gender' => ['required', Rule::in(['Male', 'Female'])],
             'bday' => ['required', 'date', 'before:today'],
             'civil_status' => ['required', Rule::in(['Single', 'Married', 'Divorced', 'Widowed', 'Separated'])],
+            // Address parts are saved as names (same as the apply form); address is the combined line
+            'region' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'brgy' => ['nullable', 'string', 'max:255'],
+            'hnum' => ['nullable', 'string', 'max:255'],
+            'zcode' => ['nullable', 'string', 'max:20'],
             'address' => ['required', 'string', 'max:500'],
         ];
     }
@@ -35,6 +42,9 @@ class UpdateApplicantRequest extends FormRequest
             'lname' => 'last name',
             'ext' => 'name extension',
             'bday' => 'birthday',
+            'brgy' => 'barangay',
+            'hnum' => 'house no.',
+            'zcode' => 'zip code',
         ];
     }
 }

@@ -123,5 +123,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/admission/dashboard.js') }}"></script>
+    <x-script src="js/employee/admission/dashboard.js" />
 @endpush

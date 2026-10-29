@@ -19,27 +19,6 @@
 
     const text = $.fn.dataTable.render.text();
 
-    // Stanine + remark preview for a raw score (the server computes the saved values the same way)
-    function previewResult(input) {
-        const stanines = JSON.parse(input.dataset.stanines);
-        const remarks = JSON.parse(input.dataset.remarks);
-        const score = parseInt(input.value, 10);
-
-        let stanine = null;
-        if (score >= 1) {
-            const bound = Object.keys(stanines).map(Number).sort((a, b) => a - b).find((max) => score <= max);
-            stanine = bound ? stanines[bound] : null;
-        }
-
-        const $modal = $(input).closest('.modal');
-        $modal.find('.js-stanine').val(stanine || '');
-        $modal.find('.js-remark').val(stanine ? remarks[stanine] : '');
-    }
-
-    $(document).on('input', '.js-raw-score', function () {
-        previewResult(this);
-    });
-
     CissCrud.register({
         pageId: 'examinees',
         table: '#examlistTable',
@@ -66,14 +45,6 @@
             { data: null, orderable: false, searchable: false, render: (data, type, row) => row.can_manage ? ACTIONS : '' },
         ],
         actions: Object.assign({}, AdmissionUi.actions, {
-            result(examinee) {
-                const { $modal, form } = CissCrud.openFor('#resultModal', examinee);
-                AdmissionUi.showFields($modal, examinee);
-                form.elements.raw_score.value = examinee.raw_score ?? '';
-                previewResult(form.elements.raw_score);
-                $modal.modal('show');
-            },
-
             push(examinee) {
                 AdmissionUi.confirmThen({
                     title: 'Push to Examination Result List?',

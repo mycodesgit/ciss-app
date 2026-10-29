@@ -17,4 +17,9 @@
             <i class="ti ti-file-check"></i><span class="nav-text">List of Examinee</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.results.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.results.*')])>
+            <i class="ti ti-report-analytics"></i><span class="nav-text">Examination Results</span>
+        </a>
+    </li>
 </ul>

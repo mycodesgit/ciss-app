@@ -143,5 +143,5 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('js/employee/settings/users.js') }}"></script>
+    <x-script src="js/employee/settings/users.js" />
 @endpush

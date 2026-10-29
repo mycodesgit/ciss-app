@@ -12,6 +12,7 @@ use App\Models\AdmissionDB\Strands;
 use App\Models\AdmissionDB\Time;
 use App\Models\AdmissionDB\Venue;
 use App\Models\AdmissionDB\Year;
+use App\Models\SettingDB\Region;
 
 /**
  * Shared by the admission list pages (List of Applicant, List of Examinee):
@@ -42,9 +43,28 @@ trait ManagesApplicants
             'campuses' => $user->canViewAllCampuses() ? $campuses : [$user->campus => $campuses[$user->campus] ?? $user->campus],
             'userCampus' => $user->campus,
             'strands' => Strands::orderBy('strand')->get(['code', 'strand']),
+            'regions' => Region::orderBy('name')->get(['region_id', 'name']),
             'schedules' => $this->examSchedules(),
             'venues' => $this->venues(),
         ];
+    }
+
+    // Values for the shared exam result modal (raw score -> stanine / remark preview)
+    protected function resultOptions(): array
+    {
+        return [
+            'stanines' => config('ciss.stanines'),
+            'stanineRemarks' => config('ciss.stanine_remarks'),
+            'passingScore' => config('ciss.passing_scores')[$this->user()->campus] ?? null,
+            'maxRawScore' => max(array_keys(config('ciss.stanines'))),
+        ];
+    }
+
+    protected function validateRawScore(Request $request): int
+    {
+        return (int) $request->validate([
+            'raw_score' => ['required', 'integer', 'min:1', 'max:' . max(array_keys(config('ciss.stanines')))],
+        ], [], ['raw_score' => 'raw score'])['raw_score'];
     }
 
     // Applicants of one p_status matching the search form (year / campus / strand)
@@ -78,7 +98,8 @@ trait ManagesApplicants
 
         return $applicant->only([
             'id', 'admission_id', 'fname', 'mname', 'lname', 'ext', 'gender', 'bday', 'civil_status',
-            'contact', 'email', 'address', 'lstsch_attended', 'strand', 'suc_lst_attended', 'course',
+            'contact', 'email', 'address', 'region', 'province', 'city', 'brgy', 'hnum', 'zcode',
+            'lstsch_attended', 'strand', 'suc_lst_attended', 'course',
             'preference_1', 'preference_2', 'dateID', 'venue', 'campus', 'status',
         ]) + [
             'display_name' => $applicant->display_name,

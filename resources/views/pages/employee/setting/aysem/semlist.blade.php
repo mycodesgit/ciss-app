@@ -81,5 +81,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/settings/academic-terms.js') }}"></script>
+    <x-script src="js/employee/settings/academic-terms.js" />
 @endpush

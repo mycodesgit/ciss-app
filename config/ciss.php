@@ -54,17 +54,22 @@ return [
     // Admission test: highest raw score => stanine (scores above the last bound are invalid)
     'stanines' => [12 => 1, 18 => 2, 23 => 3, 29 => 4, 36 => 5, 43 => 6, 49 => 7, 56 => 8, 72 => 9],
 
-    // Stanine => remark saved in ad_examinee_result.percentile
+    // Stanine => remark saved in ad_examinee_result.percentile (campuses without a passing score below)
     'stanine_remarks' => [
-        1 => 'Very Low',
-        2 => 'Below Average',
-        3 => 'Below Average',
-        4 => 'Average',
-        5 => 'Average',
-        6 => 'Average',
-        7 => 'Above Average',
-        8 => 'Above Average',
-        9 => 'Very High',
+        1 => 'Failed',
+        2 => 'Failed',
+        3 => 'Passed',
+        4 => 'Passed',
+        5 => 'Passed',
+        6 => 'Passed',
+        7 => 'Passed',
+        8 => 'Passed',
+        9 => 'Passed',
+    ],
+
+    // Campuses graded by a passing raw score instead of stanine: score >= value => 'Qualified', else 'Failed'
+    'passing_scores' => [
+        'MC' => 45,
     ],
 
     'departments' => [

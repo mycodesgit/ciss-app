@@ -915,5 +915,5 @@
 
 @push('scripts')
     <!-- Apply wizard -->
-    <script src="{{ asset('js/portal/apply.js') }}"></script>
+    <x-script src="js/portal/apply.js" />
 @endpush

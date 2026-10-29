@@ -92,6 +92,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/admission/common.js') }}"></script>
-    <script src="{{ asset('js/employee/admission/applicants.js') }}"></script>
+    <x-script src="js/employee/admission/common.js" />
+    <x-script src="js/employee/admission/applicants.js" />
 @endpush

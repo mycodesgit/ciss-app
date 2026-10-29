@@ -74,5 +74,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/settings/control-status.js') }}"></script>
+    <x-script src="js/employee/settings/control-status.js" />
 @endpush

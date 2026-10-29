@@ -101,5 +101,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/settings/grade-passwords.js') }}"></script>
+    <x-script src="js/employee/settings/grade-passwords.js" />
 @endpush

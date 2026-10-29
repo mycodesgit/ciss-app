@@ -22,11 +22,7 @@ class AdmissionExamineeController extends Controller
 
     public function index()
     {
-        return view('pages.employee.admission.examinee.list', $this->searchOptions() + [
-            'stanines' => config('ciss.stanines'),
-            'stanineRemarks' => config('ciss.stanine_remarks'),
-            'maxRawScore' => max(array_keys(config('ciss.stanines'))),
-        ]);
+        return view('pages.employee.admission.examinee.list', $this->searchOptions() + $this->resultOptions());
     }
 
     // DataTables source, filtered by the search form
@@ -49,24 +45,9 @@ class AdmissionExamineeController extends Controller
     {
         $this->authorizeCampus($applicant);
 
-        $validated = $request->validate([
-            'raw_score' => ['required', 'integer', 'min:1', 'max:' . max(array_keys(config('ciss.stanines')))],
-        ], [], ['raw_score' => 'raw score']);
+        $result = ExamineeResult::record($applicant, $this->validateRawScore($request));
 
-        $remark = ExamineeResult::remarkFor(ExamineeResult::stanineFor($validated['raw_score']));
-
-        ExamineeResult::updateOrCreate(
-            ['app_id' => $applicant->id],
-            [
-                'camp' => $applicant->campus,
-                'admission_id' => $applicant->admission_id,
-                'raw_score' => $validated['raw_score'],
-                'percentile' => $remark,
-                'rawscoredate' => now(),
-            ]
-        );
-
-        return $this->ok('Exam result saved: raw score ' . $validated['raw_score'] . ' (' . $remark . ').');
+        return $this->ok('Exam result saved: raw score ' . $result->raw_score . ' (' . $result->percentile . ').');
     }
 
     // Moves the examinee to the examination result list (p_status 3)

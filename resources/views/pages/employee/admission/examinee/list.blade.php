@@ -89,11 +89,11 @@
         @include('pages.employee.admission.shared.info-modal')
         @include('pages.employee.admission.shared.schedule-modal')
         @include('pages.employee.admission.shared.document-modal')
-        @include('pages.employee.admission.examinee.partials.result-modal')
+        @include('pages.employee.admission.shared.result-modal')
     </div>
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/employee/admission/common.js') }}"></script>
-    <script src="{{ asset('js/employee/admission/examinees.js') }}"></script>
+    <x-script src="js/employee/admission/common.js" />
+    <x-script src="js/employee/admission/examinees.js" />
 @endpush

@@ -15,6 +15,7 @@ use App\Http\Controllers\Employee\Settings\SettingCampusController;
 use App\Http\Controllers\Employee\Admission\AdmissionDashboardController;
 use App\Http\Controllers\Employee\Admission\AdmissionApplicantController;
 use App\Http\Controllers\Employee\Admission\AdmissionExamineeController;
+use App\Http\Controllers\Employee\Admission\AdmissionResultController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -69,6 +70,13 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [EmployeeLoginController::class, 'logout'])->name('logout');
 
+    // Address lookups for employee forms (same data as the portal's apply form; the portal routes stay unchanged)
+    Route::prefix('locations')->name('locations.')->controller(PortalLocationController::class)->group(function () {
+        Route::get('/provinces/{regionId}', 'provinces')->name('provinces');
+        Route::get('/cities/{provinceId}', 'cities')->name('cities');
+        Route::get('/barangays/{cityId}', 'barangays')->name('barangays');
+    });
+
     // Admission module (menu key "admission-url")
     Route::prefix('admission')->name('admission.')->middleware('menu.access:admission-url')->group(function () {
         Route::get('/', [AdmissionDashboardController::class, 'index'])->name('dashboard');
@@ -92,6 +100,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::put('/{applicant}/result', 'saveResult')->name('result');
             Route::put('/{applicant}/push', 'pushToResults')->name('push');
+        });
+
+        // Examination Results (View Data uses the applicants route above)
+        Route::prefix('results')->name('results.')->controller(AdmissionResultController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{applicant}/result', 'updateResult')->name('result');
+            Route::put('/{applicant}/push', 'pushToConfirmation')->name('push');
         });
     });
 

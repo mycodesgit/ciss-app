@@ -66,14 +66,17 @@ window.CissCrud = (function () {
         return '<span class="badge ' + className + '">' + escapeHtml(text) + '</span>';
     }
 
-    // items: [{ action, icon, label, color? }]
+    // items: [{ action, icon, label, color?, disabled? }] (disabled items are shown greyed out, not clickable)
     function actionsMenu(items) {
         return '<div class="d-inline-block">' +
             '<a class="btn btn-success btn-sm dropdown-toggle dropdown-icon text-light" data-bs-toggle="dropdown"></a>' +
             '<div class="dropdown-menu">' +
             items.map(function (item) {
-                const style = item.color ? ' style="color: ' + item.color + '"' : '';
-                return '<a href="#" class="dropdown-item" data-action="' + item.action + '"><i class="' + item.icon + '"' + style + '></i> ' + item.label + '</a>';
+                const style = item.color && !item.disabled ? ' style="color: ' + item.color + '"' : '';
+                const icon = '<i class="' + item.icon + '"' + style + '></i> ' + item.label;
+                return item.disabled
+                    ? '<span class="dropdown-item disabled">' + icon + '</span>'
+                    : '<a href="#" class="dropdown-item" data-action="' + item.action + '">' + icon + '</a>';
             }).join('') +
             '</div></div>';
     }
@@ -99,9 +102,12 @@ window.CissCrud = (function () {
         return { $modal, form };
     }
 
+    // Set form fields by their name attribute. (form.elements[x] also matches ids, so a field named "region"
+    // next to a select with id="region" would return both and the value would silently not be set.)
     function fill(form, row, fields) {
         fields.forEach(function (field) {
-            form.elements[field].value = row[field] ?? '';
+            const input = form.querySelector('[name="' + field + '"]');
+            if (input) input.value = row[field] ?? '';
         });
     }
 
