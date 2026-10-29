@@ -41,7 +41,11 @@ window.CissCrud = (function () {
         const urls = page.dataset;
 
         const table = $(config.table).DataTable({
-            ajax: { url: urls.listUrl },
+            ajax: {
+                url: urls.listUrl,
+                // Optional extra query values (e.g. search filters), read on every (re)load
+                data: config.ajaxData ? (params) => Object.assign(params, config.ajaxData()) : undefined,
+            },
             responsive: true,
             order: config.order || [[0, 'asc']],
             columns: config.columns,
@@ -108,6 +112,26 @@ window.CissCrud = (function () {
         });
     }
 
+    // Reload the table (e.g. after changing search filters)
+    function reload() {
+        if (current) current.table.ajax.reload();
+    }
+
+    // One-click action without a form (e.g. after a confirm popup): PUT/DELETE a URL key, then refresh the table
+    function send(key, id, method) {
+        return $.ajax({
+            url: urlFor(key, id),
+            type: 'POST',
+            data: { _method: method || 'PUT' },
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        })
+            .done(function (response) {
+                toastr.success(response.message);
+                current.table.ajax.reload(null, false);
+            })
+            .fail((xhr) => toastr.error(errorMessage(xhr)));
+    }
+
     // ---------- Delegated handlers (bound once) ----------
 
     // Row actions: [data-action] inside the current page's table
@@ -163,5 +187,5 @@ window.CissCrud = (function () {
         this.value = this.value.replace(/(^|\s)(\S)/g, (m, space, letter) => space + letter.toUpperCase());
     });
 
-    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor };
+    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send };
 })();

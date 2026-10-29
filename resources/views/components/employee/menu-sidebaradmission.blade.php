@@ -7,4 +7,9 @@
             <i class="ti ti-box"></i><span class="nav-text">Dashboard</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.applicants.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.applicants.*')])>
+            <i class="ti ti-list-details"></i><span class="nav-text">List of Applicant</span>
+        </a>
+    </li>
 </ul>

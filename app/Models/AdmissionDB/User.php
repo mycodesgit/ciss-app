@@ -103,6 +103,11 @@ class User extends Authenticatable
     {
         return in_array($button, $this->buttonAccess?->buttons ?? []);
     }
+    // Administrators and the Main Campus Guidance Officer can look at every campus's applicants
+    public function canViewAllCampuses(): bool
+    {
+        return $this->isAdministrator() || ($this->campus === 'MC' && (int) $this->role === 1);
+    }
     // Administrators can open every menu; everyone else needs it in button_access
     public function canAccessMenu($button): bool
     {

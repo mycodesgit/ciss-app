@@ -13,6 +13,7 @@ use App\Http\Controllers\Employee\Settings\SettingGradePassController;
 use App\Http\Controllers\Employee\Settings\SettingControlStatusController;
 use App\Http\Controllers\Employee\Settings\SettingCampusController;
 use App\Http\Controllers\Employee\Admission\AdmissionDashboardController;
+use App\Http\Controllers\Employee\Admission\AdmissionApplicantController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -71,6 +72,18 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
     Route::prefix('admission')->name('admission.')->middleware('menu.access:admission-url')->group(function () {
         Route::get('/', [AdmissionDashboardController::class, 'index'])->name('dashboard');
         Route::get('/chart', [AdmissionDashboardController::class, 'chart'])->name('dashboard.chart');
+
+        // List of Applicant
+        Route::prefix('applicants')->name('applicants.')->controller(AdmissionApplicantController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{applicant}', 'update')->name('update');
+            Route::get('/{applicant}/reupload', 'showReupload')->name('reupload.show');
+            Route::put('/{applicant}/reupload', 'updateReupload')->name('reupload.update');
+            Route::put('/{applicant}/schedule', 'updateSchedule')->name('schedule');
+            Route::put('/{applicant}/push', 'pushToExaminees')->name('push');
+            Route::put('/{applicant}/cancel', 'cancel')->name('cancel');
+        });
     });
 
     // Accounts / Settings module (menu key "setting-url")
