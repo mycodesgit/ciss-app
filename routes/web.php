@@ -19,6 +19,7 @@ use App\Http\Controllers\Employee\Admission\AdmissionResultController;
 use App\Http\Controllers\Employee\Admission\AdmissionConfirmController;
 use App\Http\Controllers\Employee\Admission\AdmissionPreEnrollmentController;
 use App\Http\Controllers\Employee\Admission\AdmissionAcceptedController;
+use App\Http\Controllers\Employee\Admission\AdmissionSlotsController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -129,6 +130,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/', 'index')->name('index');
             Route::get('/list', 'list')->name('list');
             Route::put('/{applicant}/push', 'pushToEnrollment')->name('push');
+        });
+
+        // Configuration: Availability Slots
+        Route::prefix('slots')->name('slots.')->controller(AdmissionSlotsController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
         });
     });
 
