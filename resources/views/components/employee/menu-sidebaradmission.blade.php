@@ -12,4 +12,9 @@
             <i class="ti ti-list-details"></i><span class="nav-text">List of Applicant</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.examinees.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.examinees.*')])>
+            <i class="ti ti-file-check"></i><span class="nav-text">List of Examinee</span>
+        </a>
+    </li>
 </ul>

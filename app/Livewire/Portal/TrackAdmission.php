@@ -8,15 +8,13 @@ use Livewire\Component;
 
 use Carbon\Carbon;
 use App\Models\AdmissionDB\Applicant;
+use App\Models\AdmissionDB\ExamineeResult;
 use App\Models\AdmissionDB\Year;
 
 class TrackAdmission extends Component
 {
     private const CANCELLED_STATUS = 7;
     private const RESULTS_RELEASE = '04-01'; // month-day the exam results are shown
-
-    // Raw score upper bound => stanine
-    private const STANINES = [12 => 1, 18 => 2, 23 => 3, 29 => 4, 36 => 5, 43 => 6, 49 => 7, 56 => 8, 72 => 9];
 
     #[Validate('required|string', as: 'last name')]
     public $lname = '';
@@ -97,7 +95,7 @@ class TrackAdmission extends Component
 
             'results_released' => Carbon::now()->format('m-d') >= self::RESULTS_RELEASE,
             'results_release_label' => Carbon::createFromFormat('Y-m-d', ($year ?: Carbon::now()->year) . '-' . self::RESULTS_RELEASE)->format('F j, Y'),
-            'stanine' => $this->stanine($record->raw_score),
+            'stanine' => ExamineeResult::stanineFor($record->raw_score),
             'percentile' => $record->percentile ?: null,
 
             'screened' => $screened,
@@ -106,20 +104,5 @@ class TrackAdmission extends Component
             'accepted_course' => !empty($record->remarks) ? $record->course : null,
             'enrolled' => $status === 7,
         ];
-    }
-
-    private function stanine($rawScore)
-    {
-        if (!is_numeric($rawScore) || (int) $rawScore < 1) {
-            return null;
-        }
-
-        foreach (self::STANINES as $maxScore => $stanine) {
-            if ((int) $rawScore <= $maxScore) {
-                return $stanine;
-            }
-        }
-
-        return null;
     }
 }

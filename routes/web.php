@@ -14,6 +14,7 @@ use App\Http\Controllers\Employee\Settings\SettingControlStatusController;
 use App\Http\Controllers\Employee\Settings\SettingCampusController;
 use App\Http\Controllers\Employee\Admission\AdmissionDashboardController;
 use App\Http\Controllers\Employee\Admission\AdmissionApplicantController;
+use App\Http\Controllers\Employee\Admission\AdmissionExamineeController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -83,6 +84,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::put('/{applicant}/schedule', 'updateSchedule')->name('schedule');
             Route::put('/{applicant}/push', 'pushToExaminees')->name('push');
             Route::put('/{applicant}/cancel', 'cancel')->name('cancel');
+        });
+
+        // List of Examinee (View Data / Schedule / Delete use the applicants routes above)
+        Route::prefix('examinees')->name('examinees.')->controller(AdmissionExamineeController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{applicant}/result', 'saveResult')->name('result');
+            Route::put('/{applicant}/push', 'pushToResults')->name('push');
         });
     });
 

@@ -51,6 +51,22 @@ return [
         21 => 'YearBook Staff',
     ],
 
+    // Admission test: highest raw score => stanine (scores above the last bound are invalid)
+    'stanines' => [12 => 1, 18 => 2, 23 => 3, 29 => 4, 36 => 5, 43 => 6, 49 => 7, 56 => 8, 72 => 9],
+
+    // Stanine => remark saved in ad_examinee_result.percentile
+    'stanine_remarks' => [
+        1 => 'Very Low',
+        2 => 'Below Average',
+        3 => 'Below Average',
+        4 => 'Average',
+        5 => 'Average',
+        6 => 'Average',
+        7 => 'Above Average',
+        8 => 'Above Average',
+        9 => 'Very High',
+    ],
+
     'departments' => [
         'CAS' => 'College of Arts and Sciences',
         'CCS' => 'College of Computer Studies',
