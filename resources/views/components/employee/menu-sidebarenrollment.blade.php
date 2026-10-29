@@ -35,7 +35,7 @@
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.enrollment.history.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.history.*')])>
             <i class="ti ti-history"></i><span class="nav-text">Enrollment History</span>
         </a>
     </li>

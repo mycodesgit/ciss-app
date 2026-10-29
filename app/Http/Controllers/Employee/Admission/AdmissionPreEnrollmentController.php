@@ -5,16 +5,13 @@ namespace App\Http\Controllers\Employee\Admission;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Employee\Admission\Concerns\ManagesApplicants;
 
-use PDF;
-
 use App\Models\AdmissionDB\Applicant;
-use App\Models\AdmissionDB\ExamineeResult;
-use App\Models\AdmissionDB\Programs;
+use App\Services\Admission\PreEnrollmentForm;
 
 /**
  * "Generate Pre-Enrollment" (Examination Results and Confirmed Applicants): the applicant's
- * Pre-Enrollment Form as a PDF (barryvdh/laravel-dompdf). This route is the src of the
- * Pre-Enrollment modal's iframe, so the browser shows it in its PDF viewer (zoom, download, print).
+ * Pre-Enrollment Form as a PDF (barryvdh/laravel-dompdf, built by Services/Admission/PreEnrollmentForm).
+ * This route is the src of the Pre-Enrollment modal's iframe, so the browser shows it in its PDF viewer (zoom, download, print).
  */
 class AdmissionPreEnrollmentController extends Controller
 {
@@ -30,21 +27,6 @@ class AdmissionPreEnrollmentController extends Controller
             404
         );
 
-        $applicant->load(['result', 'deptRating']);
-
-        return Pdf::loadView('pdf.pre-enrollment', [
-            'applicant' => $applicant,
-            'stanine' => ExamineeResult::stanineFor($applicant->result?->raw_score),
-            'remarks' => $applicant->result?->percentile,
-            'course' => $applicant->deptRating?->course,
-            // Name of the interviewed course (ad_programs), so the form can also match it by name
-            'courseName' => Programs::where('code', $applicant->deptRating?->course)->value('program'),
-            'interview' => $applicant->deptRating,
-            'colleges' => config('ciss.pre_enrollment.colleges'),
-            'bsedMajors' => config('ciss.pre_enrollment.bsed_majors'),
-            'nurse' => config('ciss.pre_enrollment.nurses')[$applicant->campus] ?? ['name' => null, 'title' => 'Nurse'],
-        ])
-            ->setPaper('legal', 'portrait')
-            ->stream('pre-enrollment-' . $applicant->admission_id . '.pdf');
+        return PreEnrollmentForm::forApplicant($applicant)->stream('pre-enrollment-' . $applicant->admission_id . '.pdf');
     }
 }

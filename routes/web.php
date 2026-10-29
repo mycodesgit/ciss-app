@@ -40,6 +40,7 @@ use App\Http\Controllers\Employee\Enrollment\EnrollmentFormController;
 use App\Http\Controllers\Employee\Enrollment\RegistrationFormController;
 use App\Http\Controllers\Employee\Enrollment\EditEnrollmentController;
 use App\Http\Controllers\Employee\Enrollment\DuplicateFeesController;
+use App\Http\Controllers\Employee\Enrollment\EnrollmentHistoryController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -281,6 +282,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/{student}', 'show')->name('show');
             Route::get('/{student}/fees', 'list')->name('list');
             Route::delete('/{student}/fees/{appraisal}', 'destroy')->whereNumber('appraisal')->name('destroy');
+        });
+
+        // Enrollment History: search students, view a student's enrollments, print the Pre-Enrollment Form
+        Route::prefix('history')->name('history.')->controller(EnrollmentHistoryController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/search', 'search')->name('search');
+            Route::get('/{student}', 'history')->name('show');
+            Route::get('/{student}/pre-enrollment', 'preEnrollment')->name('pre-enrollment');
         });
 
         // Enroll Student: queue panel (the user's own counter) and List of Pre-Enrolled Students
