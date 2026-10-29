@@ -17,6 +17,7 @@ class Applicant extends Model
     public const STATUS_WITH_RESULT = 3;  // exam score encoded
     public const STATUS_CONFIRMED = 4;    // confirmed, ready for department interview
     public const STATUS_ACCEPTED = 5;     // accepted after the department interview
+    public const STATUS_ENROLLMENT = 6;   // pushed to enrollment (student record created)
     public const STATUS_CANCELLED = 7;    // removed from the applicant list
 
     public const TYPES = [
@@ -47,6 +48,12 @@ class Applicant extends Model
     public function deptRating()
     {
         return $this->hasOne(DeptRating::class, 'app_id');
+    }
+
+    // Enrollment record created when the accepted applicant is pushed to enrollment
+    public function student()
+    {
+        return $this->hasOne(\App\Models\EnrollmentDB\Student::class, 'app_id');
     }
 
     public function reupload()

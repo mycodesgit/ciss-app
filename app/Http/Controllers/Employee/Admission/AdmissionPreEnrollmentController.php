@@ -9,6 +9,7 @@ use PDF;
 
 use App\Models\AdmissionDB\Applicant;
 use App\Models\AdmissionDB\ExamineeResult;
+use App\Models\AdmissionDB\Programs;
 
 /**
  * "Generate Pre-Enrollment" (Examination Results and Confirmed Applicants): the applicant's
@@ -36,6 +37,8 @@ class AdmissionPreEnrollmentController extends Controller
             'stanine' => ExamineeResult::stanineFor($applicant->result?->raw_score),
             'remarks' => $applicant->result?->percentile,
             'course' => $applicant->deptRating?->course,
+            // Name of the interviewed course (ad_programs), so the form can also match it by name
+            'courseName' => Programs::where('code', $applicant->deptRating?->course)->value('program'),
             'interview' => $applicant->deptRating,
             'colleges' => config('ciss.pre_enrollment.colleges'),
             'bsedMajors' => config('ciss.pre_enrollment.bsed_majors'),

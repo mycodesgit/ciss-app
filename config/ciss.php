@@ -73,6 +73,25 @@ return [
     ],
 
     /*
+    | Student ID made when an accepted applicant is pushed to enrollment: {year}-{0001}-{campus letter}.
+    | Graduate School Staff (role 15) at Main Campus use their own letter.
+    */
+    'student_id_letters' => [
+        'MC' => 'K',
+        'VC' => 'V',
+        'SCC' => 'R',
+        'HC' => 'H',
+        'MP' => 'M',
+        'IC' => 'I',
+        'CA' => 'A',
+        'CC' => 'C',
+        'SC' => 'P',
+        'HinC' => 'N',
+        'VE' => 'D',
+    ],
+    'graduate_school_letter' => 'G',
+
+    /*
     | Pre-Enrollment Form (PDF): programs listed per college (the interviewed course is checked),
     | and the nurse signatory per campus (campuses not listed get an empty line titled "Nurse").
     */

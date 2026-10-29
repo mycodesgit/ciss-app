@@ -1,0 +1,94 @@
+@extends('layouts.master_empadmission')
+
+@section('title')
+    CISS - Admission | Accepted Applicants
+@endsection
+
+@section('workspace')
+    {{-- URLs for accepted.js (__ID__ is replaced with the applicant's id) --}}
+    <div id="accepted"
+        data-list-url="{{ route('employee.admission.accepted.list') }}"
+        data-pre-enrollment-url="{{ route('employee.admission.applicants.pre-enrollment', '__ID__') }}"
+        data-push-url="{{ route('employee.admission.accepted.push', '__ID__') }}">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-6">
+                    <div class="card mb-3" style=" background-color: #e9ecef; margin-top: -10px">
+                        <div class="card-body">
+                            <ol class="breadcrumb" style="margin-bottom: -3px;">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('employee.dashboard') }}" wire:navigate class="btn btn-success btn-sm text-light">
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item mt-1">Admission</li>
+                                <li class="breadcrumb-item active mt-1">Accepted Applicants</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                        <div>
+                            <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">Accepted Applicants</h1>
+                            <p class="text-muted small mb-0">Applicants accepted after the department interview: generate their Pre-Enrollment Form and push them to enrollment.</p>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="card card-animate">
+                                <div class="card-header pt-3">
+                                    <h6 class="card-title">
+                                        <i class="ti ti-search"></i> Search to show data
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @include('pages.employee.admission.shared.search-form')
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="card card-animate">
+                                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                                    <h6 class="card-title mb-0">
+                                        <i class="ti ti-server"></i> Accepted Applicants
+                                    </h6>
+                                    <small class="text-muted">Shows applicants accepted by your department.</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive p-2">
+                                        <table id="acceptedTableapp" class="table table-hover" style="width: 100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>App ID</th>
+                                                    <th>Name</th>
+                                                    <th>Type</th>
+                                                    <th>Interviewer</th>
+                                                    <th>Course</th>
+                                                    <th>Student ID</th>
+                                                    <th>Status</th>
+                                                    <th>Campus</th>
+                                                    <th>Strand</th>
+                                                    <th width="5%">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @include('pages.employee.admission.shared.pre-enrollment-modal')
+    </div>
+@endsection
+
+@push('scripts')
+    <x-script src="js/employee/admission/common.js" />
+    <x-script src="js/employee/admission/accepted.js" />
+@endpush

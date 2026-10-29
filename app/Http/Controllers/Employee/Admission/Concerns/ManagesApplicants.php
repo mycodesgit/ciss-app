@@ -67,8 +67,8 @@ trait ManagesApplicants
         ], [], ['raw_score' => 'raw score'])['raw_score'];
     }
 
-    // Applicants of one p_status matching the search form (year / campus / strand)
-    protected function searchApplicants(Request $request, int $status)
+    // Applicants with the given p_status (one value or a list) matching the search form (year / campus / strand)
+    protected function searchApplicants(Request $request, int|array $status)
     {
         $user = $this->user();
 
@@ -84,7 +84,7 @@ trait ManagesApplicants
         return Applicant::with('documents')
             ->where('year', $filters['year'])
             ->where('campus', $campus)
-            ->where('p_status', $status)
+            ->whereIn('p_status', (array) $status)
             ->when($filters['strand'] ?? null, fn ($query, $strand) => $query->where('strand', $strand))
             ->orderBy('admission_id');
     }

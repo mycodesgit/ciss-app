@@ -7,6 +7,14 @@
 --}}
 @php
     $box = fn (bool $checked) => $checked ? '&#9745;' : '&#9744;';
+
+    // Is this the course chosen in the interview? Compares the code, or the program name, ignoring
+    // case, spaces and punctuation (ad_programs codes can be written a little differently from the config)
+    $normalize = fn ($value) => preg_replace('/[^A-Z0-9]/', '', strtoupper((string) $value));
+    $isCourse = fn ($code, $label) => $course !== null && $course !== '' && (
+        $normalize($code) === $normalize($course)
+        || ($courseName && $normalize($label) === $normalize($courseName))
+    );
     $type = (string) $applicant->type;
 @endphp
 <!DOCTYPE html>
@@ -122,12 +130,12 @@
         <div class="college">{{ $college }}</div>
         <ul class="programs">
             @foreach ($programs as $code => $label)
-                <li><span class="box">{!! $box($course === $code) !!}</span> {{ $label }}</li>
+                <li><span class="box">{!! $box($isCourse($code, $label)) !!}</span> {{ $label }}</li>
             @endforeach
             @if (array_key_exists('BSED', $programs))
                 <li style="margin-left: 20px;">
                     @foreach ($bsedMajors as $code => $label)
-                        <span class="box">{!! $box($course === $code) !!}</span> {{ $label }}&nbsp;&nbsp;&nbsp;
+                        <span class="box">{!! $box($isCourse($code, $label)) !!}</span> {{ $label }}&nbsp;&nbsp;&nbsp;
                     @endforeach
                 </li>
             @endif

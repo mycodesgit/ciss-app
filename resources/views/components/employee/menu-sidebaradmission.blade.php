@@ -27,4 +27,9 @@
             <i class="ti ti-user-check"></i><span class="nav-text">Confirmed Applicants</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.accepted.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.accepted.*')])>
+            <i class="ti ti-school"></i><span class="nav-text">Accepted Applicants</span>
+        </a>
+    </li>
 </ul>

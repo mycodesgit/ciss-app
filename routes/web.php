@@ -18,6 +18,7 @@ use App\Http\Controllers\Employee\Admission\AdmissionExamineeController;
 use App\Http\Controllers\Employee\Admission\AdmissionResultController;
 use App\Http\Controllers\Employee\Admission\AdmissionConfirmController;
 use App\Http\Controllers\Employee\Admission\AdmissionPreEnrollmentController;
+use App\Http\Controllers\Employee\Admission\AdmissionAcceptedController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -121,6 +122,13 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::put('/{applicant}/interview', 'saveInterview')->name('interview');
             Route::put('/{applicant}/push', 'pushToAccepted')->name('push');
+        });
+
+        // Accepted Applicants
+        Route::prefix('accepted')->name('accepted.')->controller(AdmissionAcceptedController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{applicant}/push', 'pushToEnrollment')->name('push');
         });
     });
 
