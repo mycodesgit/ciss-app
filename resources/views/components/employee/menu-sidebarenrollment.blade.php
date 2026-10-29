@@ -44,7 +44,7 @@
             <i class="ti ti-file-spreadsheet"></i><span class="nav-text">Gradesheet</span>
         </a>
     </li>
-    {{-- Registrar and Administrators only: Correction of Grades, Transferred Student (the routes check it too: 'registrar' middleware) --}}
+    {{-- Registrar and Administrators only: Correction of Grades, Transferred Student, Subjects (the routes check it too: 'registrar' middleware) --}}
     @if (Auth::guard('web')->user()->canCorrectGrades())
         <li>
             <a href="{{ route('employee.enrollment.corrections.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.corrections.*')])>
@@ -54,6 +54,11 @@
         <li>
             <a href="{{ route('employee.enrollment.transfers.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.transfers.*')])>
                 <i class="ti ti-transfer"></i><span class="nav-text">Transferred Student</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('employee.enrollment.subjects.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.subjects.*')])>
+                <i class="ti ti-book"></i><span class="nav-text">Subjects</span>
             </a>
         </li>
     @endif

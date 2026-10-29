@@ -44,6 +44,7 @@ use App\Http\Controllers\Employee\Enrollment\EnrollmentHistoryController;
 use App\Http\Controllers\Employee\Enrollment\GradesheetController;
 use App\Http\Controllers\Employee\Enrollment\GradeCorrectionController;
 use App\Http\Controllers\Employee\Enrollment\StudentTransferController;
+use App\Http\Controllers\Employee\Enrollment\SubjectController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -314,6 +315,17 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::get('/lookup', 'lookup')->name('lookup');
             Route::post('/', 'store')->name('store');
+        });
+
+        // Subjects (Registrar, Administrators): the subjects master list, add a subject
+        Route::prefix('subjects')->name('subjects.')->middleware('registrar')->controller(SubjectController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/next-code', 'nextCode')->name('next-code');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{subject}', 'update')->name('update');
+            // Delete = Inactive (and back to Active): subjects are never removed
+            Route::put('/{subject}/status', 'updateStatus')->name('status');
         });
 
         // Enrollment History: search students, view a student's enrollments, print the Pre-Enrollment Form

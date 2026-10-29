@@ -27,8 +27,13 @@ class Subject extends Model
         'subjlev',
         'subdelmod',
         'subjprereq',
-        'subacadtype'
+        'subacadtype',
+        'subjstatus',
     ];
+
+    // subjstatus: subjects are never deleted, only made Inactive (offerings and grades point to them)
+    public const ACTIVE = 1;
+    public const INACTIVE = 0;
 
     // Relationship to SubjectOffered
     public function subjectOffered()
