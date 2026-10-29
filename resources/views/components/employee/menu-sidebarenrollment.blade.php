@@ -40,13 +40,16 @@
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.enrollment.gradesheet.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.gradesheet.*')])>
             <i class="ti ti-file-spreadsheet"></i><span class="nav-text">Gradesheet</span>
         </a>
     </li>
-    <li>
-        <a href="#" class="nav-link">
-            <i class="ti ti-file-pencil"></i><span class="nav-text">Correction of Grades</span>
-        </a>
-    </li>
+    {{-- Registrar and Administrators only (the routes check it too: 'registrar' middleware) --}}
+    @if (Auth::guard('web')->user()->canCorrectGrades())
+        <li>
+            <a href="{{ route('employee.enrollment.corrections.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.corrections.*')])>
+                <i class="ti ti-file-pencil"></i><span class="nav-text">Correction of Grades</span>
+            </a>
+        </li>
+    @endif
 </ul>

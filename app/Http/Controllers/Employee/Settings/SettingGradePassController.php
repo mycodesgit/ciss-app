@@ -30,11 +30,12 @@ class SettingGradePassController extends Controller
     {
         $campuses = config('ciss.campuses');
 
+        // The password itself is never sent: only whether it is saved protected (hashed) or still plain text
         $passwords = GradePass::orderBy('campus')
             ->get(['id', 'gradeauthpass', 'campus', 'created_at', 'updated_at'])
             ->map(fn (GradePass $pass) => [
                 'id' => $pass->id,
-                'gradeauthpass' => $pass->gradeauthpass,
+                'protected' => $pass->isProtected(),
                 'campus' => $pass->campus,
                 'campus_name' => $campuses[$pass->campus] ?? $pass->campus,
                 'created_at' => $pass->created_at?->timestamp,

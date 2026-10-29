@@ -23,7 +23,16 @@
         order: [[2, 'asc']],
         columns: [
             { data: null, orderable: false, searchable: false, render: (data, type, row, meta) => meta.row + 1 },
-            { data: 'gradeauthpass', render: $.fn.dataTable.render.text() },
+            // The password is never shown; an old plain-text one should be changed so it is saved protected
+            {
+                data: 'protected',
+                render: (isProtected, type) => {
+                    const label = isProtected ? 'Protected' : 'Plain text: change it';
+                    return type === 'display'
+                        ? '<i class="ti ti-lock"></i> •••••••• ' + CissCrud.badge(isProtected ? 'bg-success' : 'bg-warning text-dark', label)
+                        : label;
+                },
+            },
             { data: 'campus_name', render: $.fn.dataTable.render.text() },
             dateColumn('created_at'),
             dateColumn('updated_at'),
@@ -33,8 +42,7 @@
             edit(pass) {
                 const { $modal, form } = CissCrud.openFor('#editGradePassModal', pass);
                 $modal.find('.js-campus-name').val(pass.campus_name);
-                CissCrud.fill(form, pass, ['gradeauthpass']);
-                $modal.modal('show');
+                $modal.modal('show'); // the new password field starts empty (the saved one can't be read)
             },
         },
     });

@@ -83,7 +83,7 @@
             </div>
             <div class="form-group mt-3">
                 <label>Grades Password: <span class="text-danger">*</span></label>
-                <input type="text" name="gradeauthpass" class="form-control form-control-sm" minlength="4" autocomplete="off" required>
+                <input type="password" name="gradeauthpass" class="form-control form-control-sm" minlength="4" autocomplete="new-password" required>
             </div>
         </x-employee.form-modal>
 
@@ -94,7 +94,7 @@
             </div>
             <div class="form-group mt-3">
                 <label>New Grades Password: <span class="text-danger">*</span></label>
-                <input type="text" name="gradeauthpass" class="form-control form-control-sm" minlength="4" autocomplete="off" required>
+                <input type="password" name="gradeauthpass" class="form-control form-control-sm" minlength="4" autocomplete="new-password" required>
             </div>
         </x-employee.form-modal>
     </div>

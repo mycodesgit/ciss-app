@@ -119,6 +119,15 @@ class User extends Authenticatable
     {
         return in_array($button, $this->buttonAccess?->buttons ?? []);
     }
+    // Administrator (0) and Registrar (3), every campus: Correction of Grades (change any grade, even submitted / INC).
+    // Registrar Staff (4) is not included.
+    public const GRADE_CORRECTION_ROLES = [0, 3];
+
+    public function canCorrectGrades(): bool
+    {
+        return in_array((int) $this->role, self::GRADE_CORRECTION_ROLES, true);
+    }
+
     // Guidance Officer (1) and Guidance Staff (2) can view interview results but not record them
     public function canRecordInterviews(): bool
     {
