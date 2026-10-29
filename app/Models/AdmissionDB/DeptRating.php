@@ -29,4 +29,17 @@ class DeptRating extends Model
     protected $casts = [
         'updated_at' => 'datetime',
     ];
+
+    // remarks of the department interview
+    public const REMARKS = [
+        1 => 'Interview Completed',
+        2 => 'Interview Pending',
+    ];
+
+    public const REMARK_COMPLETED = 1;
+
+    public function isCompleted(): bool
+    {
+        return (int) $this->remarks === self::REMARK_COMPLETED;
+    }
 }

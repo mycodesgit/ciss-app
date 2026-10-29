@@ -22,4 +22,9 @@
             <i class="ti ti-report-analytics"></i><span class="nav-text">Examination Results</span>
         </a>
     </li>
+    <li>
+        <a href="{{ route('employee.admission.confirmed.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.confirmed.*')])>
+            <i class="ti ti-user-check"></i><span class="nav-text">Confirmed Applicants</span>
+        </a>
+    </li>
 </ul>

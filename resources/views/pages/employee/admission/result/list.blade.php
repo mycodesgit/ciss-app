@@ -9,6 +9,7 @@
     <div id="results"
         data-list-url="{{ route('employee.admission.results.list') }}"
         data-update-url="{{ route('employee.admission.applicants.update', '__ID__') }}"
+        data-pre-enrollment-url="{{ route('employee.admission.applicants.pre-enrollment', '__ID__') }}"
         data-result-url="{{ route('employee.admission.results.result', '__ID__') }}"
         data-push-url="{{ route('employee.admission.results.push', '__ID__') }}">
 
@@ -85,6 +86,7 @@
         </div>
 
         @include('pages.employee.admission.shared.info-modal')
+        @include('pages.employee.admission.shared.pre-enrollment-modal')
         @include('pages.employee.admission.shared.result-modal', ['title' => 'Update Test Result', 'withQualifier' => true])
     </div>
 @endsection

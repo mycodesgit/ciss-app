@@ -16,6 +16,8 @@ use App\Http\Controllers\Employee\Admission\AdmissionDashboardController;
 use App\Http\Controllers\Employee\Admission\AdmissionApplicantController;
 use App\Http\Controllers\Employee\Admission\AdmissionExamineeController;
 use App\Http\Controllers\Employee\Admission\AdmissionResultController;
+use App\Http\Controllers\Employee\Admission\AdmissionConfirmController;
+use App\Http\Controllers\Employee\Admission\AdmissionPreEnrollmentController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
 use App\Http\Controllers\Main\PortalLocationController;
@@ -94,6 +96,9 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::put('/{applicant}/cancel', 'cancel')->name('cancel');
         });
 
+        // Pre-Enrollment Form PDF (Examination Results, Confirmed Applicants)
+        Route::get('/applicants/{applicant}/pre-enrollment', [AdmissionPreEnrollmentController::class, 'show'])->name('applicants.pre-enrollment');
+
         // List of Examinee (View Data / Schedule / Delete use the applicants routes above)
         Route::prefix('examinees')->name('examinees.')->controller(AdmissionExamineeController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -108,6 +113,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::put('/{applicant}/result', 'updateResult')->name('result');
             Route::put('/{applicant}/push', 'pushToConfirmation')->name('push');
+        });
+
+        // Confirmed Applicants (View Data uses the applicants route above)
+        Route::prefix('confirmed')->name('confirmed.')->controller(AdmissionConfirmController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{applicant}/interview', 'saveInterview')->name('interview');
+            Route::put('/{applicant}/push', 'pushToAccepted')->name('push');
         });
     });
 

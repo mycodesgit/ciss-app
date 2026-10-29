@@ -103,6 +103,11 @@ class User extends Authenticatable
     {
         return in_array($button, $this->buttonAccess?->buttons ?? []);
     }
+    // Guidance Officer (1) and Guidance Staff (2) can view interview results but not record them
+    public function canRecordInterviews(): bool
+    {
+        return !in_array((int) $this->role, [1, 2], true);
+    }
     // Administrators and the Main Campus Guidance Officer can look at every campus's applicants
     public function canViewAllCampuses(): bool
     {

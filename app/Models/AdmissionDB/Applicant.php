@@ -16,6 +16,7 @@ class Applicant extends Model
     public const STATUS_SCHEDULED = 2;    // exam scheduled (examinee)
     public const STATUS_WITH_RESULT = 3;  // exam score encoded
     public const STATUS_CONFIRMED = 4;    // confirmed, ready for department interview
+    public const STATUS_ACCEPTED = 5;     // accepted after the department interview
     public const STATUS_CANCELLED = 7;    // removed from the applicant list
 
     public const TYPES = [
@@ -40,6 +41,12 @@ class Applicant extends Model
     public function documents()
     {
         return $this->hasOne(ApplicantDocs::class, 'app_id');
+    }
+
+    // Department interview result (joined by applicant id; admission_id can repeat across campuses)
+    public function deptRating()
+    {
+        return $this->hasOne(DeptRating::class, 'app_id');
     }
 
     public function reupload()

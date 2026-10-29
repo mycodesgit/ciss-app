@@ -2,9 +2,10 @@
     Modal with a form submitted by AJAX.
     url    = key of the URL in the page's data-* attributes (e.g. "update-url"), may contain __ID__
     method = HTTP method sent to Laravel (POST, PUT)
+    can-save = false shows the form read-only (no Save button)
     Saved by public/js/employee/crud.js.
 --}}
-@props(['id', 'title', 'formId', 'url', 'method' => 'POST', 'size' => 'md'])
+@props(['id', 'title', 'formId', 'url', 'method' => 'POST', 'size' => 'md', 'canSave' => true])
 
 <div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-{{ $size }}">
@@ -18,8 +19,10 @@
                     {{ $slot }}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $canSave ? 'Cancel' : 'Close' }}</button>
+                    @if ($canSave)
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                    @endif
                 </div>
             </form>
         </div>

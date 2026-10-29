@@ -12,6 +12,7 @@
     function actionsFor(row) {
         return CissCrud.actionsMenu([
             { action: 'view', icon: 'fas fa-eye', label: 'View Data' },
+            { action: 'preEnrollment', icon: 'fas fa-file-pdf', label: 'Generate Pre-Enrollment' },
             { action: 'result', icon: 'fas fa-file-lines', label: 'Update Test Result' },
             { action: 'push', icon: 'fas fa-check', label: 'Push to Confirm', color: 'green', disabled: !row.can_proceed },
         ]);

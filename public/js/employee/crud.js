@@ -66,7 +66,8 @@ window.CissCrud = (function () {
         return '<span class="badge ' + className + '">' + escapeHtml(text) + '</span>';
     }
 
-    // items: [{ action, icon, label, color?, disabled? }] (disabled items are shown greyed out, not clickable)
+    // items: [{ action, icon, label, color?, disabled?, href? }]
+    // disabled items are greyed out; href items are plain links opened in a new tab (e.g. a PDF)
     function actionsMenu(items) {
         return '<div class="d-inline-block">' +
             '<a class="btn btn-success btn-sm dropdown-toggle dropdown-icon text-light" data-bs-toggle="dropdown"></a>' +
@@ -74,9 +75,9 @@ window.CissCrud = (function () {
             items.map(function (item) {
                 const style = item.color && !item.disabled ? ' style="color: ' + item.color + '"' : '';
                 const icon = '<i class="' + item.icon + '"' + style + '></i> ' + item.label;
-                return item.disabled
-                    ? '<span class="dropdown-item disabled">' + icon + '</span>'
-                    : '<a href="#" class="dropdown-item" data-action="' + item.action + '">' + icon + '</a>';
+                if (item.disabled) return '<span class="dropdown-item disabled">' + icon + '</span>';
+                if (item.href) return '<a href="' + escapeHtml(item.href) + '" class="dropdown-item" target="_blank" rel="noopener">' + icon + '</a>';
+                return '<a href="#" class="dropdown-item" data-action="' + item.action + '">' + icon + '</a>';
             }).join('') +
             '</div></div>';
     }
@@ -193,5 +194,5 @@ window.CissCrud = (function () {
         this.value = this.value.replace(/(^|\s)(\S)/g, (m, space, letter) => space + letter.toUpperCase());
     });
 
-    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send };
+    return { register, escapeHtml, badge, actionsMenu, openFor, fill, fetchFor, reload, send, urlFor };
 })();

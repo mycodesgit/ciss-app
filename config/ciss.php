@@ -72,6 +72,58 @@ return [
         'MC' => 45,
     ],
 
+    /*
+    | Pre-Enrollment Form (PDF): programs listed per college (the interviewed course is checked),
+    | and the nurse signatory per campus (campuses not listed get an empty line titled "Nurse").
+    */
+    'pre_enrollment' => [
+        'colleges' => [
+            'COLLEGE OF AGRICULTURE and FORESTRY (CAF)' => [
+                'BSAB' => 'Bachelor of Science in Agribusiness (BSAB)',
+                'BSAGRI-As' => 'Bachelor of Science in Agriculture major in Animal Science',
+                'BSAGRI-Cs' => 'Bachelor of Science in Agriculture major in Crop Science',
+                'BSF' => 'Bachelor of Science in Forestry (BSF)',
+                'BST' => 'Bachelor in Sugar Technology (BST)',
+                'BS FISHERIES' => 'Bachelor of Science in Fisheries (BS FISHERIES)',
+            ],
+            'COLLEGE OF ARTS AND SCIENCES (CAS)' => [
+                'BS-Stat' => 'Bachelor of Science in Statistics (BS Stat)',
+                'ABEL' => 'Bachelor of Arts in English Language (ABEL)',
+                'BASS' => 'Bachelor of Arts in Social Science (AB Soc Sci)',
+            ],
+            'COLLEGE OF BUSINESS AND MANAGEMENT (CBM)' => [
+                'BSHM' => 'Bachelor of Science in Hospitality Management (BSHM)',
+            ],
+            'COLLEGE OF COMPUTER STUDIES (CCS)' => [
+                'BSIT' => 'Bachelor of Science in Information Technology (BSIT)',
+            ],
+            'COLLEGE OF CRIMINAL JUSTICE EDUCATION (CCJE)' => [
+                'BSCrim' => 'Bachelor of Science in Criminology (BSCrim)',
+            ],
+            'COLLEGE OF ENGINEERING (COE)' => [
+                'BSABE' => 'Bachelor of Science in Agricultural and Biosystems Engineering (BSABE)',
+                'BSEE' => 'Bachelor of Science in Electrical Engineering (BSEE)',
+                'BSME' => 'Bachelor of Science in Mechanical Engineering (BSME)',
+            ],
+            'COLLEGE OF TEACHER EDUCATION (COTED)' => [
+                'BECED' => 'Bachelor of Early Childhood Education (BECED)',
+                'BEED-GE' => 'Bachelor of Elementary Education Major in General Education (BEED-GE)',
+                'BPED' => 'Bachelor of Physical Education (BPED) major in Physical Education',
+                'BSED' => 'Bachelor of Secondary Education major in:',
+            ],
+        ],
+        // Shown on one line under BSED
+        'bsed_majors' => [
+            'BSED - English' => 'English',
+            'BSED - Filipino' => 'Filipino',
+            'BSED - Math' => 'Math',
+            'BSED - Science' => 'Science',
+        ],
+        'nurses' => [
+            'MC' => ['name' => 'KRISTINE C. DURAN, MAN', 'title' => 'Nurse II'],
+        ],
+    ],
+
     'departments' => [
         'CAS' => 'College of Arts and Sciences',
         'CCS' => 'College of Computer Studies',
