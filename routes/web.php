@@ -25,6 +25,8 @@ use App\Http\Controllers\Employee\Admission\AdmissionSchoolReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionScheduleReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionNoScheduleReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionResultReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionConfirmedReportController;
+use App\Http\Controllers\Employee\Admission\AdmissionAcceptedReportController;
 use App\Http\Controllers\Employee\Admission\AdmissionConfigController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigProgramController;
 use App\Http\Controllers\Employee\Admission\Config\ConfigStrandController;
@@ -169,6 +171,20 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
 
         // Reports: Examination Results
         Route::prefix('reports/results')->name('reports.results.')->controller(AdmissionResultReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Reports: Confirmed Applicants
+        Route::prefix('reports/confirmed')->name('reports.confirmed.')->controller(AdmissionConfirmedReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Reports: Accepted Applicants
+        Route::prefix('reports/accepted')->name('reports.accepted.')->controller(AdmissionAcceptedReportController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/list', 'list')->name('list');
             Route::get('/pdf', 'pdf')->name('pdf');

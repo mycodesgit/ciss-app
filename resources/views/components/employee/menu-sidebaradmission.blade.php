@@ -75,17 +75,19 @@
         </a>
     </li>
 
-    {{-- Reports not built yet (links to be added) --}}
     <li>
-        <a href="#" class="nav-link">
-            <i class="ti ti-file-check"></i><span class="nav-text">Qualified Applicants</span>
+        <a href="{{ route('employee.admission.reports.confirmed.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.confirmed.*')])>
+            <i class="ti ti-file-check"></i><span class="nav-text">Confirmed Applicants</span>
         </a>
     </li>
+
     <li>
-        <a href="#" class="nav-link">
+        <a href="{{ route('employee.admission.reports.accepted.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.admission.reports.accepted.*')])>
             <i class="ti ti-file-code"></i><span class="nav-text">Accepted Applicants</span>
         </a>
     </li>
+
+    {{-- Reports not built yet (links to be added) --}}
     <li>
         <a href="#" class="nav-link">
             <i class="ti ti-file-code-2"></i><span class="nav-text">Course Preferences</span>
