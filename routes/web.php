@@ -56,6 +56,7 @@ use App\Http\Controllers\Employee\Enrollment\ExtendedStudentsController;
 use App\Http\Controllers\Employee\Enrollment\ElPlController;
 use App\Http\Controllers\Employee\Enrollment\RankingController;
 use App\Http\Controllers\Employee\Enrollment\NumberOfEnrolleesController;
+use App\Http\Controllers\Employee\Enrollment\NstpEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -436,6 +437,13 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
 
         // Number of Enrollees: enrolled students of a campus and term per year level (?campus=&schlyear=&semester=)
         Route::prefix('number-of-enrollees')->name('number-of-enrollees.')->middleware('enrollment-reports')->controller(NumberOfEnrolleesController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/count', 'count')->name('count');
+        });
+
+        // CWTS/LTS/ROTC: students per NSTP component in a campus and term (?campus=&schlyear=&semester=)
+        // Users given the NSTP menu in User Access (button_access "nstp-url"); administrators always
+        Route::prefix('nstp-enrollees')->name('nstp-enrollees.')->middleware('menu.access:nstp-url')->controller(NstpEnrolleesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/count', 'count')->name('count');
         });

@@ -127,5 +127,13 @@
                 <i class="ti ti-checklist"></i><span class="nav-text">Number of Enrollees</span>
             </a>
         </li>
+        {{-- Users given the NSTP menu in User Access (the route checks it too: 'menu.access:nstp-url') --}}
+        @if (Auth::guard('web')->user()->canAccessMenu('nstp-url'))
+            <li>
+                <a href="{{ route('employee.enrollment.nstp-enrollees.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.nstp-enrollees.*')])>
+                    <i class="ti ti-brand-miniprogram"></i><span class="nav-text">CWTS/LTS/ROTC</span>
+                </a>
+            </li>
+        @endif
     @endif
 </ul>

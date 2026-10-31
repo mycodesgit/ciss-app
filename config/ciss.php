@@ -121,6 +121,17 @@ return [
     ],
 
     /*
+    | Enrollment > CWTS/LTS/ROTC: the NSTP subject codes of each component (the old system's codes).
+    | Keep these in step with report_card.nstp_subjects.
+    */
+    'nstp_components' => [
+        'NSTP' => ['KAB-SER-076', 'KAB-SER-077'],
+        'CWTS' => ['KAB-SER-144', 'KAB-SER-147'],
+        'LTS' => ['KAB-SER-145', 'KAB-SER-148'],
+        'ROTC' => ['KAB-SER-146', 'KAB-SER-149'],
+    ],
+
+    /*
     | Pre-Enrollment Form (PDF): programs listed per college (the interviewed course is checked),
     | and the nurse signatory per campus (campuses not listed get an empty line titled "Nurse").
     */
