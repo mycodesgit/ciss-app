@@ -106,6 +106,11 @@
                     <i class="ti ti-id-badge-2"></i><span class="nav-text">Student Report Card</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('employee.enrollment.extended-students.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.extended-students.*')])>
+                    <i class="ti ti-calendar-due"></i><span class="nav-text">Extended Students</span>
+                </a>
+            </li>
         @endif
     @endif
 </ul>

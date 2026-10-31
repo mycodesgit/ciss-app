@@ -52,6 +52,7 @@ use App\Http\Controllers\Employee\Enrollment\AttendancePerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\ClassAttendanceController;
 use App\Http\Controllers\Employee\Enrollment\StudentGradesController;
 use App\Http\Controllers\Employee\Enrollment\StudentReportCardController;
+use App\Http\Controllers\Employee\Enrollment\ExtendedStudentsController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -408,6 +409,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/', 'index')->name('index');
             Route::get('/find', 'find')->name('find');
             Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Extended Students: students enrolled in more than 10 semesters (same roles as the Report Card)
+        Route::prefix('extended-students')->name('extended-students.')->middleware('report-card')->controller(ExtendedStudentsController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
         });
     });
 
