@@ -25,7 +25,7 @@
     @include('layouts.partials.employee-topbar', ['withSidebar' => true])
 
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="sidebar overflow-y-auto overflow-x-hidden">
+    <aside id="sidebar" class="sidebar overflow-y-auto overflow-x-hidden" style="z-index: auto">
         @yield('sidebar')
     </aside>
 

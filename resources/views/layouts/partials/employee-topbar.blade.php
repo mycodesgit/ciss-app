@@ -5,7 +5,7 @@
 @endphp
 
 <div id="overlay" class="overlay"></div>
-<nav id="topbar" class="navbar bg-white border-bottom fixed-top px-3" style="background-color: #04401f !important; z-index: 9995">
+<nav id="topbar" class="navbar bg-white border-bottom fixed-top px-3" style="background-color: #04401f !important;">
     <div id="toggleBtn" class="text-light" style="padding-left: 25px">
         CISS v.1.0
     </div>
