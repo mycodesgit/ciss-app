@@ -164,6 +164,23 @@ class User extends Authenticatable
         return (int) $this->role !== self::ENCODER_ROLE;
     }
 
+    // A Scheduling page (a key of config ciss.scheduling.pages): its roles, or users listed by id
+    public function canOpenSchedulingPage(string $page): bool
+    {
+        $access = config("ciss.scheduling.pages.{$page}");
+
+        return $access !== null
+            && (in_array((int) $this->role, $access['roles'] ?? [], true) || in_array((int) $this->id, $access['users'] ?? [], true));
+    }
+
+    // Graduate School Staff (15): graduate school programs and subjects only
+    public const GRADUATE_SCHOOL_ROLE = 15;
+
+    public function isGraduateSchoolStaff(): bool
+    {
+        return (int) $this->role === self::GRADUATE_SCHOOL_ROLE;
+    }
+
     // Guidance Officer (1) and Guidance Staff (2) can view interview results but not record them
     public function canRecordInterviews(): bool
     {

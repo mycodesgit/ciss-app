@@ -67,6 +67,16 @@ use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
 use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
 use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
 use App\Http\Controllers\Employee\Nstp\NstpEnrolleesController as NstpModuleEnrolleesController;
+use App\Http\Controllers\Employee\Scheduling\SchedulingDashboardController;
+use App\Http\Controllers\Employee\Scheduling\SchedulingLookupController;
+use App\Http\Controllers\Employee\Scheduling\CollegeController;
+use App\Http\Controllers\Employee\Scheduling\ProgramController;
+use App\Http\Controllers\Employee\Scheduling\RoomController;
+use App\Http\Controllers\Employee\Scheduling\ClassEnrollController;
+use App\Http\Controllers\Employee\Scheduling\CurriculumController;
+use App\Http\Controllers\Employee\Scheduling\FacultyDesignationController;
+use App\Http\Controllers\Employee\Scheduling\FacultyController;
+use App\Http\Controllers\Employee\Scheduling\SubjectOfferedController;
 use App\Http\Controllers\Employee\Kiosk\KioskDashboardController;
 use App\Http\Controllers\Employee\Kiosk\KioskUserController;
 use App\Http\Controllers\Employee\Kiosk\KioskBulkController;
@@ -545,6 +555,90 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('enrollees')->name('enrollees.')->controller(NstpModuleEnrolleesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/count', 'count')->name('count');
+        });
+    });
+
+    // Scheduling module (menu key "scheduler-url"). Each page: middleware 'scheduling:{page}' (config ciss.scheduling.pages);
+    // campus-wide pages take ?campus= (administrators any campus, everyone else their own) and ?schlyear=&semester=
+    Route::prefix('scheduling')->name('scheduling.')->middleware('menu.access:scheduler-url')->group(function () {
+        Route::get('/', [SchedulingDashboardController::class, 'index'])->name('dashboard');
+
+        // Lookups shared by the pages: subject picker, a subject's units and fees, a college's departments
+        Route::controller(SchedulingLookupController::class)->middleware('throttle:120,1')->group(function () {
+            Route::get('/lookup/subjects', 'subjects')->name('lookup.subjects');
+            Route::get('/lookup/subjects/{subjectCode}/fees', 'fees')->name('lookup.fees');
+            Route::get('/lookup/departments', 'departments')->name('lookup.departments');
+        });
+
+        // Colleges (administrators): the campuses of each college ({college} = college.id)
+        Route::prefix('colleges')->name('colleges.')->middleware('scheduling:colleges')->controller(CollegeController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{college}', 'update')->whereNumber('college')->name('update');
+        });
+
+        // Programs (administrators) ({program} = programs.id)
+        Route::prefix('programs')->name('programs.')->middleware('scheduling:programs')->controller(ProgramController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::put('/{program}', 'update')->whereNumber('program')->name('update');
+        });
+
+        // Class Rooms ({room} = rooms.id)
+        Route::prefix('rooms')->name('rooms.')->middleware('scheduling:rooms')->controller(RoomController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{room}', 'update')->whereNumber('room')->name('update');
+            Route::delete('/{room}', 'destroy')->whereNumber('room')->name('destroy');
+        });
+
+        // Classes Enrolled: the sections of a term ({class} = class_enroll.id)
+        Route::prefix('classes')->name('classes.')->middleware('scheduling:classes')->controller(ClassEnrollController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{class}', 'update')->whereNumber('class')->name('update');
+            Route::delete('/{class}', 'destroy')->whereNumber('class')->name('destroy');
+        });
+
+        // Curriculum Programs: a program's subjects per year level and semester ({curriculum} = curriculum.id)
+        Route::prefix('curricula')->name('curricula.')->middleware('scheduling:curricula')->controller(CurriculumController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+            Route::post('/', 'store')->name('store');
+            Route::delete('/{curriculum}', 'destroy')->whereNumber('curriculum')->name('destroy');
+        });
+
+        // Faculty Designation of a term ({designation} = fac_designation.id)
+        Route::prefix('designations')->name('designations.')->middleware('scheduling:designations')->controller(FacultyDesignationController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{designation}', 'update')->whereNumber('designation')->name('update');
+            Route::delete('/{designation}', 'destroy')->whereNumber('designation')->name('destroy');
+        });
+
+        // Faculty List: add a newly hired one, or assign an existing one to the campus ({faculty} = faculty.id)
+        Route::prefix('faculty')->name('faculty.')->middleware('scheduling:faculty')->controller(FacultyController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/search', 'search')->middleware('throttle:120,1')->name('search');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{faculty}', 'update')->whereNumber('faculty')->name('update');
+            Route::put('/{faculty}/assign', 'assign')->whereNumber('faculty')->name('assign');
+        });
+
+        // Subject Offered of a term, and the curriculum template ({offering} = sub_offered.id)
+        Route::prefix('offerings')->name('offerings.')->middleware('scheduling:offerings')->controller(SubjectOfferedController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/template', 'template')->name('template');
+            Route::post('/template', 'storeTemplate')->name('template.store');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{offering}', 'update')->whereNumber('offering')->name('update');
+            Route::delete('/{offering}', 'destroy')->whereNumber('offering')->name('destroy');
         });
     });
 

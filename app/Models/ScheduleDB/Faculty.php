@@ -55,6 +55,15 @@ class Faculty extends Authenticatable
         return $this->role === $role;
     }
 
+    // e.g. "Dela Cruz, Juan D. Jr."
+    public function listName(): string
+    {
+        $middleInitial = $this->mname ? mb_substr($this->mname, 0, 1) . '.' : null;
+        $ext = $this->ext && $this->ext !== 'N/A' ? $this->ext : null;
+
+        return trim("{$this->lname}, " . collect([$this->fname, $middleInitial, $ext])->filter()->implode(' '));
+    }
+
     public function buttonAccess(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne('App\Models\SettingDB\ButtonAccess', 'user_id');

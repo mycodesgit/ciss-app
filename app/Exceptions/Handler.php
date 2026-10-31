@@ -17,6 +17,7 @@ class Handler extends ExceptionHandler
         'employee/admission' => ['layouts.master_empadmission', 'admission-url', 'Admission'],
         'employee/enrollment' => ['layouts.master_empenrollment', 'enrollment-url', 'Enrollment'],
         'employee/settings' => ['layouts.master_empsetting', 'setting-url', 'Settings'],
+        'employee/scheduling' => ['layouts.master_empscheduling', 'scheduler-url', 'Scheduling'],
     ];
 
     /**

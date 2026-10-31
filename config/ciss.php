@@ -219,7 +219,7 @@ return [
         'home-url' => ['label' => 'Home', 'icon' => 'fas fa-home', 'route' => 'employee.dashboard', 'always' => true],
         'admission-url' => ['label' => 'Admission', 'icon' => 'fas fa-id-card', 'route' => 'employee.admission.dashboard'],
         'enrollment-url' => ['label' => 'Enrollment', 'icon' => 'fas fa-laptop-code', 'route' => 'employee.enrollment.dashboard'],
-        'scheduler-url' => ['label' => 'Scheduling', 'icon' => 'fas fa-calendar-alt', 'route' => null],
+        'scheduler-url' => ['label' => 'Scheduling', 'icon' => 'fas fa-calendar-alt', 'route' => 'employee.scheduling.dashboard'],
         'assessment-url' => ['label' => 'Assessment', 'icon' => 'fas fa-clipboard', 'route' => null],
         'cashiering-url' => ['label' => 'Cashier', 'icon' => 'fas fa-calculator', 'route' => null],
         'scholarship-url' => ['label' => 'Scholarship', 'icon' => 'fas fa-graduation-cap', 'route' => null],
@@ -231,6 +231,115 @@ return [
         'ossa-url' => ['label' => 'Ossa', 'icon' => 'fas fa-user-gear', 'route' => null],
         'request-url' => ['label' => 'Request', 'icon' => 'fas fa-file', 'route' => null],
         'setting-url' => ['label' => 'Accounts', 'icon' => 'fas fa-cog', 'route' => 'employee.settings.index'],
+    ],
+
+    /*
+    | Scheduling module (menu key "scheduler-url").
+    | pages: who may open each page (users.role list, and extra users.id list); the sidebar and the
+    | 'scheduling:{page}' middleware both read it (User::canOpenSchedulingPage). The Dashboard is open to the module.
+    */
+    'scheduling' => [
+        'pages' => [
+            'colleges' => ['roles' => [0]],
+            'programs' => ['roles' => [0]],
+            'rooms' => ['roles' => [0, 12, 14]],
+            'classes' => ['roles' => [0, 3, 12, 14, 15]],
+            'curricula' => ['roles' => [0], 'users' => [24]],
+            'designations' => ['roles' => [0, 12, 14]],
+            'faculty' => ['roles' => [0, 5, 6, 7, 12, 14]],
+            'offerings' => ['roles' => [0, 3, 12, 14, 15]],
+        ],
+
+        // college.id of the academic colleges (ADM and KAB are not listed)
+        'college_ids' => [2, 3, 4, 5, 6, 7, 8],
+
+        // Graduate School: program codes contain this, subject codes start with that (lecture fee typed by hand)
+        'graduate_program_code' => '-GSS-',
+        'graduate_subject_prefix' => 'KAB-GSS',
+        // Subjects with codes starting with this are never offered
+        'hidden_subject_prefix' => 'VIC',
+
+        // Fees computed by the server (SubjectFees); NSTP subjects are config ciss.report_card.nstp_subjects
+        'fees' => [
+            'per_unit' => 180,
+            'nstp_lecture' => 270,
+            'laboratory' => 500,
+            'ojt_development' => 3000,
+            'thesis_laboratory' => 500,
+        ],
+        // assessment accountappraisal.id of the fund accounts a subject can be charged to
+        'fund_accounts' => ['laboratory' => 85, 'nstp' => 105],
+
+        'max_students' => 35,
+        // Campuses that can add a section's subjects from its curriculum (Subject Offered > Template)
+        'template_campuses' => ['MC'],
+        // Optional text added after a new section's name (Classes Enrolled)
+        'section_add_ons' => ['SIKAT - CAMI'],
+
+        'offering_types' => [
+            'No' => 'No', 'Special' => 'Special Class',
+            '1st Cycle' => '1st Cycle', '2nd Cycle' => '2nd Cycle', '3rd Cycle' => '3rd Cycle', '4th Cycle' => '4th Cycle',
+            'SHA 1st' => 'SHA 1st Cycle', 'SHA 2nd' => 'SHA 2nd Cycle', 'SHA 3rd' => 'SHA 3rd Cycle',
+        ],
+
+        // Faculty: majors (SED department only), suffixes, academic ranks
+        'major_department' => 'SED',
+        'majors' => ['English', 'Filipino', 'Math', 'Science'],
+        'suffixes' => ['Ph.D.', 'Ed.D.', 'MIT', 'MSIT', 'MA', 'MBA', 'CPA', 'MEd'],
+        'ranks' => [
+            'Professor VI', 'Professor V', 'Professor IV', 'Professor III', 'Professor II', 'Professor I',
+            'Associate Professor V', 'Associate Professor IV', 'Associate Professor III', 'Associate Professor II', 'Associate Professor I',
+            'Assistant Professor IV', 'Assistant Professor III', 'Assistant Professor II', 'Assistant Professor I',
+            'Instructor III', 'Instructor II', 'Instructor I', 'Part-Time',
+        ],
+        // addressee.id hidden from the Prefix list ("M...")
+        'hidden_prefix_ids' => [4],
+
+        // Faculty Designation: fac_designation.facCollege => label, and the designations per group (value => label)
+        'designation_colleges' => [
+            'ADM' => 'ADM', 'CAF' => 'CAF', 'CAS' => 'CAS', 'CBM' => 'CBM', 'CCS' => 'CCS', 'CJE' => 'CJE', 'COE' => 'COE', 'CTE' => 'COTED',
+        ],
+        'designations' => [
+            'A. University Wide' => [
+                'Dean of Instruction' => 'Dean of Instruction',
+                'Vice President' => 'Vice President',
+                'Dean' => 'Dean',
+                'Quality Assurance' => 'Quality Assurance',
+                'Research & Extension' => 'Research & Extension',
+                'Planning Officer' => 'Planning Officer',
+                'Director (by category)' => 'Director (by category)',
+                'CampusAdmin' => 'Campus Administrator',
+                'Coordinator' => 'Coordinator',
+                'Internal Lead Auditor' => 'Internal Lead Auditor',
+                'ISO/ISA Secretariat' => 'ISO/ISA Secretariat',
+                'Faculty Regent' => 'Faculty Regent',
+                'Editor-in-Chief/Managing Editor' => 'Editor-in-Chief/Managing Editor',
+            ],
+            'B. Campus/College Level' => [
+                'Division Chair' => 'Division Chair',
+                'Program Head' => 'Program Head',
+                'Collecting and Disbursing Officer' => 'Collecting and Disbursing Officer',
+                'Library Services/Librarian' => 'Library Services/Librarian',
+                'Registrar' => 'Registrar',
+                'Assessment' => 'Assessment',
+                'MIS' => 'Network Administrator/Management Information System (MIS) In-charge',
+                'Data Privacy Act Officer' => 'Data Privacy Act Officer',
+                'Guidance and Counseling/Health Services' => 'Guidance and Counseling/Health Services',
+                'Property Custodian/Supply Officer/Records Officer/Campus-HR' => 'Property Custodian/Supply Officer/Records Officer/Campus-HR',
+                'OSSA Coordinator' => 'OSSA Coordinator',
+                'NBC Local Evaluator' => 'NBC Local Evaluator',
+                'Coordinator, Research/Extension' => 'Coordinator, Research/Extension',
+                'Coordinator, Landscaping and Beautification' => 'Coordinator, Landscaping and Beautification',
+                'Coordinator, Sports and Cultural' => 'Coordinator, Sports and Cultural',
+                'Adviser, Student Organization (FLP/SSG)' => 'Adviser, Student Organization (FLP/SSG)',
+                'Adviser, School Publication/Journal' => 'Adviser, School Publication/Journal',
+                'Laboratory/AVR In-charge' => 'Laboratory/AVR In-charge',
+                'Yearbook In-charge' => 'Yearbook In-charge',
+                'Sports and Cultural Coach (Varsity)' => 'Sports and Cultural Coach (Varsity)',
+                'Project In-charge' => 'Project In-charge',
+                'Faculty with approved Research/Extension/Production proposal' => 'Faculty with approved Research/Extension/Production proposal',
+            ],
+        ],
     ],
 
 ];

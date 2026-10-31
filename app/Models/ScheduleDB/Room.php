@@ -18,4 +18,9 @@ class Room extends Model
         'campus', 
         'status',
     ];
+
+    // rooms.status (enum '1' / '2')
+    public const ACTIVE = '1';
+    public const INACTIVE = '2';
+    public const STATUSES = [self::ACTIVE => 'Active', self::INACTIVE => 'Inactive'];
 }
