@@ -145,4 +145,12 @@
             </a>
         </li>
     @endif
+    {{-- Registrar and Administrators only (User::canCorrectGrades, 'registrar' middleware) --}}
+    @if (Auth::guard('web')->user()->canCorrectGrades())
+        <li>
+            <a href="{{ route('employee.enrollment.students-enrolled.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.students-enrolled.*')])>
+                <i class="ti ti-category"></i><span class="nav-text">Students Enrolled</span>
+            </a>
+        </li>
+    @endif
 </ul>
