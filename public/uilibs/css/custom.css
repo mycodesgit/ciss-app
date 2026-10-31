@@ -94,6 +94,8 @@
     top: 10px !important;
     left: 50% !important;
     transform: translateX(-50%);
+    /* Above the fixed topbar (9995) and modals (9991), so scrolled modals pass behind both */
+    z-index: 9996;
 }
 
 .services-menu{
@@ -248,7 +250,7 @@
 
 .modal {
     z-index: 9991;
-    /* Space above every modal for the fixed green topbar and its logo (#topbar is above modals: z-index 9995) */
+    /* Space above every modal for the fixed green topbar and its logo (#topbar 9995 and .center-top 9996 are above modals) */
     --modal-top-gap: 5rem;
 }
 

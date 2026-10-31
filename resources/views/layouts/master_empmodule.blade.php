@@ -33,7 +33,7 @@
     <main id="content" class="content py-10">
         <div class="container-fluid">
             <div class="row">
-                <div style="z-index: 9999">
+                <div>
                     <img src="{{ asset('uilibs/images/cpsulogov4.webp') }}" style="width:70px;" class="center-top">
                 </div>
             </div>
