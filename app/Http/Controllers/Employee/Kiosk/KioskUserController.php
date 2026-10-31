@@ -19,7 +19,7 @@ use App\Services\Kiosk\KioskAccounts;
 /**
  * Kiosk > Kiosk User: the students' kiosk accounts of a campus.
  *  - index():   the page (campus select, accounts table, Add / Reset Password modals)
- *  - list():    AJAX, the accounts of the campus (DataTable)
+ *  - list():    AJAX, the accounts of the campus matching a search: last name, first name or Student ID (DataTable)
  *  - student(): AJAX, the name of a Student ID while it is typed in Add New (and whether it has an account)
  *  - store():   creates an account; reset(): sets a new password (resetnumber + 1); destroy(): deletes it
  * Each create / reset is a kiosk log of the employee (Dashboard). Accounts are reached through their student's
@@ -29,23 +29,43 @@ class KioskUserController extends Controller
 {
     use ChecksEnrollment, FindsEnrollment;
 
+    private const MIN_SEARCH_LENGTH = 2;
+    private const MAX_RESULTS = 500;
+
     public function index()
     {
         return view('pages.employee.kiosk.users.index', $this->searchOptions());
     }
 
+    // Empty until a search of at least MIN_SEARCH_LENGTH characters: last name or first name containing it, or the
+    // exact Student ID; at most MAX_RESULTS accounts
     public function list(Request $request)
     {
-        $campus = $request->validate(['campus' => ['required', Rule::in(array_keys($this->searchableCampuses()))]])['campus'];
+        $data = $request->validate([
+            'campus' => ['required', Rule::in(array_keys($this->searchableCampuses()))],
+            'query' => ['nullable', 'string', 'max:50'],
+        ]);
+        $search = strtoupper(trim((string) ($data['query'] ?? '')));
 
-        // From students (filtered by campus) to kioskstudent, whose studid is indexed
+        if (mb_strlen($search) < self::MIN_SEARCH_LENGTH) {
+            return response()->json(['data' => []]);
+        }
+
+        $like = '%' . addcslashes($search, '%_\\') . '%';
+
+        // From students (filtered by campus and the search) to kioskstudent, whose studid is indexed
         $accounts = Student::join('kioskstudent', 'kioskstudent.studid', '=', 'students.stud_id')
-            ->whereCampusIn('students.campus', [$campus])
+            ->whereCampusIn('students.campus', [$data['campus']])
+            ->where(fn ($where) => $where->where('students.lname', 'like', $like)
+                ->orWhere('students.fname', 'like', $like)
+                ->orWhere('students.stud_id', $search))
             ->orderBy('students.lname')->orderBy('students.fname')
+            ->limit(self::MAX_RESULTS)
             ->get(['kioskstudent.id', 'kioskstudent.studid', 'kioskstudent.resetnumber', 'kioskstudent.updated_at as changed_at',
                 'students.lname', 'students.fname', 'students.mname', 'students.ext']);
 
         return response()->json([
+            'limited' => $accounts->count() === self::MAX_RESULTS,
             'data' => $accounts->map(function ($account) {
                 $changedAt = $account->changed_at ? Carbon::parse($account->changed_at) : null;
 

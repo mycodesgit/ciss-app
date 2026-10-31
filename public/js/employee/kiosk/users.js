@@ -1,12 +1,14 @@
 /**
  * Kiosk > Kiosk User (resources/views/pages/employee/kiosk/users/index.blade.php). Server: KioskUserController.
- * Table, form saving and wire:navigate handling come from public/js/employee/crud.js. Passwords look like the
+ * Table, form saving and wire:navigate handling come from public/js/employee/crud.js; the table stays empty until
+ * a search (last name, first name or Student ID), so thousands of accounts are never loaded. Passwords look like the
  * old system's (4 digits + K, U or G); only their hash is saved, so the password field always starts empty.
  */
 (function () {
     'use strict';
 
     const page = () => document.getElementById('kioskUsers');
+    const form = () => document.getElementById('kioskUsersSearchForm');
 
     const ACTIONS = CissCrud.actionsMenu([
         { action: 'reset', icon: 'fas fa-key', label: 'Reset Password' },
@@ -24,7 +26,11 @@
         pageId: 'kioskUsers',
         table: '#kioskUsersTable',
         order: [[1, 'asc']],
-        ajaxData: () => ({ campus: $('#kioskUsers .js-campus').val() }),
+        // The search form's campus and query; the server lists nothing until a query of 2+ characters
+        ajaxData: () => {
+            const elements = form().elements;
+            return { campus: elements.campus.value, query: elements.query.value.trim() };
+        },
         columns: [
             { data: 'studid', render: $.fn.dataTable.render.text() },
             { data: 'name', render: $.fn.dataTable.render.text() },
@@ -36,7 +42,12 @@
             { data: null, orderable: false, searchable: false, render: () => ACTIONS },
         ],
         tableOptions: {
-            language: { emptyTable: 'No kiosk accounts in this campus.' },
+            language: { emptyTable: 'No kiosk accounts to show. Enter a last name, first name or Student ID No., then click Search.' },
+            // Note when the search matched more accounts than the table shows
+            drawCallback: function () {
+                const json = this.api().ajax.json() || {};
+                $('#kioskUsers .js-limit-note').text(json.limited ? 'Showing the first ' + json.data.length + ' matches. Search more specifically.' : '');
+            },
         },
         actions: {
             reset(account) {
@@ -60,7 +71,16 @@
         },
     });
 
-    $(document).on('change', '#kioskUsers .js-campus', () => CissCrud.reload());
+    $(document).on('submit', '#kioskUsersSearchForm', function (e) {
+        e.preventDefault();
+        CissCrud.reload();
+    });
+
+    // After Add New, search the added Student ID so the new account shows in the table (crud.js reloads it on save)
+    $(document).on('submit', '#addKioskUserForm', function () {
+        const studentId = this.elements.studid.value.trim().toUpperCase();
+        if (/^\d{4}-\d{4}-[A-Z]$/.test(studentId)) form().elements.query.value = studentId;
+    });
 
     // Add New starts empty
     $(document).on('show.bs.modal', '#addKioskUserModal', function (e) {
@@ -71,7 +91,7 @@
     });
 
     $(document).on('click', '#kioskUsers .js-generate-password', function () {
-        $(this).closest('.input-group').find('.js-password').val(generatePassword());
+        $(this).closest('.kiosk-password-field').find('.js-password').val(generatePassword()).trigger('focus');
     });
 
     // The student's name once a whole Student ID is typed (2024-0001-K)
