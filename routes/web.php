@@ -64,6 +64,11 @@ use App\Http\Controllers\Employee\Nstp\NstpEnrolleesController as NstpModuleEnro
 use App\Http\Controllers\Employee\Kiosk\KioskDashboardController;
 use App\Http\Controllers\Employee\Kiosk\KioskUserController;
 use App\Http\Controllers\Employee\Kiosk\KioskBulkController;
+use App\Http\Controllers\Employee\Queue\QueueDashboardController;
+use App\Http\Controllers\Employee\Queue\QueueCounterController;
+use App\Http\Controllers\Employee\Queue\QueueNumberController;
+use App\Http\Controllers\Employee\Queue\QueueSettingController;
+use App\Http\Controllers\Main\QueueMonitorController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -83,6 +88,13 @@ use App\Http\Controllers\Main\PortalTrackController;
 
 // Public
 Route::get('/', [PortalController::class, 'home'])->name('home');
+
+// Queue Monitor (TV screen at the Registrar), no login: /queueing/MC ({campus} = a code of config ciss.campuses)
+Route::prefix('queueing/{campus}')->name('queue-monitor.')->whereIn('campus', array_keys(config('ciss.campuses')))
+    ->controller(QueueMonitorController::class)->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::get('/data', 'data')->middleware('throttle:120,1')->name('data');
+    });
 
 Route::prefix('portal')->name('portal.')->group(function () {
     Route::get('/admission', [PortalController::class, 'admission'])->name('admission');
@@ -510,6 +522,37 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::get('/students', 'students')->name('students');
             Route::post('/generate', 'generate')->name('generate');
+        });
+    });
+
+    // Queueing module (menu key "queue-url"); every page works on one campus (?campus=, default the user's own)
+    Route::prefix('queue')->name('queue.')->middleware('menu.access:queue-url')->group(function () {
+        Route::get('/', [QueueDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/data', [QueueDashboardController::class, 'data'])->name('dashboard.data');
+
+        // Counters ({counter} = counters.id)
+        Route::prefix('counters')->name('counters.')->controller(QueueCounterController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{counter}', 'update')->whereNumber('counter')->name('update');
+            Route::put('/{counter}/status', 'status')->whereNumber('counter')->name('status');
+            Route::delete('/{counter}', 'destroy')->whereNumber('counter')->name('destroy');
+        });
+
+        // Numbers (tickets)
+        Route::prefix('numbers')->name('numbers.')->controller(QueueNumberController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/summary', 'summary')->name('summary');
+            Route::get('/list', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+        });
+
+        // Settings: On / Off, Reset
+        Route::prefix('settings')->name('settings.')->controller(QueueSettingController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/toggle', 'toggle')->name('toggle');
+            Route::post('/reset', 'reset')->name('reset');
         });
     });
 

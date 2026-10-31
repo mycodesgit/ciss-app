@@ -71,6 +71,11 @@ class EnrollmentQueueController extends Controller
                 ->first();
 
             if ($customer) {
+                // The number the window was serving is done (Queue > Dashboard counts served numbers)
+                if ((int) $counter->currentid) {
+                    QueueCustomer::whereKey((int) $counter->currentid)->where('status', 'serving')->update(['status' => 'served']);
+                }
+
                 // customers.counter_id holds the counter's window name (read that way by the queue screens)
                 $customer->update(['status' => 'serving', 'counter_id' => $counter->windowname]);
                 $counter->update(['activeidnumber' => $customer->id, 'currentid' => $customer->id]);

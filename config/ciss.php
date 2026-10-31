@@ -226,7 +226,7 @@ return [
         'yearbook-url' => ['label' => 'Yearbook', 'icon' => 'fas fa-book', 'route' => null],
         'grading-url' => ['label' => 'Grading', 'icon' => 'fas fa-star', 'route' => null, 'in_menu' => false],
         'kiosk-url' => ['label' => 'Kiosk', 'icon' => 'fas fa-desktop', 'route' => 'employee.kiosk.dashboard'],
-        'queue-url' => ['label' => 'Queuing', 'icon' => 'fas fa-list-ol', 'route' => null],
+        'queue-url' => ['label' => 'Queuing', 'icon' => 'fas fa-list-ol', 'route' => 'employee.queue.dashboard'],
         'nstp-url' => ['label' => 'Nstp', 'icon' => 'fas fa-person-rifle', 'route' => 'employee.nstp.dashboard'],
         'ossa-url' => ['label' => 'Ossa', 'icon' => 'fas fa-user-gear', 'route' => null],
         'request-url' => ['label' => 'Request', 'icon' => 'fas fa-file', 'route' => null],
