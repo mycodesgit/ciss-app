@@ -47,9 +47,13 @@
                                 <div class="card-body">
                                     <form id="transferLookupForm" autocomplete="off">
                                         <label class="form-label fw-semibold">Student ID Number: <span class="text-danger">*</span></label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" name="stud_id" class="form-control js-student-id" placeholder="0000-0000-X" maxlength="11" required>
-                                            <button type="submit" class="btn btn-success"><i class="ti ti-search"></i> Find</button>
+                                        {{-- Typed as 2024-0001-K (crud.js formats it) --}}
+                                        <input type="text" name="stud_id" class="form-control form-control-sm js-student-id" placeholder="0000-0000-X" maxlength="11" required autofocus>
+                                        <div class="form-text small">Enter the student's ID, then find the record to transfer.</div>
+                                        <div class="d-grid mt-3">
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="ti ti-search"></i> Find Student
+                                            </button>
                                         </div>
                                     </form>
 
