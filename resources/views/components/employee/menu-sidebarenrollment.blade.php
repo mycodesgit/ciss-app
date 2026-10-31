@@ -157,5 +157,22 @@
                 <i class="ti ti-category"></i><span class="nav-text">Students Enrolled</span>
             </a>
         </li>
+
+        <li class="px-4 py-1 mt-2"><small class="nav-text text-muted">Logs</small></li>
+        <li>
+            <a href="{{ route('employee.enrollment.enrollment-logs.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.enrollment-logs.*')])>
+                <i class="ti ti-logs"></i><span class="nav-text">Enrollment Logs</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('employee.enrollment.grade-encoding-logs.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.grade-encoding-logs.*')])>
+                <i class="ti ti-building-store"></i><span class="nav-text">Grade Encoding Logs</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('employee.enrollment.deleted-enrollment-logs.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.deleted-enrollment-logs.*')])>
+                <i class="ti ti-git-branch-deleted"></i><span class="nav-text">Deleted Enrollment Logs</span>
+            </a>
+        </li>
     @endif
 </ul>

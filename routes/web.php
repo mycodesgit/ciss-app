@@ -60,6 +60,9 @@ use App\Http\Controllers\Employee\Enrollment\NstpEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\StudentRecordController;
 use App\Http\Controllers\Employee\Enrollment\StudentsEnrolledController;
 use App\Http\Controllers\Employee\Enrollment\GradesheetLogbookController;
+use App\Http\Controllers\Employee\Enrollment\EnrollmentLogsController;
+use App\Http\Controllers\Employee\Enrollment\GradeEncodingLogsController;
+use App\Http\Controllers\Employee\Enrollment\DeletedEnrollmentLogsController;
 use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
 use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
 use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
@@ -487,6 +490,25 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
 
         // Students Enrolled (the old "Students Strands"): enrolled students of a term with strand, age, program, address
         Route::prefix('students-enrolled')->name('students-enrolled.')->middleware('registrar')->controller(StudentsEnrolledController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+        });
+
+        // Enrollment Logs (the old "Updated Enroll. Logs"): every save of the enrollments of a term (?campus=&schlyear=&semester=)
+        Route::prefix('enrollment-logs')->name('enrollment-logs.')->middleware('registrar')->controller(EnrollmentLogsController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Grade Encoding Logs (the old "Encoded Grades. Logs"): saves of final grades / completions (?campus=&schlyear=&semester=&q=)
+        Route::prefix('grade-encoding-logs')->name('grade-encoding-logs.')->middleware('registrar')->controller(GradeEncodingLogsController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+        });
+
+        // Deleted Enrollment Logs (the old "Deleted Enroll. Logs"): enrollments of a term deleted in Edit Enrollment (?campus=&schlyear=&semester=)
+        Route::prefix('deleted-enrollment-logs')->name('deleted-enrollment-logs.')->middleware('registrar')->controller(DeletedEnrollmentLogsController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/list', 'list')->name('list');
         });
