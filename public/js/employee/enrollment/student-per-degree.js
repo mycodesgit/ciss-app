@@ -1,6 +1,6 @@
 /**
- * Enrollment > Student Per Degree (resources/views/pages/employee/enrollment/per-degree/index.blade.php).
- * Server: StudentPerDegreeController. The table and wire:navigate handling come from CissCrud
+ * Enrollment > Student Per Degree and Attendance Per Degree (resources/views/pages/employee/enrollment/per-degree/index.blade.php).
+ * Server: StudentPerDegreeController / AttendancePerDegreeController. The table and wire:navigate handling come from CissCrud
  * (public/js/employee/crud.js); searching reloads the table without a page reload. View opens a class's
  * students in a modal; its PDF View tab loads the class's PDF.
  */
@@ -52,7 +52,8 @@
                 extend: 'excelHtml5',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-success btn-sm',
-                title: () => 'Student Per Degree - ' + shownTerm(),
+                // "Student Per Degree" or "Attendance Per Degree" (data-title on the page)
+                title: () => document.getElementById('studentPerDegree').dataset.title + ' - ' + shownTerm(),
                 exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] },
             }],
             // Totals of the rows shown by the search box

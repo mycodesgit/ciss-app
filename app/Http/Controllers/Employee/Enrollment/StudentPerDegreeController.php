@@ -7,6 +7,7 @@ use App\Http\Controllers\Employee\Enrollment\Concerns\ChecksEnrollment;
 use App\Http\Controllers\Employee\Enrollment\Concerns\FindsEnrollment;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use PDF;
 
@@ -21,6 +22,7 @@ use App\Models\SettingDB\ConfigureCurrent;
  *  - pdf():      the same students as a PDF, males then females (src of the modal's iframe)
  * Enrolled = program_en_history.status 2 or 3. Graduate School staff see graduate school programs only.
  * Campus: administrators can pick any campus, everyone else only their own (FindsEnrollment). (student-per-degree.js)
+ * AttendancePerDegreeController reuses all of this with its own routes, titles and a Signature column on the PDF.
  */
 class StudentPerDegreeController extends Controller
 {
@@ -29,9 +31,20 @@ class StudentPerDegreeController extends Controller
     private const ENROLLED_STATUSES = [2, 3];
     private const GRADUATE_PROGRAMS = '%-GSS-%'; // progCod of graduate school programs
 
+    protected string $routeName = 'employee.enrollment.per-degree';
+    protected string $pageTitle = 'Student Per Degree';
+    protected string $pageDescription = 'Enrolled students of a term per program, year and section.';
+    protected bool $withSignature = false; // PDF: Signature column for the students to sign
+
     public function index()
     {
-        return view('pages.employee.enrollment.per-degree.index', $this->searchOptions());
+        return view('pages.employee.enrollment.per-degree.index', $this->searchOptions() + [
+            'page' => [
+                'title' => $this->pageTitle,
+                'description' => $this->pageDescription,
+                'listUrl' => route("{$this->routeName}.list"),
+            ],
+        ]);
     }
 
     // Empty until a term is searched (the table loads once when the page opens)
@@ -70,8 +83,8 @@ class StudentPerDegreeController extends Controller
                     'total' => (int) $row->total,
                     'male' => (int) $row->male,
                     'female' => (int) $row->female,
-                    'students_url' => route('employee.enrollment.per-degree.students', $class),
-                    'pdf_url' => route('employee.enrollment.per-degree.pdf', $class),
+                    'students_url' => route("{$this->routeName}.students", $class),
+                    'pdf_url' => route("{$this->routeName}.pdf", $class),
                 ];
             }),
         ]);
@@ -98,6 +111,8 @@ class StudentPerDegreeController extends Controller
         $term = new ConfigureCurrent(['schlyear' => $data['schlyear'], 'semester' => (int) $data['semester']]);
 
         return PDF::loadView('pdf.student-per-degree', [
+            'documentTitle' => $this->pageTitle,
+            'withSignature' => $this->withSignature,
             'title' => trim(($first->progName ?? $data['progCod']) . " {$data['studYear']}-{$data['studSec']}"),
             'term' => $term,
             'campusName' => config('ciss.campuses')[$data['campus']] ?? $data['campus'],
@@ -109,7 +124,7 @@ class StudentPerDegreeController extends Controller
             'total' => $students->count(),
         ])
             ->setPaper('legal', 'portrait')
-            ->stream('student-per-degree.pdf');
+            ->stream(Str::slug($this->pageTitle) . '.pdf');
     }
 
     // ---------- Helpers ----------

@@ -1,12 +1,13 @@
+{{-- Student Per Degree and Attendance Per Degree ($page: title, description, listUrl from the controller) --}}
 @extends('layouts.master_empenrollment')
 
 @section('title')
-    CISS - Enrollment | Student Per Degree
+    CISS - Enrollment | {{ $page['title'] }}
 @endsection
 
 @section('workspace')
-    {{-- URL for enrollment/student-per-degree.js (the table, via CissCrud) --}}
-    <div id="studentPerDegree" data-list-url="{{ route('employee.enrollment.per-degree.list') }}">
+    {{-- URL and export title for enrollment/student-per-degree.js (the table, via CissCrud) --}}
+    <div id="studentPerDegree" data-list-url="{{ $page['listUrl'] }}" data-title="{{ $page['title'] }}">
 
         <div class="row">
             <div class="col-12">
@@ -20,15 +21,15 @@
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item mt-1">Enrollment</li>
-                                <li class="breadcrumb-item active mt-1">Student Per Degree</li>
+                                <li class="breadcrumb-item active mt-1">{{ $page['title'] }}</li>
                             </ol>
                         </div>
                     </div>
                     <!-- Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                         <div>
-                            <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">Student Per Degree</h1>
-                            <p class="text-muted small mb-0">Enrolled students of a term per program, year and section.</p>
+                            <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">{{ $page['title'] }}</h1>
+                            <p class="text-muted small mb-0">{{ $page['description'] }}</p>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
@@ -134,7 +135,7 @@
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="perDegreeStudentsModalLabel">Student Per Degree - <span class="js-class-name"></span></h5>
+                        <h5 class="modal-title" id="perDegreeStudentsModalLabel">{{ $page['title'] }} - <span class="js-class-name"></span></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

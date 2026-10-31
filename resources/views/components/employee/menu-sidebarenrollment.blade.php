@@ -84,5 +84,10 @@
                 <i class="ti ti-file-type-pdf"></i><span class="nav-text">Student Per Degree</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.enrollment.attendance-per-degree.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.attendance-per-degree.*')])>
+                <i class="ti ti-signature"></i><span class="nav-text">Attendance Per Degree</span>
+            </a>
+        </li>
     @endif
 </ul>

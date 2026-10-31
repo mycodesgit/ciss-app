@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Per Degree - {{ $title }}</title>
+    {{-- Student Per Degree, or Attendance Per Degree ($withSignature: Signature column for the students to sign) --}}
+    <title>{{ $documentTitle }} - {{ $title }}</title>
     <style>
         /* Paper size is set by the controller (Legal portrait). Top / bottom margins leave room for the header and footer images */
         @page {
@@ -77,6 +78,12 @@
 
         .text-center { text-align: center; }
 
+        /* Attendance sheet: taller rows leave room to sign */
+        table.list.attendance td {
+            height: 22px;
+            vertical-align: middle;
+        }
+
         .summary {
             margin-top: 10px;
             font-size: 9pt;
@@ -102,12 +109,15 @@
         @continue($students->isEmpty())
 
         <div class="group-title">{{ $groupTitle }} ({{ $students->count() }})</div>
-        <table class="list">
+        <table class="list {{ $withSignature ? 'attendance' : '' }}">
             <thead>
                 <tr>
                     <th class="text-center" style="width: 8%;">#</th>
-                    <th style="width: 22%;">Student ID</th>
+                    <th style="width: {{ $withSignature ? '18%' : '22%' }};">Student ID</th>
                     <th>Name</th>
+                    @if ($withSignature)
+                        <th class="text-center" style="width: 30%;">Signature</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -116,6 +126,9 @@
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $student->studentID }}</td>
                         <td>{{ $student->full_name }}</td>
+                        @if ($withSignature)
+                            <td></td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
