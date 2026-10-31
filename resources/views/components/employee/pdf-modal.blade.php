@@ -14,11 +14,12 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0 position-relative" style="height: 75vh; background-color: #e9ecef;">
+            {{-- The PDF sits in a rounded, bordered frame with space around it (like the Student Record page) --}}
+            <div class="modal-body p-3 position-relative" style="height: 75vh;">
                 <div class="position-absolute top-50 start-50 translate-middle text-muted js-pdf-loading">
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading...
                 </div>
-                <iframe class="w-100 h-100 border-0 position-relative js-pdf-frame" title="{{ $title }}"></iframe>
+                <iframe class="w-100 h-100 border rounded position-relative js-pdf-frame" title="{{ $title }}"></iframe>
             </div>
             <div class="modal-footer">
                 <small class="text-muted me-auto">Use the viewer's <i class="fas fa-download"></i> download or <i class="fas fa-print"></i> print buttons above.</small>
