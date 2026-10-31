@@ -144,6 +144,11 @@
                 <i class="ti ti-book-2"></i><span class="nav-text">Student Record</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.enrollment.gradesheet-logbook.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.gradesheet-logbook.*')])>
+                <i class="ti ti-address-book"></i><span class="nav-text">Gradesheet Logbook</span>
+            </a>
+        </li>
     @endif
     {{-- Registrar and Administrators only (User::canCorrectGrades, 'registrar' middleware) --}}
     @if (Auth::guard('web')->user()->canCorrectGrades())

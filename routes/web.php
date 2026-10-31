@@ -59,6 +59,7 @@ use App\Http\Controllers\Employee\Enrollment\NumberOfEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\NstpEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\StudentRecordController;
 use App\Http\Controllers\Employee\Enrollment\StudentsEnrolledController;
+use App\Http\Controllers\Employee\Enrollment\GradesheetLogbookController;
 use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
 use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
 use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
@@ -473,6 +474,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('student-record')->name('student-record.')->middleware('student-record')->controller(StudentRecordController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/find', 'find')->name('find');
+            Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Gradesheet Logbook: submitted gradesheets of a college, and the logbook to sign (?campus=&schlyear=&semester=&college=)
+        // Same users as Student Record ('student-record' middleware)
+        Route::prefix('gradesheet-logbook')->name('gradesheet-logbook.')->middleware('student-record')->controller(GradesheetLogbookController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
             Route::get('/pdf', 'pdf')->name('pdf');
         });
 
