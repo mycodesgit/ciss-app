@@ -99,5 +99,13 @@
                 <i class="ti ti-numbers"></i><span class="nav-text">View Student Grades</span>
             </a>
         </li>
+        {{-- Administrator, Registrar, Registrar Staff, MIS and Dean of Instruction (User::REPORT_CARD_ROLES) --}}
+        @if (Auth::guard('web')->user()->canPrintReportCards())
+            <li>
+                <a href="{{ route('employee.enrollment.report-card.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.report-card.*')])>
+                    <i class="ti ti-id-badge-2"></i><span class="nav-text">Student Report Card</span>
+                </a>
+            </li>
+        @endif
     @endif
 </ul>

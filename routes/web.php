@@ -51,6 +51,7 @@ use App\Http\Controllers\Employee\Enrollment\StudentPerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\AttendancePerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\ClassAttendanceController;
 use App\Http\Controllers\Employee\Enrollment\StudentGradesController;
+use App\Http\Controllers\Employee\Enrollment\StudentReportCardController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -400,6 +401,13 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('student-grades')->name('student-grades.')->middleware('enrollment-reports')->controller(StudentGradesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/find', 'find')->name('find');
+        });
+
+        // Student Report Card: an enrollment's grades of one term as a PDF (?campus=&stud_id=&schlyear=&semester=)
+        Route::prefix('report-card')->name('report-card.')->middleware('report-card')->controller(StudentReportCardController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'find')->name('find');
+            Route::get('/pdf', 'pdf')->name('pdf');
         });
     });
 

@@ -92,6 +92,35 @@ return [
     'graduate_school_letter' => 'G',
 
     /*
+    | Student Report Card (PDF): the header image per campus (public/uilibs/images/reportcard),
+    | the registrar who certifies it per campus (campuses not listed get an empty signature line),
+    | and the NSTP subjects: their credits are shown in parentheses and left out of the average.
+    */
+    'report_card' => [
+        'headers' => [
+            'MC' => 'reportcardheaderMain.png',
+            'VC' => 'reportcardheaderVic.jpg',
+            'SCC' => 'reportcardheaderSCC.jpg',
+            'HC' => 'reportcardheaderHC.jpg',
+            'MP' => 'reportcardheaderMP.jpg',
+            'IC' => 'reportcardheaderIC.jpg',
+            'CC' => 'reportcardheaderCC.jpg',
+            'CA' => 'reportcardheaderCA.jpg',
+            'SC' => 'reportcardheaderSC.jpg',
+            'HinC' => 'reportcardheaderHinC.jpg',
+        ],
+        'registrars' => [
+            'MC' => ['name' => 'ELYSA JANE S. ARLOS', 'title' => 'OIC - University Registrar'],
+            'VC' => ['name' => 'JUNO E. PAJARILLO, DPA', 'title' => 'Campus Registrar'],
+            'SCC' => ['name' => 'JUJE C. RAMADA, LPT, Ph. D.', 'title' => 'Asst. Prof. / Campus Registrar'],
+        ],
+        'nstp_subjects' => [
+            'KAB-SER-076', 'KAB-SER-077', 'KAB-SER-144', 'KAB-SER-145',
+            'KAB-SER-146', 'KAB-SER-147', 'KAB-SER-148', 'KAB-SER-149',
+        ],
+    ],
+
+    /*
     | Pre-Enrollment Form (PDF): programs listed per college (the interviewed course is checked),
     | and the nurse signatory per campus (campuses not listed get an empty line titled "Nurse").
     */
