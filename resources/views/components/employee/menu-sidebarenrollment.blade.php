@@ -89,5 +89,10 @@
                 <i class="ti ti-signature"></i><span class="nav-text">Attendance Per Degree</span>
             </a>
         </li>
+        <li>
+            <a href="{{ route('employee.enrollment.class-attendance.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.class-attendance.*')])>
+                <i class="ti ti-clipboard-check"></i><span class="nav-text">Class Attendance</span>
+            </a>
+        </li>
     @endif
 </ul>

@@ -49,6 +49,7 @@ use App\Http\Controllers\Employee\Enrollment\StudentInformationController;
 use App\Http\Controllers\Employee\Enrollment\PrintRegistrationFormController;
 use App\Http\Controllers\Employee\Enrollment\StudentPerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\AttendancePerDegreeController;
+use App\Http\Controllers\Employee\Enrollment\ClassAttendanceController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -384,6 +385,14 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::get('/students', 'students')->name('students');
             Route::get('/pdf', 'pdf')->name('pdf');
+        });
+
+        // Class Attendance: subjects offered in a term (?campus=&schlyear=&semester=), students and attendance sheet PDF of a subject
+        Route::prefix('class-attendance')->name('class-attendance.')->middleware('enrollment-reports')->controller(ClassAttendanceController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/{subject}/students', 'students')->whereNumber('subject')->name('students');
+            Route::get('/{subject}/pdf', 'pdf')->whereNumber('subject')->name('pdf');
         });
     });
 
