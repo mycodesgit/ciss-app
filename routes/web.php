@@ -55,6 +55,7 @@ use App\Http\Controllers\Employee\Enrollment\StudentReportCardController;
 use App\Http\Controllers\Employee\Enrollment\ExtendedStudentsController;
 use App\Http\Controllers\Employee\Enrollment\ElPlController;
 use App\Http\Controllers\Employee\Enrollment\RankingController;
+use App\Http\Controllers\Employee\Enrollment\NumberOfEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -431,6 +432,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/', 'index')->name('index');
             Route::get('/courses', 'courses')->name('courses');
             Route::get('/list', 'list')->name('list');
+        });
+
+        // Number of Enrollees: enrolled students of a campus and term per year level (?campus=&schlyear=&semester=)
+        Route::prefix('number-of-enrollees')->name('number-of-enrollees.')->middleware('enrollment-reports')->controller(NumberOfEnrolleesController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/count', 'count')->name('count');
         });
     });
 

@@ -122,5 +122,10 @@
                 </a>
             </li>
         @endif
+        <li>
+            <a href="{{ route('employee.enrollment.number-of-enrollees.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.number-of-enrollees.*')])>
+                <i class="ti ti-checklist"></i><span class="nav-text">Number of Enrollees</span>
+            </a>
+        </li>
     @endif
 </ul>
