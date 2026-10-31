@@ -57,6 +57,10 @@ use App\Http\Controllers\Employee\Enrollment\ElPlController;
 use App\Http\Controllers\Employee\Enrollment\RankingController;
 use App\Http\Controllers\Employee\Enrollment\NumberOfEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\NstpEnrolleesController;
+use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
+use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
+use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
+use App\Http\Controllers\Employee\Nstp\NstpEnrolleesController as NstpModuleEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -444,6 +448,40 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         // CWTS/LTS/ROTC: students per NSTP component in a campus and term (?campus=&schlyear=&semester=)
         // Users given the NSTP menu in User Access (button_access "nstp-url"); administrators always
         Route::prefix('nstp-enrollees')->name('nstp-enrollees.')->middleware('menu.access:nstp-url')->controller(NstpEnrolleesController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/count', 'count')->name('count');
+        });
+    });
+
+    // NSTP module (menu key "nstp-url")
+    Route::prefix('nstp')->name('nstp.')->middleware('menu.access:nstp-url')->group(function () {
+        Route::get('/', [NstpDashboardController::class, 'index'])->name('dashboard');
+
+        // CWTS / LTS / ROTC / NSTP 1/2 students ({component} = a key of config ciss.nstp_components)
+        Route::prefix('students/{component}')->name('students.')->whereIn('component', array_keys(config('ciss.nstp_components')))
+            ->controller(NstpStudentsController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/list', 'list')->name('list');
+            });
+
+        // Grade Sheet: the Enrollment Gradesheet for NSTP subjects ({subject} = sub_offered.id, {grade} = studgrades.id)
+        Route::prefix('gradesheet')->name('gradesheet.')->controller(NstpGradesheetController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/subjects', 'subjects')->name('subjects');
+            Route::get('/subjects/{subject}', 'show')->whereNumber('subject')->name('show');
+            Route::get('/subjects/{subject}/students', 'students')->whereNumber('subject')->name('students');
+            Route::put('/subjects/{subject}/submit', 'submit')->whereNumber('subject')->name('submit');
+            Route::put('/grades/{grade}', 'saveGrade')->whereNumber('grade')->name('grade');
+            Route::put('/grades/{grade}/completion', 'saveCompletion')->whereNumber('grade')->name('completion');
+            // Grades password: at most 10 tries a minute
+            Route::middleware('throttle:10,1')->group(function () {
+                Route::put('/grades/{grade}/unlock', 'unlockGrade')->whereNumber('grade')->name('unlock-grade');
+                Route::put('/grades/{grade}/completion/unlock', 'unlockCompletion')->whereNumber('grade')->name('unlock-completion');
+            });
+        });
+
+        // CWTS/LTS/ROTC: the Enrollment report of the same name (?campus=&schlyear=&semester=)
+        Route::prefix('enrollees')->name('enrollees.')->controller(NstpModuleEnrolleesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/count', 'count')->name('count');
         });

@@ -127,11 +127,12 @@ class ClassAttendance
         ]);
     }
 
-    // Student records by stud_id (in chunks, so a big term stays within the query's placeholder limit)
+    // Student records by stud_id, in chunks of 500: with more than 1000 values MariaDB turns the IN list into a
+    // join (in_predicate_conversion_threshold) that finds no students
     private function studentRecords(array $studentIds, array $columns): Collection
     {
         return collect($studentIds)
-            ->chunk(5000)
+            ->chunk(500)
             ->flatMap(fn ($ids) => Student::whereIn('stud_id', $ids->values()->all())->get($columns))
             ->keyBy('stud_id');
     }

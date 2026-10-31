@@ -121,14 +121,22 @@ return [
     ],
 
     /*
-    | Enrollment > CWTS/LTS/ROTC: the NSTP subject codes of each component (the old system's codes).
+    | NSTP components (NSTP module, Enrollment > CWTS/LTS/ROTC): key = URL slug, the label and the subject codes.
+    | KAB-SER-076 / 077 are the old curriculum's NSTP 1 / NSTP 2 without a component.
     | Keep these in step with report_card.nstp_subjects.
     */
     'nstp_components' => [
-        'NSTP' => ['KAB-SER-076', 'KAB-SER-077'],
-        'CWTS' => ['KAB-SER-144', 'KAB-SER-147'],
-        'LTS' => ['KAB-SER-145', 'KAB-SER-148'],
-        'ROTC' => ['KAB-SER-146', 'KAB-SER-149'],
+        'cwts' => ['label' => 'CWTS', 'name' => 'Civic Welfare Training Service', 'codes' => ['KAB-SER-144', 'KAB-SER-147']],
+        'lts' => ['label' => 'LTS', 'name' => 'Literacy Training Service', 'codes' => ['KAB-SER-145', 'KAB-SER-148']],
+        'rotc' => ['label' => 'ROTC', 'name' => 'Reserve Officers Training Corps', 'codes' => ['KAB-SER-146', 'KAB-SER-149']],
+        'nstp' => ['label' => 'NSTP 1/2', 'name' => 'NSTP 1/2 (old curriculum, no component)', 'codes' => ['KAB-SER-076', 'KAB-SER-077']],
+    ],
+
+    // NSTP student lists (CHED serial number format): the fixed HEI columns
+    'nstp_hei' => [
+        'name' => 'Central Philippines State University',
+        'institutional_code' => '6058',
+        'type' => 'SUC',
     ],
 
     /*
@@ -219,7 +227,7 @@ return [
         'grading-url' => ['label' => 'Grading', 'icon' => 'fas fa-star', 'route' => null, 'in_menu' => false],
         'kiosk-url' => ['label' => 'Kiosk', 'icon' => 'fas fa-desktop', 'route' => null],
         'queue-url' => ['label' => 'Queuing', 'icon' => 'fas fa-list-ol', 'route' => null],
-        'nstp-url' => ['label' => 'Nstp', 'icon' => 'fas fa-person-rifle', 'route' => null],
+        'nstp-url' => ['label' => 'Nstp', 'icon' => 'fas fa-person-rifle', 'route' => 'employee.nstp.dashboard'],
         'ossa-url' => ['label' => 'Ossa', 'icon' => 'fas fa-user-gear', 'route' => null],
         'request-url' => ['label' => 'Request', 'icon' => 'fas fa-file', 'route' => null],
         'setting-url' => ['label' => 'Accounts', 'icon' => 'fas fa-cog', 'route' => 'employee.settings.index'],

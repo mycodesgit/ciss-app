@@ -1,12 +1,13 @@
-@extends('layouts.master_empenrollment')
+{{-- CWTS/LTS/ROTC counts, in the Enrollment or the NSTP module ($module: name, layout; $countUrl from the controller) --}}
+@extends($module['layout'])
 
 @section('title')
-    CISS - Enrollment | CWTS/LTS/ROTC
+    CISS - {{ $module['name'] }} | CWTS/LTS/ROTC
 @endsection
 
 @section('workspace')
     {{-- URL for enrollment/nstp-enrollees.js --}}
-    <div id="nstpEnrollees" data-count-url="{{ route('employee.enrollment.nstp-enrollees.count') }}">
+    <div id="nstpEnrollees" data-count-url="{{ $countUrl }}">
 
         <div class="row">
             <div class="col-12">
@@ -19,7 +20,7 @@
                                         <i class="fas fa-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item mt-1">Enrollment</li>
+                                <li class="breadcrumb-item mt-1">{{ $module['name'] }}</li>
                                 <li class="breadcrumb-item active mt-1">CWTS/LTS/ROTC</li>
                             </ol>
                         </div>

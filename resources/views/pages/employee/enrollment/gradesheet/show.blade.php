@@ -1,14 +1,15 @@
-@extends('layouts.master_empenrollment')
+{{-- A subject's gradesheet, in the Enrollment or the NSTP module ($module: name, layout; $routeName from the controller) --}}
+@extends($module['layout'])
 
 @section('title')
-    CISS - Enrollment | Gradesheet
+    CISS - {{ $module['name'] }} | Gradesheet
 @endsection
 
 @section('workspace')
     {{-- URLs and grade codes for enrollment/gradesheet.js (the rows are loaded by AJAX and re-drawn after every save) --}}
     <div id="gradesheet"
-        data-students-url="{{ route('employee.enrollment.gradesheet.students', $subject->id) }}"
-        data-submit-url="{{ route('employee.enrollment.gradesheet.submit', $subject->id) }}"
+        data-students-url="{{ route("{$routeName}.students", $subject->id) }}"
+        data-submit-url="{{ route("{$routeName}.submit", $subject->id) }}"
         data-grade-codes='@json($gradeCodes)'>
 
         <div class="row">
@@ -22,9 +23,9 @@
                                         <i class="fas fa-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item mt-1">Enrollment</li>
+                                <li class="breadcrumb-item mt-1">{{ $module['name'] }}</li>
                                 <li class="breadcrumb-item mt-1">
-                                    <a href="{{ route('employee.enrollment.gradesheet.index') }}" wire:navigate>Gradesheet</a>
+                                    <a href="{{ route("{$routeName}.index") }}" wire:navigate>Gradesheet</a>
                                 </li>
                                 <li class="breadcrumb-item active mt-1"><strong>{{ $subject->sub_name }} {{ $subject->subSec }}</strong></li>
                             </ol>

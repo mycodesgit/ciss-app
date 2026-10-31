@@ -29,6 +29,7 @@ class RankingController extends Controller
     use ChecksEnrollment, FindsEnrollment, SearchesCourses;
 
     private const GWA_DECIMALS = 4;
+    private const ID_BATCH = 500;
 
     public function index()
     {
@@ -75,21 +76,19 @@ class RankingController extends Controller
 
     // ---------- Helpers ----------
 
-    // The term's grades of the students in the campus, by Student ID
+    // The term's grades of the students in the campus, by Student ID. In batches: with more than 1000 values
+    // MariaDB turns the IN list into a join (in_predicate_conversion_threshold) that finds nothing here.
     private function grades(array $studentIds, array $data): Collection
     {
-        if (! $studentIds) {
-            return collect();
-        }
-
         $schedule = config('database.connections.schedule.database');
 
-        return Grade::join("{$schedule}.sub_offered as offered", 'studgrades.subjID', '=', 'offered.id')
-            ->whereIn('studgrades.studID', $studentIds)
-            ->where('offered.schlyear', $data['schlyear'])
-            ->where('offered.semester', $data['semester'])
-            ->whereCampusIn('studgrades.campus', [$data['campus']])
-            ->get(['studgrades.studID', 'studgrades.subjFgrade', 'studgrades.subjComp', 'studgrades.creditEarned', 'offered.subCode'])
+        return collect($studentIds)->chunk(self::ID_BATCH)
+            ->flatMap(fn (Collection $batch) => Grade::join("{$schedule}.sub_offered as offered", 'studgrades.subjID', '=', 'offered.id')
+                ->whereIn('studgrades.studID', $batch->values()->all())
+                ->where('offered.schlyear', $data['schlyear'])
+                ->where('offered.semester', $data['semester'])
+                ->whereCampusIn('studgrades.campus', [$data['campus']])
+                ->get(['studgrades.studID', 'studgrades.subjFgrade', 'studgrades.subjComp', 'studgrades.creditEarned', 'offered.subCode']))
             ->groupBy('studID');
     }
 

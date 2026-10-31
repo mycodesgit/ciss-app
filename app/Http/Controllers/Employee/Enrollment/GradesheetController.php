@@ -25,22 +25,29 @@ use App\Services\Enrollment\GradeRules;
  *  - unlockGrade() / unlockCompletion(): with the campus grades password, makes a submitted grade editable again
  * Shared rules (subject access, rows, grade codes, logs): Concerns/ReadsGradesheet. Correcting a submitted grade
  * directly is Correction of Grades (GradeCorrectionController). (public/js/employee/enrollment/gradesheet.js)
+ * The NSTP module's Grade Sheet reuses all of this for NSTP subjects: Nstp\NstpGradesheetController sets the
+ * properties below and narrows allowedSubjects().
  */
 class GradesheetController extends Controller
 {
     use ChecksEnrollment, ReadsGradesheet;
+
+    protected string $routeName = 'employee.enrollment.gradesheet';
+    protected array $module = ['name' => 'Enrollment', 'layout' => 'layouts.master_empenrollment', 'description' => 'Encode and view student grades.'];
 
     public function index()
     {
         return view('pages.employee.enrollment.gradesheet.index', [
             'schoolYears' => ConfigureCurrent::orderByDesc('id')->pluck('schlyear')->unique()->values(),
             'semesters' => ConfigureCurrent::SEMESTERS,
+            'module' => $this->module,
+            'routeName' => $this->routeName,
         ]);
     }
 
     public function subjects(Request $request)
     {
-        return $this->subjectsResponse($request, 'employee.enrollment.gradesheet.show');
+        return $this->subjectsResponse($request, "{$this->routeName}.show");
     }
 
     public function show(int $subject)
@@ -51,6 +58,8 @@ class GradesheetController extends Controller
             'subject' => $subject,
             'term' => $this->termOf($subject),
             'gradeCodes' => GradeRules::codesFor($this->user()),
+            'module' => $this->module,
+            'routeName' => $this->routeName,
         ]);
     }
 
@@ -191,10 +200,10 @@ class GradesheetController extends Controller
             'completionEditable' => $needsCompletion && ! $completionLocked,
             'canUnlockGrade' => $gradeLocked && ! $needsCompletion,
             'canUnlockCompletion' => $completionLocked,
-            'saveGradeUrl' => route('employee.enrollment.gradesheet.grade', $row->id),
-            'saveCompletionUrl' => route('employee.enrollment.gradesheet.completion', $row->id),
-            'unlockGradeUrl' => route('employee.enrollment.gradesheet.unlock-grade', $row->id),
-            'unlockCompletionUrl' => route('employee.enrollment.gradesheet.unlock-completion', $row->id),
+            'saveGradeUrl' => route("{$this->routeName}.grade", $row->id),
+            'saveCompletionUrl' => route("{$this->routeName}.completion", $row->id),
+            'unlockGradeUrl' => route("{$this->routeName}.unlock-grade", $row->id),
+            'unlockCompletionUrl' => route("{$this->routeName}.unlock-completion", $row->id),
         ];
     }
 

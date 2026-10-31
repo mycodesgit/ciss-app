@@ -1,12 +1,13 @@
-@extends('layouts.master_empenrollment')
+{{-- Gradesheet subjects, in the Enrollment or the NSTP module ($module: name, layout, description; $routeName from the controller) --}}
+@extends($module['layout'])
 
 @section('title')
-    CISS - Enrollment | Gradesheet
+    CISS - {{ $module['name'] }} | Gradesheet
 @endsection
 
 @section('workspace')
     {{-- URL for enrollment/gradesheet.js (the subjects table, via CissCrud) --}}
-    <div id="gradesheetSubjects" data-list-url="{{ route('employee.enrollment.gradesheet.subjects') }}">
+    <div id="gradesheetSubjects" data-list-url="{{ route("{$routeName}.subjects") }}">
 
         <div class="row">
             <div class="col-12">
@@ -19,7 +20,7 @@
                                         <i class="fas fa-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item mt-1">Enrollment</li>
+                                <li class="breadcrumb-item mt-1">{{ $module['name'] }}</li>
                                 <li class="breadcrumb-item active mt-1">Gradesheet</li>
                             </ol>
                         </div>
@@ -28,7 +29,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                         <div>
                             <h1 class="h4 fw-bold mb-1" style="letter-spacing: -0.02em;">Student Gradesheet</h1>
-                            <p class="text-muted small mb-0">Encode and view student grades.</p>
+                            <p class="text-muted small mb-0">{{ $module['description'] }}</p>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
