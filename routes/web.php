@@ -425,3 +425,7 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         });
     });
 });
+
+// Unknown URLs: a real route runs the "web" middleware (session), so a logged-in employee's
+// 404 is shown inside their module layout (see App\Exceptions\Handler::renderHttpException)
+Route::fallback(fn () => abort(404));
