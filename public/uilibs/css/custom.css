@@ -254,6 +254,13 @@
     --modal-top-gap: 5rem;
 }
 
+/* SweetAlert popups (default 1060) above modals (9991), the topbar (9995) and its logo (9996): a confirmation
+   opened from inside a modal (e.g. Kiosk > Bulk Generation) must not be hidden behind it.
+   "body" outweighs the SweetAlert theme's own .swal2-container rule, which is loaded after this file. */
+body .swal2-container {
+    z-index: 9997;
+}
+
 .modal-dialog {
     margin-top: var(--modal-top-gap);
 }

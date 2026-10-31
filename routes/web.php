@@ -61,6 +61,9 @@ use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
 use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
 use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
 use App\Http\Controllers\Employee\Nstp\NstpEnrolleesController as NstpModuleEnrolleesController;
+use App\Http\Controllers\Employee\Kiosk\KioskDashboardController;
+use App\Http\Controllers\Employee\Kiosk\KioskUserController;
+use App\Http\Controllers\Employee\Kiosk\KioskBulkController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -484,6 +487,29 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('enrollees')->name('enrollees.')->controller(NstpModuleEnrolleesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/count', 'count')->name('count');
+        });
+    });
+
+    // Kiosk module (menu key "kiosk-url"): students' kiosk accounts
+    Route::prefix('kiosk')->name('kiosk.')->middleware('menu.access:kiosk-url')->group(function () {
+        Route::get('/', [KioskDashboardController::class, 'index'])->name('dashboard');
+
+        // Kiosk User ({account} = kioskstudent.id, {student} = a Student ID)
+        Route::prefix('users')->name('users.')->controller(KioskUserController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/student/{student}', 'student')->name('student');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{account}', 'reset')->whereNumber('account')->name('reset');
+            Route::delete('/{account}', 'destroy')->whereNumber('account')->name('destroy');
+        });
+
+        // Bulk Generation: classes of a term -> a class's students -> new passwords as a PDF (POST, never cached)
+        Route::prefix('bulk')->name('bulk.')->controller(KioskBulkController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+            Route::get('/students', 'students')->name('students');
+            Route::post('/generate', 'generate')->name('generate');
         });
     });
 
