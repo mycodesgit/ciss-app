@@ -136,4 +136,13 @@
             </li>
         @endif
     @endif
+
+    {{-- Outside the Reports block: Encoders may open it too (User::STUDENT_RECORD_ROLES, 'student-record' middleware) --}}
+    @if (Auth::guard('web')->user()->canViewStudentRecords())
+        <li>
+            <a href="{{ route('employee.enrollment.student-record.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.student-record.*')])>
+                <i class="ti ti-book-2"></i><span class="nav-text">Student Record</span>
+            </a>
+        </li>
+    @endif
 </ul>

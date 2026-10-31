@@ -146,6 +146,16 @@ class User extends Authenticatable
         return in_array((int) $this->role, self::REPORT_CARD_ROLES, true);
     }
 
+    // Administrator (0), Registrar (3), Registrar Staff (4), College Staff (7), MIS Director (13), MIS Officer (14),
+    // Graduate School Staff (15, graduate students only), Encoder (19) and Dean of Instruction (20):
+    // Enrollment > Student Record (same roles as the old system)
+    public const STUDENT_RECORD_ROLES = [0, 3, 4, 7, 13, 14, 15, 19, 20];
+
+    public function canViewStudentRecords(): bool
+    {
+        return in_array((int) $this->role, self::STUDENT_RECORD_ROLES, true);
+    }
+
     // Enrollment reports (Print Student RF, Student Per Degree): everyone but the Encoder (19)
     public const ENCODER_ROLE = 19;
 

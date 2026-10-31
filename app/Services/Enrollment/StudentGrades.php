@@ -31,7 +31,7 @@ class StudentGrades
                 COALESCE(NULLIF(offered.schlyear, ''), studgrades.schlyear) as schlyear,
                 COALESCE(NULLIF(offered.semester, 0), studgrades.semester) as semester,
                 studgrades.subjFgrade, studgrades.subjComp, studgrades.creditEarned,
-                offered.subSec, offered.isType, subjects.sub_name, subjects.sub_title
+                offered.subSec, offered.subCode, offered.isType, subjects.sub_name, subjects.sub_title
             ")
             ->orderBy('schlyear')
             ->orderBy('semester')
@@ -49,6 +49,7 @@ class StudentGrades
     {
         $first = $grades->first();
         $term = new ConfigureCurrent(['schlyear' => $first->schlyear, 'semester' => (int) $first->semester]);
+        $nstp = config('ciss.report_card.nstp_subjects', []);
 
         return [
             'schlyear' => $first->schlyear,
@@ -63,6 +64,9 @@ class StudentGrades
                 'gradeWarning' => GradeRules::isWarning($grade->subjFgrade),
                 'completion' => GradeRules::equivalent($grade->subjComp, $studentId),
                 'credit' => self::credit($grade->creditEarned),
+                // For Student Record: the grade as encoded (e.g. 88) and whether it is NSTP (left out of averages)
+                'rawGrade' => $grade->subjFgrade,
+                'nstp' => in_array($grade->subCode, $nstp, true),
             ])->values()->all(),
         ];
     }

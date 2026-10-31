@@ -57,6 +57,7 @@ use App\Http\Controllers\Employee\Enrollment\ElPlController;
 use App\Http\Controllers\Employee\Enrollment\RankingController;
 use App\Http\Controllers\Employee\Enrollment\NumberOfEnrolleesController;
 use App\Http\Controllers\Employee\Enrollment\NstpEnrolleesController;
+use App\Http\Controllers\Employee\Enrollment\StudentRecordController;
 use App\Http\Controllers\Employee\Nstp\NstpDashboardController;
 use App\Http\Controllers\Employee\Nstp\NstpStudentsController;
 use App\Http\Controllers\Employee\Nstp\NstpGradesheetController;
@@ -465,6 +466,13 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         Route::prefix('nstp-enrollees')->name('nstp-enrollees.')->middleware('menu.access:nstp-url')->controller(NstpEnrolleesController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/count', 'count')->name('count');
+        });
+
+        // Student Record: a student's whole academic record, as a PDF and with the computation (?campus=&stud_id=)
+        Route::prefix('student-record')->name('student-record.')->middleware('student-record')->controller(StudentRecordController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'find')->name('find');
+            Route::get('/pdf', 'pdf')->name('pdf');
         });
     });
 
