@@ -50,6 +50,7 @@ use App\Http\Controllers\Employee\Enrollment\PrintRegistrationFormController;
 use App\Http\Controllers\Employee\Enrollment\StudentPerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\AttendancePerDegreeController;
 use App\Http\Controllers\Employee\Enrollment\ClassAttendanceController;
+use App\Http\Controllers\Employee\Enrollment\StudentGradesController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -393,6 +394,12 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
             Route::get('/list', 'list')->name('list');
             Route::get('/{subject}/students', 'students')->whereNumber('subject')->name('students');
             Route::get('/{subject}/pdf', 'pdf')->whereNumber('subject')->name('pdf');
+        });
+
+        // View Student Grades: all grades of a student per term (?campus=&stud_id=)
+        Route::prefix('student-grades')->name('student-grades.')->middleware('enrollment-reports')->controller(StudentGradesController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/find', 'find')->name('find');
         });
     });
 
