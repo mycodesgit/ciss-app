@@ -53,6 +53,8 @@ use App\Http\Controllers\Employee\Enrollment\ClassAttendanceController;
 use App\Http\Controllers\Employee\Enrollment\StudentGradesController;
 use App\Http\Controllers\Employee\Enrollment\StudentReportCardController;
 use App\Http\Controllers\Employee\Enrollment\ExtendedStudentsController;
+use App\Http\Controllers\Employee\Enrollment\ElPlController;
+use App\Http\Controllers\Employee\Enrollment\RankingController;
 use App\Http\Controllers\Employee\Enrollment\EnrollmentQueueController;
 use App\Http\Controllers\Main\PortalController;
 use App\Http\Controllers\Main\PortalApplyController;
@@ -414,6 +416,20 @@ Route::prefix('employee')->name('employee.')->middleware(['auth:web', 'prevent-b
         // Extended Students: students enrolled in more than 10 semesters (same roles as the Report Card)
         Route::prefix('extended-students')->name('extended-students.')->middleware('report-card')->controller(ExtendedStudentsController::class)->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/list', 'list')->name('list');
+        });
+
+        // EL and PL: a course's students with their subjects and grades in a term (same roles as the Report Card)
+        Route::prefix('el-pl')->name('el-pl.')->middleware('report-card')->controller(ElPlController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/courses', 'courses')->name('courses');
+            Route::get('/list', 'list')->name('list');
+        });
+
+        // Ranking: a course's students in a term ranked by GWA (same roles as the Report Card)
+        Route::prefix('ranking')->name('ranking.')->middleware('report-card')->controller(RankingController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/courses', 'courses')->name('courses');
             Route::get('/list', 'list')->name('list');
         });
     });

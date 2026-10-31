@@ -44,6 +44,22 @@ class ReportCard
         ];
     }
 
+    /**
+     * The report card average of one student's subjects (each with subjFgrade, subjComp, creditEarned, subCode),
+     * e.g. for Enrollment > Ranking. Same rule as of().
+     */
+    public static function averageOf(Collection $subjects, string $studentId): float
+    {
+        $nstp = config('ciss.report_card.nstp_subjects', []);
+
+        return self::weightedAverage($subjects
+            ->reject(fn ($subject) => in_array($subject->subCode, $nstp, true))
+            ->map(fn ($subject) => [
+                'credit' => self::number($subject->creditEarned),
+                'averaged' => self::averageGrade($subject, $studentId),
+            ]));
+    }
+
     // ---------- Helpers ----------
 
     // The student's subjects of the term in the campus, by subject code

@@ -1,5 +1,5 @@
 {{--
-    <head> assets for every employee layout (master_empdash, master_empsetting).
+    <head> assets for every employee layout (master_empdash, master_empmodule).
 
     The first employee page after login is a full load, so everything here downloads
     once. After that, wire:navigate only swaps <body> and keeps these loaded, which is
@@ -126,11 +126,28 @@
             }
         });
 
+        // ---------- Sidebar scroll ----------
+        // The sidebar scrolls on its own (fixed, 100vh, overflow-y-auto); center the active menu item in it.
+        // Layouts without a sidebar (dashboard) are skipped.
+        function scrollToActiveMenu() {
+            var sidebar = document.getElementById('sidebar');
+            var activeItem = sidebar && sidebar.querySelector('.active');
+            if (!activeItem) return;
+
+            var itemTop = activeItem.getBoundingClientRect().top - sidebar.getBoundingClientRect().top + sidebar.scrollTop;
+            sidebar.scrollTo({
+                top: itemTop - sidebar.clientHeight / 2 + activeItem.offsetHeight / 2,
+                behavior: 'smooth'
+            });
+        }
+
         // wire:navigate resets <html data-bs-theme> from the server markup, so re-apply after each swap
         document.addEventListener('livewire:navigating', function (e) {
             e.detail.onSwap(applyTheme);
         });
         document.addEventListener('livewire:navigated', applyTheme);
+        // Fires on the first load too (Livewire 3), and after each wire:navigate swaps in a new sidebar
+        document.addEventListener('livewire:navigated', scrollToActiveMenu);
 
         applyTheme();
 

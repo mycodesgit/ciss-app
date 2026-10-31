@@ -111,6 +111,16 @@
                     <i class="ti ti-calendar-due"></i><span class="nav-text">Extended Students</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('employee.enrollment.el-pl.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.el-pl.*')])>
+                    <i class="ti ti-file-spreadsheet"></i><span class="nav-text">EL and PL</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('employee.enrollment.ranking.index') }}" wire:navigate @class(['nav-link', 'active' => request()->routeIs('employee.enrollment.ranking.*')])>
+                    <i class="ti ti-military-rank"></i><span class="nav-text">Ranking</span>
+                </a>
+            </li>
         @endif
     @endif
 </ul>
